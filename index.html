@@ -1703,11 +1703,32 @@
 
     document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
-    // Simple form submission placeholder
-    document.querySelector('.contact-form').addEventListener('submit', e => {
+    // ✅ Form submission REAL con mensaje después
+    const form = document.querySelector('.contact-form');
+
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        alert('Thank you for reaching out! We’ll be in touch soon.');
-        e.target.reset();
+
+        const data = new FormData(form);
+
+        try {
+            const response = await fetch(form.action, {
+                method: form.method,
+                body: data,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                alert('Thank you for reaching out! We’ll be in touch soon.');
+                form.reset();
+            } else {
+                alert('Something went wrong. Please try again.');
+            }
+        } catch (error) {
+            alert('Network error. Please try again.');
+        }
     });
 </script>
 
