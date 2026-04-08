@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ImationGroup | Data Engineering and Software Solutions</title>
+    <title data-i18n="page_title">ImationGroup | Data Engineering and Software Solutions</title>
     <link rel="preconnect" href="[fonts.googleapis.com](https://fonts.googleapis.com)">
     <link rel="preconnect" href="[fonts.gstatic.com](https://fonts.gstatic.com)" crossorigin>
     <link href="[fonts.googleapis.com](https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap)" rel="stylesheet">
@@ -124,6 +124,95 @@
             background: var(--text-dark);
             margin: 6px 0;
             transition: all 0.3s ease;
+        }
+
+        /* Language Switcher */
+        .lang-switcher {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin-left: 16px;
+        }
+
+        .lang-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            background: transparent;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            transition: all 0.3s ease;
+        }
+
+        .lang-btn:hover {
+            border-color: var(--primary-teal);
+            color: var(--primary-teal);
+        }
+
+        .lang-btn svg {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .lang-dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px);
+            transition: all 0.25s ease;
+            z-index: 1001;
+            min-width: 140px;
+        }
+
+        .lang-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .lang-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 10px 16px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            transition: background 0.2s ease;
+        }
+
+        .lang-option:hover {
+            background: var(--light-teal);
+        }
+
+        .lang-option.active {
+            color: var(--primary-teal);
+            font-weight: 600;
+        }
+
+        .lang-flag {
+            font-size: 1.2rem;
+            line-height: 1;
         }
 
         /* Hero Section */
@@ -1102,13 +1191,28 @@
         <div class="nav-container">
             <a href="#home" class="logo">ImationGroup</a>
             <ul class="nav-links">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#services">Services</a></li>
-                <li><a href="#technologies">Technologies</a></li>
-                <li><a href="#projects">Projects</a></li>
-                <li><a href="#contact">Contact</a></li>
+                <li><a href="#home" data-i18n="nav_home">Home</a></li>
+                <li><a href="#about" data-i18n="nav_about">About</a></li>
+                <li><a href="#services" data-i18n="nav_services">Services</a></li>
+                <li><a href="#technologies" data-i18n="nav_technologies">Technologies</a></li>
+                <li><a href="#projects" data-i18n="nav_projects">Projects</a></li>
+                <li><a href="#contact" data-i18n="nav_contact">Contact</a></li>
             </ul>
+            <div class="lang-switcher">
+                <button class="lang-btn" id="langToggle" aria-label="Change language">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+                    <span id="currentLangLabel">EN</span>
+                    <svg viewBox="0 0 24 24" width="12" height="12" style="margin-left:-2px"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <div class="lang-dropdown" id="langDropdown">
+                    <button class="lang-option active" data-lang="en">
+                        <span class="lang-flag">🇬🇧</span> English
+                    </button>
+                    <button class="lang-option" data-lang="es">
+                        <span class="lang-flag">🇪🇸</span> Español
+                    </button>
+                </div>
+            </div>
             <button class="mobile-menu-btn" aria-label="Toggle menu">
                 <span></span>
                 <span></span>
@@ -1119,12 +1223,12 @@
 
     <!-- Mobile Menu -->
     <div class="mobile-menu">
-        <a href="#home">Home</a>
-        <a href="#about">About</a>
-        <a href="#services">Services</a>
-        <a href="#technologies">Technologies</a>
-        <a href="#projects">Projects</a>
-        <a href="#contact">Contact</a>
+        <a href="#home" data-i18n="nav_home">Home</a>
+        <a href="#about" data-i18n="nav_about">About</a>
+        <a href="#services" data-i18n="nav_services">Services</a>
+        <a href="#technologies" data-i18n="nav_technologies">Technologies</a>
+        <a href="#projects" data-i18n="nav_projects">Projects</a>
+        <a href="#contact" data-i18n="nav_contact">Contact</a>
     </div>
 
     <!-- Hero Section -->
@@ -1166,18 +1270,18 @@
         <div class="hero-content">
             <div class="hero-text">
                 <h1>ImationGroup</h1>
-                <p class="hero-tagline">Data Engineering and Software Solutions</p>
-                <p class="hero-description">
+                <p class="hero-tagline" data-i18n="hero_tagline">Data Engineering and Software Solutions</p>
+                <p class="hero-description" data-i18n="hero_description">
                     We transform data into actionable insights and build scalable software solutions that drive business growth. Our expertise spans data engineering, data science, and cloud-native development.
                 </p>
                 <div class="hero-buttons">
                     <a href="#contact" class="btn btn-primary">
-                        Contact Us
+                        <span data-i18n="hero_btn_contact">Contact Us</span>
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M5 12h14m-7-7l7 7-7 7"/>
                         </svg>
                     </a>
-                    <a href="#services" class="btn btn-secondary">Our Services</a>
+                    <a href="#services" class="btn btn-secondary" data-i18n="hero_btn_services">Our Services</a>
                 </div>
             </div>
             <div class="hero-visual">
@@ -1201,17 +1305,17 @@
     <section id="about" class="about">
         <div class="section-container">
             <div class="section-header fade-in">
-                <span class="section-label">About Us</span>
-                <h2 class="section-title">Pioneering Data-Driven Solutions</h2>
-                <p class="section-subtitle">Building the future of enterprise technology through innovation and expertise</p>
+                <span class="section-label" data-i18n="about_label">About Us</span>
+                <h2 class="section-title" data-i18n="about_title">Pioneering Data-Driven Solutions</h2>
+                <p class="section-subtitle" data-i18n="about_subtitle">Building the future of enterprise technology through innovation and expertise</p>
             </div>
             <div class="about-content">
                 <div class="about-text fade-in">
-                    <h3>Who We Are</h3>
-                    <p>
+                    <h3 data-i18n="about_who_title">Who We Are</h3>
+                    <p data-i18n="about_who_p1">
                         ImationGroup is a forward-thinking technology company specializing in data engineering, data science, and scalable software solutions. We partner with organizations to unlock the full potential of their data and transform it into competitive advantage.
                     </p>
-                    <p>
+                    <p data-i18n="about_who_p2">
                         Our team of experienced engineers and data scientists brings together deep technical expertise with a passion for solving complex business challenges. We believe in building systems that are not only powerful but also maintainable, scalable, and future-proof.
                     </p>
                     <div class="values-grid">
@@ -1221,8 +1325,8 @@
                                     <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
                                 </svg>
                             </div>
-                            <h4>Innovation</h4>
-                            <p>Leveraging cutting-edge technologies to deliver breakthrough solutions</p>
+                            <h4 data-i18n="value_innovation">Innovation</h4>
+                            <p data-i18n="value_innovation_desc">Leveraging cutting-edge technologies to deliver breakthrough solutions</p>
                         </div>
                         <div class="value-item">
                             <div class="value-icon">
@@ -1231,8 +1335,8 @@
                                     <path d="M12 6v6l4 2"/>
                                 </svg>
                             </div>
-                            <h4>Reliability</h4>
-                            <p>Building robust systems that perform consistently under any conditions</p>
+                            <h4 data-i18n="value_reliability">Reliability</h4>
+                            <p data-i18n="value_reliability_desc">Building robust systems that perform consistently under any conditions</p>
                         </div>
                         <div class="value-item">
                             <div class="value-icon">
@@ -1242,8 +1346,8 @@
                                     <path d="M23 21v-2a4 4 0 00-3-3.87m-4-12a4 4 0 010 7.75"/>
                                 </svg>
                             </div>
-                            <h4>Partnership</h4>
-                            <p>Working closely with clients to understand and exceed their expectations</p>
+                            <h4 data-i18n="value_partnership">Partnership</h4>
+                            <p data-i18n="value_partnership_desc">Working closely with clients to understand and exceed their expectations</p>
                         </div>
                         <div class="value-item">
                             <div class="value-icon">
@@ -1252,27 +1356,27 @@
                                     <path d="M22 4L12 14.01l-3-3"/>
                                 </svg>
                             </div>
-                            <h4>Excellence</h4>
-                            <p>Committed to delivering the highest quality in every project we undertake</p>
+                            <h4 data-i18n="value_excellence">Excellence</h4>
+                            <p data-i18n="value_excellence_desc">Committed to delivering the highest quality in every project we undertake</p>
                         </div>
                     </div>
                 </div>
                 <div class="about-visual fade-in">
                     <div class="stat-card">
                         <div class="stat-number">50+</div>
-                        <div class="stat-label">Projects Delivered</div>
+                        <div class="stat-label" data-i18n="stat_projects">Projects Delivered</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-number">99%</div>
-                        <div class="stat-label">Client Satisfaction</div>
+                        <div class="stat-label" data-i18n="stat_satisfaction">Client Satisfaction</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-number">24/7</div>
-                        <div class="stat-label">Support Available</div>
+                        <div class="stat-label" data-i18n="stat_support">Support Available</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-number">10+</div>
-                        <div class="stat-label">Years Experience</div>
+                        <div class="stat-label" data-i18n="stat_experience">Years Experience</div>
                     </div>
                 </div>
             </div>
@@ -1283,9 +1387,9 @@
     <section id="services" class="services">
         <div class="section-container">
             <div class="section-header fade-in">
-                <span class="section-label">Services</span>
-                <h2 class="section-title">What We Offer</h2>
-                <p class="section-subtitle">Comprehensive technology solutions tailored to your business needs</p>
+                <span class="section-label" data-i18n="services_label">Services</span>
+                <h2 class="section-title" data-i18n="services_title">What We Offer</h2>
+                <p class="section-subtitle" data-i18n="services_subtitle">Comprehensive technology solutions tailored to your business needs</p>
             </div>
             <div class="services-grid">
                 <div class="service-card fade-in">
@@ -1295,8 +1399,8 @@
                             <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
                         </svg>
                     </div>
-                    <h3>Data Engineering</h3>
-                    <p>Design and build robust data pipelines, data warehouses, and ETL processes that handle massive volumes of data efficiently and reliably.</p>
+                    <h3 data-i18n="svc_data_eng">Data Engineering</h3>
+                    <p data-i18n="svc_data_eng_desc">Design and build robust data pipelines, data warehouses, and ETL processes that handle massive volumes of data efficiently and reliably.</p>
                 </div>
                 <div class="service-card fade-in">
                     <div class="service-icon">
@@ -1305,8 +1409,8 @@
                             <path d="M22 12A10 10 0 0012 2v10z"/>
                         </svg>
                     </div>
-                    <h3>Data Science</h3>
-                    <p>Transform raw data into actionable insights using advanced analytics, machine learning models, and predictive algorithms.</p>
+                    <h3 data-i18n="svc_data_sci">Data Science</h3>
+                    <p data-i18n="svc_data_sci_desc">Transform raw data into actionable insights using advanced analytics, machine learning models, and predictive algorithms.</p>
                 </div>
                 <div class="service-card fade-in">
                     <div class="service-icon">
@@ -1315,8 +1419,8 @@
                             <polyline points="8 6 2 12 8 18"/>
                         </svg>
                     </div>
-                    <h3>Software Development</h3>
-                    <p>Build custom software solutions using modern architectures and best practices that scale with your business growth.</p>
+                    <h3 data-i18n="svc_soft_dev">Software Development</h3>
+                    <p data-i18n="svc_soft_dev_desc">Build custom software solutions using modern architectures and best practices that scale with your business growth.</p>
                 </div>
                 <div class="service-card fade-in">
                     <div class="service-icon">
@@ -1329,8 +1433,8 @@
                             <path d="M12 3v4"/>
                         </svg>
                     </div>
-                    <h3>Cloud Solutions</h3>
-                    <p>Migrate, optimize, and manage cloud infrastructure on AWS, Azure, or GCP with security and cost-efficiency in mind.</p>
+                    <h3 data-i18n="svc_cloud">Cloud Solutions</h3>
+                    <p data-i18n="svc_cloud_desc">Migrate, optimize, and manage cloud infrastructure on AWS, Azure, or GCP with security and cost-efficiency in mind.</p>
                 </div>
                 <div class="service-card fade-in">
                     <div class="service-icon">
@@ -1340,14 +1444,14 @@
                             <path d="M23 21v-2a4 4 0 00-3-3.87m-4-12a4 4 0 010 7.75"/>
                         </svg>
                     </div>
-                    <h3>Consulting</h3>
-                    <p>Strategic technology consulting to help you make informed decisions about your data strategy and digital transformation journey.</p>
+                    <h3 data-i18n="svc_consulting">Consulting</h3>
+                    <p data-i18n="svc_consulting_desc">Strategic technology consulting to help you make informed decisions about your data strategy and digital transformation journey.</p>
                 </div>
             
 				<div class="service-card fade-in visible">
 				  <div class="service-icon">BI</div>
-				  <h3>Business Intelligence</h3>
-				  <p>
+				  <h3 data-i18n="svc_bi">Business Intelligence</h3>
+				  <p data-i18n="svc_bi_desc">
 					We help teams create reporting layers and analytics environments that support faster decisions with trustworthy, well-structured data.
 				  </p>
 				</div>
@@ -1359,9 +1463,9 @@
     <section id="technologies" class="technologies">
         <div class="section-container">
             <div class="section-header fade-in">
-                <span class="section-label">Technologies</span>
-                <h2 class="section-title">Our Tech Stack</h2>
-                <p class="section-subtitle">Industry-leading technologies powering our solutions</p>
+                <span class="section-label" data-i18n="tech_label">Technologies</span>
+                <h2 class="section-title" data-i18n="tech_title">Our Tech Stack</h2>
+                <p class="section-subtitle" data-i18n="tech_subtitle">Industry-leading technologies powering our solutions</p>
             </div>
             <div class="tech-grid fade-in">
                 <div class="tech-item">
@@ -1533,50 +1637,50 @@
 <section id="projects" class="projects">
 <div class="section-container">
     <div class="section-header fade-in">
-        <span class="section-label">Projects</span>
-        <h2 class="section-title">Scalable Solutions in Action</h2>
-        <p class="section-subtitle">Delivering end-to-end systems that turn data into value and insight</p>
+        <span class="section-label" data-i18n="projects_label">Projects</span>
+        <h2 class="section-title" data-i18n="projects_title">Scalable Solutions in Action</h2>
+        <p class="section-subtitle" data-i18n="projects_subtitle">Delivering end-to-end systems that turn data into value and insight</p>
     </div>
     <div class="projects-grid">
         <div class="project-card fade-in">
             <div class="project-icon">
                 <svg viewBox="0 0 24 24"><path d="M3 4h18M3 12h18M3 20h18"/></svg>
             </div>
-            <h3>Data Pipelines</h3>
-            <p>Automated, fault-tolerant data pipelines that connect sources, transform data, and ensure reliable delivery to analytics systems.</p>
+            <h3 data-i18n="proj_pipelines">Data Pipelines</h3>
+            <p data-i18n="proj_pipelines_desc">Automated, fault-tolerant data pipelines that connect sources, transform data, and ensure reliable delivery to analytics systems.</p>
         </div>
         <div class="project-card fade-in">
             <div class="project-icon">
                 <svg viewBox="0 0 24 24"><path d="M12 20v-8m0 0l8-8m-8 8l-8-8"/></svg>
             </div>
-            <h3>ETL Systems</h3>
-            <p>Designed and optimized high-performance ETL frameworks enabling seamless data integration across platforms and domains.</p>
+            <h3 data-i18n="proj_etl">ETL Systems</h3>
+            <p data-i18n="proj_etl_desc">Designed and optimized high-performance ETL frameworks enabling seamless data integration across platforms and domains.</p>
         </div>
         <div class="project-card fade-in">
             <div class="project-icon">
                 <svg viewBox="0 0 24 24"><path d="M3 3h18v18H3z"/></svg>
             </div>
-            <h3>Business Intelligence</h3>
-            <p>Developed BI and analytics dashboards that empower strategic, data-informed decision-making in real time.</p>
+            <h3 data-i18n="proj_bi">Business Intelligence</h3>
+            <p data-i18n="proj_bi_desc">Developed BI and analytics dashboards that empower strategic, data-informed decision-making in real time.</p>
         </div>
         <div class="project-card fade-in">
             <div class="project-icon">
                 <svg viewBox="0 0 24 24"><path d="M8 21h8M12 17V3"/></svg>
             </div>
-            <h3>Custom Software</h3>
-            <p>End-to-end software tailored to your operational ecosystem — scalable, secure, and cloud-ready.</p>
+            <h3 data-i18n="proj_custom">Custom Software</h3>
+            <p data-i18n="proj_custom_desc">End-to-end software tailored to your operational ecosystem — scalable, secure, and cloud-ready.</p>
         </div>
         <div class="project-card fade-in">
             <div class="project-icon">
                 <svg viewBox="0 0 24 24"><path d="M12 2l9 4v9a9 9 0 01-18 0V6l9-4z"/></svg>
             </div>
-            <h3>Cloud Infrastructure</h3>
-            <p>Cloud-native architectures on AWS designed for scalability, performance, and cost efficiency.</p>
+            <h3 data-i18n="proj_cloud">Cloud Infrastructure</h3>
+            <p data-i18n="proj_cloud_desc">Cloud-native architectures on AWS designed for scalability, performance, and cost efficiency.</p>
         </div>
 		<div class="project-card fade-in visible">
           <div class="project-icon">06</div>
-          <h3>Scalable Architectures</h3>
-          <p>
+          <h3 data-i18n="proj_scalable">Scalable Architectures</h3>
+          <p data-i18n="proj_scalable_desc">
             End-to-end architecture design for distributed systems, data platforms, and software ecosystems that grow with your business.
           </p>
         </div>
@@ -1588,21 +1692,21 @@
 <section id="contact" class="contact">
 <div class="section-container">
     <div class="section-header fade-in">
-        <span class="section-label">Contact</span>
-        <h2 class="section-title">Get in Touch</h2>
-        <p class="section-subtitle">Let's discuss how ImationGroup can help transform your data and technology strategy</p>
+        <span class="section-label" data-i18n="contact_label">Contact</span>
+        <h2 class="section-title" data-i18n="contact_title">Get in Touch</h2>
+        <p class="section-subtitle" data-i18n="contact_subtitle">Let's discuss how ImationGroup can help transform your data and technology strategy</p>
     </div>
     <div class="contact-content">
         <div class="contact-info fade-in">
             <h3>ImationGroup</h3>
-            <p>We are ready to collaborate on your next data and software project. Reach out to discuss your challenges and goals.</p>
+            <p data-i18n="contact_desc">We are ready to collaborate on your next data and software project. Reach out to discuss your challenges and goals.</p>
             <div class="contact-details">
                 <div class="contact-item">
                     <div class="contact-item-icon">
                         <svg viewBox="0 0 24 24"><path d="M22 12H2m10 10l-10-10L12 2"/></svg>
                     </div>
                     <div class="contact-item-text">
-                        <h4>Email</h4>
+                        <h4 data-i18n="contact_email_label">Email</h4>
                         <p>info@imationgroup.com</p>
                     </div>
                 </div>
@@ -1611,8 +1715,8 @@
                         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
                     </div>
                     <div class="contact-item-text">
-                        <h4>Location</h4>
-                        <p>Global — Remote Projects Worldwide</p>
+                        <h4 data-i18n="contact_location_label">Location</h4>
+                        <p data-i18n="contact_location">Global — Remote Projects Worldwide</p>
                     </div>
                 </div>
             </div>
@@ -1622,19 +1726,19 @@
             <form class="contact-form" action="https://formspree.io/f/xeepdkbz" method="post">
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="name">Name</label>
-                        <input id="name" name="name" type="text" placeholder="Your name" required>
+                        <label for="name" data-i18n="form_name">Name</label>
+                        <input id="name" name="name" type="text" data-i18n-placeholder="form_name_placeholder" placeholder="Your name" required>
                     </div>
                     <div class="form-group">
-                        <label for="email">Email</label>
+                        <label for="email" data-i18n="form_email">Email</label>
                         <input id="email" name="email" type="email" placeholder="you@example.com" required>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="message">Message</label>
-                    <textarea id="message" name="message" placeholder="How can we help you?" required></textarea>
+                    <label for="message" data-i18n="form_message">Message</label>
+                    <textarea id="message" name="message" data-i18n-placeholder="form_message_placeholder" placeholder="How can we help you?" required></textarea>
                 </div>
-                <button class="btn btn-primary" type="submit">Send Message</button>
+                <button class="btn btn-primary" type="submit" data-i18n="form_submit">Send Message</button>
             </form>
         </div>
     </div>
@@ -1646,27 +1750,27 @@
 <div class="footer-content">
     <div class="footer-brand">
         <h3>ImationGroup</h3>
-        <p>Data engineering, data science, and scalable software solutions designed to elevate your business performance.</p>
+        <p data-i18n="footer_desc">Data engineering, data science, and scalable software solutions designed to elevate your business performance.</p>
     </div>
     <div class="footer-column">
-        <h4>Company</h4>
+        <h4 data-i18n="footer_company">Company</h4>
         <ul class="footer-links">
-            <li><a href="#about">About</a></li>
-            <li><a href="#services">Services</a></li>
-            <li><a href="#technologies">Technologies</a></li>
-            <li><a href="#projects">Projects</a></li>
+            <li><a href="#about" data-i18n="nav_about">About</a></li>
+            <li><a href="#services" data-i18n="nav_services">Services</a></li>
+            <li><a href="#technologies" data-i18n="nav_technologies">Technologies</a></li>
+            <li><a href="#projects" data-i18n="nav_projects">Projects</a></li>
         </ul>
     </div>
     <div class="footer-column">
-        <h4>Support</h4>
+        <h4 data-i18n="footer_support">Support</h4>
         <ul class="footer-links">
-            <li><a href="#">Privacy Policy</a></li>
-            <li><a href="#">Terms of Service</a></li>
-            <li><a href="#contact">Contact</a></li>
+            <li><a href="#" data-i18n="footer_privacy">Privacy Policy</a></li>
+            <li><a href="#" data-i18n="footer_terms">Terms of Service</a></li>
+            <li><a href="#contact" data-i18n="nav_contact">Contact</a></li>
         </ul>
     </div>
     <div class="footer-column">
-        <h4>Follow</h4>
+        <h4 data-i18n="footer_follow">Follow</h4>
         <div class="social-links">
             <a href="#"><svg viewBox="0 0 24 24"><path d="M22 4.01C21.42 4.45 20.82 4.75 20.18 4.91A3.96 3.96 0 0021.43 3a7.67 7.67 0 01-2.34.9 3.93 3.93 0 00-6.72 3.58A11.2 11.2 0 013 4.64a3.89 3.89 0 001.22 5.24 3.92 3.92 0 01-1.78-.49v.05a3.93 3.93 0 003.15 3.85c-.43.12-.84.17-1.3.17-.32 0-.63-.03-.93-.08a3.94 3.94 0 003.67 2.73A7.89 7.89 0 012 19.54a11.27 11.27 0 006.06 1.77c7.27 0 11.25-6.02 11.25-11.25l-.01-.51A8.17 8.17 0 0022 4.01z"/></svg></a>
             <a href="#"><svg viewBox="0 0 24 24"><path d="M12 2.04c-5.5 0-9.96 4.46-9.96 9.96 0 4.41 3.41 8.06 7.84 8.83v-6.25H7.9v-2.58h1.98V9.55c0-1.96 1.2-3.03 2.94-3.03.84 0 1.57.06 1.78.09v2.07l-1.22.01c-.96 0-1.15.46-1.15 1.13v1.48h2.3l-.3 2.58h-2v6.28c4.45-.75 7.87-4.4 7.87-8.83 0-5.5-4.46-9.96-9.96-9.96z"/></svg></a>
@@ -1674,12 +1778,266 @@
     </div>
 </div>
 <div class="footer-bottom">
-    <p>© 2024 ImationGroup. All rights reserved.</p>
+    <p data-i18n="footer_copyright">© 2024 ImationGroup. All rights reserved.</p>
 </div>
 </footer>
 
 <script>
+    // ========================
+    // Translations
+    // ========================
+    const translations = {
+        en: {
+            page_title: "ImationGroup | Data Engineering and Software Solutions",
+            nav_home: "Home",
+            nav_about: "About",
+            nav_services: "Services",
+            nav_technologies: "Technologies",
+            nav_projects: "Projects",
+            nav_contact: "Contact",
+            hero_tagline: "Data Engineering and Software Solutions",
+            hero_description: "We transform data into actionable insights and build scalable software solutions that drive business growth. Our expertise spans data engineering, data science, and cloud-native development.",
+            hero_btn_contact: "Contact Us",
+            hero_btn_services: "Our Services",
+            about_label: "About Us",
+            about_title: "Pioneering Data-Driven Solutions",
+            about_subtitle: "Building the future of enterprise technology through innovation and expertise",
+            about_who_title: "Who We Are",
+            about_who_p1: "ImationGroup is a forward-thinking technology company specializing in data engineering, data science, and scalable software solutions. We partner with organizations to unlock the full potential of their data and transform it into competitive advantage.",
+            about_who_p2: "Our team of experienced engineers and data scientists brings together deep technical expertise with a passion for solving complex business challenges. We believe in building systems that are not only powerful but also maintainable, scalable, and future-proof.",
+            value_innovation: "Innovation",
+            value_innovation_desc: "Leveraging cutting-edge technologies to deliver breakthrough solutions",
+            value_reliability: "Reliability",
+            value_reliability_desc: "Building robust systems that perform consistently under any conditions",
+            value_partnership: "Partnership",
+            value_partnership_desc: "Working closely with clients to understand and exceed their expectations",
+            value_excellence: "Excellence",
+            value_excellence_desc: "Committed to delivering the highest quality in every project we undertake",
+            stat_projects: "Projects Delivered",
+            stat_satisfaction: "Client Satisfaction",
+            stat_support: "Support Available",
+            stat_experience: "Years Experience",
+            services_label: "Services",
+            services_title: "What We Offer",
+            services_subtitle: "Comprehensive technology solutions tailored to your business needs",
+            svc_data_eng: "Data Engineering",
+            svc_data_eng_desc: "Design and build robust data pipelines, data warehouses, and ETL processes that handle massive volumes of data efficiently and reliably.",
+            svc_data_sci: "Data Science",
+            svc_data_sci_desc: "Transform raw data into actionable insights using advanced analytics, machine learning models, and predictive algorithms.",
+            svc_soft_dev: "Software Development",
+            svc_soft_dev_desc: "Build custom software solutions using modern architectures and best practices that scale with your business growth.",
+            svc_cloud: "Cloud Solutions",
+            svc_cloud_desc: "Migrate, optimize, and manage cloud infrastructure on AWS, Azure, or GCP with security and cost-efficiency in mind.",
+            svc_consulting: "Consulting",
+            svc_consulting_desc: "Strategic technology consulting to help you make informed decisions about your data strategy and digital transformation journey.",
+            svc_bi: "Business Intelligence",
+            svc_bi_desc: "We help teams create reporting layers and analytics environments that support faster decisions with trustworthy, well-structured data.",
+            tech_label: "Technologies",
+            tech_title: "Our Tech Stack",
+            tech_subtitle: "Industry-leading technologies powering our solutions",
+            projects_label: "Projects",
+            projects_title: "Scalable Solutions in Action",
+            projects_subtitle: "Delivering end-to-end systems that turn data into value and insight",
+            proj_pipelines: "Data Pipelines",
+            proj_pipelines_desc: "Automated, fault-tolerant data pipelines that connect sources, transform data, and ensure reliable delivery to analytics systems.",
+            proj_etl: "ETL Systems",
+            proj_etl_desc: "Designed and optimized high-performance ETL frameworks enabling seamless data integration across platforms and domains.",
+            proj_bi: "Business Intelligence",
+            proj_bi_desc: "Developed BI and analytics dashboards that empower strategic, data-informed decision-making in real time.",
+            proj_custom: "Custom Software",
+            proj_custom_desc: "End-to-end software tailored to your operational ecosystem — scalable, secure, and cloud-ready.",
+            proj_cloud: "Cloud Infrastructure",
+            proj_cloud_desc: "Cloud-native architectures on AWS designed for scalability, performance, and cost efficiency.",
+            proj_scalable: "Scalable Architectures",
+            proj_scalable_desc: "End-to-end architecture design for distributed systems, data platforms, and software ecosystems that grow with your business.",
+            contact_label: "Contact",
+            contact_title: "Get in Touch",
+            contact_subtitle: "Let's discuss how ImationGroup can help transform your data and technology strategy",
+            contact_desc: "We are ready to collaborate on your next data and software project. Reach out to discuss your challenges and goals.",
+            contact_email_label: "Email",
+            contact_location_label: "Location",
+            contact_location: "Global — Remote Projects Worldwide",
+            form_name: "Name",
+            form_name_placeholder: "Your name",
+            form_email: "Email",
+            form_message: "Message",
+            form_message_placeholder: "How can we help you?",
+            form_submit: "Send Message",
+            footer_desc: "Data engineering, data science, and scalable software solutions designed to elevate your business performance.",
+            footer_company: "Company",
+            footer_support: "Support",
+            footer_privacy: "Privacy Policy",
+            footer_terms: "Terms of Service",
+            footer_follow: "Follow",
+            footer_copyright: "\u00a9 2024 ImationGroup. All rights reserved.",
+            alert_success: "Thank you for reaching out! We'll be in touch soon.",
+            alert_error: "Something went wrong. Please try again.",
+            alert_network: "Network error. Please try again."
+        },
+        es: {
+            page_title: "ImationGroup | Ingenier\u00eda de Datos y Soluciones de Software",
+            nav_home: "Inicio",
+            nav_about: "Nosotros",
+            nav_services: "Servicios",
+            nav_technologies: "Tecnolog\u00edas",
+            nav_projects: "Proyectos",
+            nav_contact: "Contacto",
+            hero_tagline: "Ingenier\u00eda de Datos y Soluciones de Software",
+            hero_description: "Transformamos datos en informaci\u00f3n accionable y construimos soluciones de software escalables que impulsan el crecimiento empresarial. Nuestra experiencia abarca ingenier\u00eda de datos, ciencia de datos y desarrollo cloud-native.",
+            hero_btn_contact: "Cont\u00e1ctanos",
+            hero_btn_services: "Nuestros Servicios",
+            about_label: "Nosotros",
+            about_title: "Soluciones Pioneras Basadas en Datos",
+            about_subtitle: "Construyendo el futuro de la tecnolog\u00eda empresarial a trav\u00e9s de la innovaci\u00f3n y la experiencia",
+            about_who_title: "Qui\u00e9nes Somos",
+            about_who_p1: "ImationGroup es una empresa tecnol\u00f3gica de vanguardia especializada en ingenier\u00eda de datos, ciencia de datos y soluciones de software escalables. Nos asociamos con organizaciones para liberar todo el potencial de sus datos y transformarlos en ventaja competitiva.",
+            about_who_p2: "Nuestro equipo de ingenieros y cient\u00edficos de datos experimentados combina una profunda experiencia t\u00e9cnica con la pasi\u00f3n por resolver desaf\u00edos empresariales complejos. Creemos en construir sistemas que no solo sean potentes, sino tambi\u00e9n mantenibles, escalables y preparados para el futuro.",
+            value_innovation: "Innovaci\u00f3n",
+            value_innovation_desc: "Aprovechando tecnolog\u00edas de vanguardia para ofrecer soluciones revolucionarias",
+            value_reliability: "Fiabilidad",
+            value_reliability_desc: "Construyendo sistemas robustos que funcionan consistentemente bajo cualquier condici\u00f3n",
+            value_partnership: "Colaboraci\u00f3n",
+            value_partnership_desc: "Trabajando estrechamente con los clientes para comprender y superar sus expectativas",
+            value_excellence: "Excelencia",
+            value_excellence_desc: "Comprometidos con ofrecer la m\u00e1xima calidad en cada proyecto que emprendemos",
+            stat_projects: "Proyectos Entregados",
+            stat_satisfaction: "Satisfacci\u00f3n del Cliente",
+            stat_support: "Soporte Disponible",
+            stat_experience: "A\u00f1os de Experiencia",
+            services_label: "Servicios",
+            services_title: "Lo Que Ofrecemos",
+            services_subtitle: "Soluciones tecnol\u00f3gicas integrales adaptadas a las necesidades de tu negocio",
+            svc_data_eng: "Ingenier\u00eda de Datos",
+            svc_data_eng_desc: "Dise\u00f1amos y construimos pipelines de datos robustos, almacenes de datos y procesos ETL que manejan grandes vol\u00famenes de datos de forma eficiente y fiable.",
+            svc_data_sci: "Ciencia de Datos",
+            svc_data_sci_desc: "Transformamos datos en bruto en informaci\u00f3n accionable utilizando an\u00e1lisis avanzado, modelos de aprendizaje autom\u00e1tico y algoritmos predictivos.",
+            svc_soft_dev: "Desarrollo de Software",
+            svc_soft_dev_desc: "Construimos soluciones de software personalizadas con arquitecturas modernas y mejores pr\u00e1cticas que escalan con el crecimiento de tu negocio.",
+            svc_cloud: "Soluciones Cloud",
+            svc_cloud_desc: "Migramos, optimizamos y gestionamos infraestructura en la nube en AWS, Azure o GCP con seguridad y eficiencia de costes.",
+            svc_consulting: "Consultor\u00eda",
+            svc_consulting_desc: "Consultor\u00eda tecnol\u00f3gica estrat\u00e9gica para ayudarte a tomar decisiones informadas sobre tu estrategia de datos y transformaci\u00f3n digital.",
+            svc_bi: "Business Intelligence",
+            svc_bi_desc: "Ayudamos a los equipos a crear capas de reporting y entornos anal\u00edticos que permiten decisiones m\u00e1s r\u00e1pidas con datos fiables y bien estructurados.",
+            tech_label: "Tecnolog\u00edas",
+            tech_title: "Nuestro Stack Tecnol\u00f3gico",
+            tech_subtitle: "Tecnolog\u00edas l\u00edderes en la industria que impulsan nuestras soluciones",
+            projects_label: "Proyectos",
+            projects_title: "Soluciones Escalables en Acci\u00f3n",
+            projects_subtitle: "Entregando sistemas de extremo a extremo que convierten datos en valor e informaci\u00f3n",
+            proj_pipelines: "Pipelines de Datos",
+            proj_pipelines_desc: "Pipelines de datos automatizados y tolerantes a fallos que conectan fuentes, transforman datos y aseguran la entrega fiable a sistemas anal\u00edticos.",
+            proj_etl: "Sistemas ETL",
+            proj_etl_desc: "Frameworks ETL de alto rendimiento dise\u00f1ados y optimizados que permiten la integraci\u00f3n de datos sin interrupciones entre plataformas y dominios.",
+            proj_bi: "Business Intelligence",
+            proj_bi_desc: "Desarrollamos dashboards de BI y anal\u00edtica que potencian la toma de decisiones estrat\u00e9gicas basadas en datos en tiempo real.",
+            proj_custom: "Software Personalizado",
+            proj_custom_desc: "Software de extremo a extremo adaptado a tu ecosistema operativo \u2014 escalable, seguro y preparado para la nube.",
+            proj_cloud: "Infraestructura Cloud",
+            proj_cloud_desc: "Arquitecturas cloud-native en AWS dise\u00f1adas para escalabilidad, rendimiento y eficiencia de costes.",
+            proj_scalable: "Arquitecturas Escalables",
+            proj_scalable_desc: "Dise\u00f1o de arquitectura de extremo a extremo para sistemas distribuidos, plataformas de datos y ecosistemas de software que crecen con tu negocio.",
+            contact_label: "Contacto",
+            contact_title: "Ponte en Contacto",
+            contact_subtitle: "Hablemos de c\u00f3mo ImationGroup puede ayudar a transformar tu estrategia de datos y tecnolog\u00eda",
+            contact_desc: "Estamos listos para colaborar en tu pr\u00f3ximo proyecto de datos y software. Cont\u00e1ctanos para hablar de tus desaf\u00edos y objetivos.",
+            contact_email_label: "Correo electr\u00f3nico",
+            contact_location_label: "Ubicaci\u00f3n",
+            contact_location: "Global \u2014 Proyectos Remotos en Todo el Mundo",
+            form_name: "Nombre",
+            form_name_placeholder: "Tu nombre",
+            form_email: "Correo electr\u00f3nico",
+            form_message: "Mensaje",
+            form_message_placeholder: "\u00bfC\u00f3mo podemos ayudarte?",
+            form_submit: "Enviar Mensaje",
+            footer_desc: "Ingenier\u00eda de datos, ciencia de datos y soluciones de software escalables dise\u00f1adas para elevar el rendimiento de tu negocio.",
+            footer_company: "Empresa",
+            footer_support: "Soporte",
+            footer_privacy: "Pol\u00edtica de Privacidad",
+            footer_terms: "T\u00e9rminos de Servicio",
+            footer_follow: "S\u00edguenos",
+            footer_copyright: "\u00a9 2024 ImationGroup. Todos los derechos reservados.",
+            alert_success: "\u00a1Gracias por contactarnos! Nos pondremos en contacto pronto.",
+            alert_error: "Algo sali\u00f3 mal. Por favor, int\u00e9ntalo de nuevo.",
+            alert_network: "Error de red. Por favor, int\u00e9ntalo de nuevo."
+        }
+    };
+
+    // ========================
+    // i18n Engine
+    // ========================
+    let currentLang = 'en';
+
+    function detectLanguage() {
+        const saved = localStorage.getItem('lang');
+        if (saved && translations[saved]) return saved;
+
+        const browserLang = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+        if (browserLang.startsWith('es')) return 'es';
+        return 'en';
+    }
+
+    function setLanguage(lang) {
+        if (!translations[lang]) return;
+        currentLang = lang;
+        localStorage.setItem('lang', lang);
+        document.documentElement.lang = lang;
+
+        // Update text content
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (translations[lang][key]) {
+                if (el.tagName === 'TITLE') {
+                    document.title = translations[lang][key];
+                } else {
+                    el.textContent = translations[lang][key];
+                }
+            }
+        });
+
+        // Update placeholders
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+            const key = el.getAttribute('data-i18n-placeholder');
+            if (translations[lang][key]) {
+                el.placeholder = translations[lang][key];
+            }
+        });
+
+        // Update language switcher UI
+        document.getElementById('currentLangLabel').textContent = lang.toUpperCase();
+        document.querySelectorAll('.lang-option').forEach(opt => {
+            opt.classList.toggle('active', opt.getAttribute('data-lang') === lang);
+        });
+    }
+
+    // ========================
+    // Language Switcher
+    // ========================
+    const langToggle = document.getElementById('langToggle');
+    const langDropdown = document.getElementById('langDropdown');
+
+    langToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        langDropdown.classList.toggle('active');
+    });
+
+    document.querySelectorAll('.lang-option').forEach(opt => {
+        opt.addEventListener('click', () => {
+            setLanguage(opt.getAttribute('data-lang'));
+            langDropdown.classList.remove('active');
+        });
+    });
+
+    document.addEventListener('click', () => {
+        langDropdown.classList.remove('active');
+    });
+
+    // Initialize language
+    setLanguage(detectLanguage());
+
+    // ========================
     // Navbar scroll shadow
+    // ========================
     window.addEventListener('scroll', () => {
         const nav = document.querySelector('.navbar');
         if (window.scrollY > 50) nav.classList.add('scrolled');
@@ -1688,10 +2046,18 @@
 
     // Mobile menu toggle
     const menuBtn = document.querySelector('.mobile-menu-btn');
-    const menu = document.querySelector('.mobile-menu');
+    const mobileMenu = document.querySelector('.mobile-menu');
     menuBtn.addEventListener('click', () => {
-        menu.classList.toggle('active');
+        mobileMenu.classList.toggle('active');
         menuBtn.classList.toggle('open');
+    });
+
+    // Close mobile menu on link click
+    mobileMenu.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+            mobileMenu.classList.remove('active');
+            menuBtn.classList.remove('open');
+        });
     });
 
     // Fade-in on scroll
@@ -1703,7 +2069,7 @@
 
     document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
-    // ✅ Form submission REAL con mensaje después
+    // Form submission
     const form = document.querySelector('.contact-form');
 
     form.addEventListener('submit', async (e) => {
@@ -1721,13 +2087,13 @@
             });
 
             if (response.ok) {
-                alert('Thank you for reaching out! We’ll be in touch soon.');
+                alert(translations[currentLang].alert_success);
                 form.reset();
             } else {
-                alert('Something went wrong. Please try again.');
+                alert(translations[currentLang].alert_error);
             }
         } catch (error) {
-            alert('Network error. Please try again.');
+            alert(translations[currentLang].alert_network);
         }
     });
 </script>
