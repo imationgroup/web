@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="privacy_page_title">Privacy Policy | ImationGroup</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary-blue: #0066CC;
+            --primary-teal: #00A5A8;
+            --dark-blue: #003366;
+            --light-teal: #E6F7F7;
+            --text-dark: #1a1a2e;
+            --text-muted: #6b7280;
+            --border-color: #e5e7eb;
+            --bg-light: #f8fafc;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text-dark);
+            line-height: 1.7;
+            background: var(--bg-light);
+        }
+        .navbar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            background: rgba(255,255,255,0.95); backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 0;
+        }
+        .navbar .container {
+            max-width: 1200px; margin: 0 auto; padding: 0 24px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .navbar .logo { font-size: 1.4rem; font-weight: 700; color: var(--primary-teal); text-decoration: none; }
+        .navbar .back-link { color: var(--primary-teal); text-decoration: none; font-weight: 500; font-size: 0.95rem; }
+        .navbar .back-link:hover { text-decoration: underline; }
+        .lang-switch { display: flex; gap: 8px; align-items: center; }
+        .lang-switch button {
+            background: none; border: 1px solid var(--border-color); padding: 4px 10px;
+            border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-weight: 500; color: var(--text-muted);
+        }
+        .lang-switch button.active { background: var(--primary-teal); color: #fff; border-color: var(--primary-teal); }
+        .legal-content {
+            max-width: 800px; margin: 0 auto; padding: 120px 24px 80px;
+        }
+        .legal-content h1 {
+            font-size: 2.2rem; font-weight: 700; margin-bottom: 8px; color: var(--text-dark);
+        }
+        .legal-content .last-updated {
+            color: var(--text-muted); font-size: 0.9rem; margin-bottom: 40px;
+        }
+        .legal-content h2 {
+            font-size: 1.3rem; font-weight: 600; margin-top: 36px; margin-bottom: 12px;
+            color: var(--primary-teal);
+        }
+        .legal-content p, .legal-content li {
+            color: var(--text-muted); margin-bottom: 12px; font-size: 0.95rem;
+        }
+        .legal-content ul { padding-left: 24px; margin-bottom: 16px; }
+        .legal-content li { margin-bottom: 6px; }
+        .legal-content a { color: var(--primary-teal); }
+        .company-info {
+            background: white; border-radius: 12px; padding: 24px; margin: 24px 0;
+            border: 1px solid var(--border-color);
+        }
+        .company-info p { margin-bottom: 6px; }
+        footer {
+            background: var(--text-dark); color: rgba(255,255,255,0.7); padding: 32px 0; text-align: center; font-size: 0.9rem;
+        }
+        footer a { color: rgba(255,255,255,0.7); text-decoration: none; }
+        footer a:hover { color: white; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="container">
+        <a href="index.html" class="logo">ImationGroup</a>
+        <div style="display:flex;align-items:center;gap:16px;">
+            <a href="index.html" class="back-link" data-i18n="back_home">&larr; Back to Home</a>
+            <div class="lang-switch">
+                <button class="lang-btn active" data-lang="en">EN</button>
+                <button class="lang-btn" data-lang="es">ES</button>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<main class="legal-content">
+    <h1 data-i18n="privacy_title">Privacy Policy</h1>
+    <p class="last-updated" data-i18n="privacy_updated">Last updated: April 2026</p>
+
+    <p data-i18n="privacy_intro">At Imationgroup OÜ, we are committed to protecting your privacy and personal data. This Privacy Policy explains how we collect, use, and safeguard your information when you visit our website or use our services.</p>
+
+    <div class="company-info">
+        <p><strong data-i18n="privacy_controller_label">Data Controller:</strong> Imationgroup OÜ</p>
+        <p><strong data-i18n="privacy_reg_label">Registration Code:</strong> 17473932</p>
+        <p><strong data-i18n="privacy_address_label">Address:</strong> Sepapaja tn 6, 15551 Tallinn, Harju Maakond, Estonia</p>
+        <p><strong data-i18n="privacy_contact_label">Contact:</strong> <a href="mailto:info@imationgroup.com">info@imationgroup.com</a> | <a href="tel:+34633756999">+34 633 756 999</a></p>
+    </div>
+
+    <h2 data-i18n="privacy_s1_title">1. Information We Collect</h2>
+    <p data-i18n="privacy_s1_p1">We may collect the following types of information:</p>
+    <ul>
+        <li data-i18n="privacy_s1_li1"><strong>Contact Information:</strong> Name, email address, phone number, and any other information you provide when contacting us through our website form.</li>
+        <li data-i18n="privacy_s1_li2"><strong>Usage Data:</strong> Information about how you interact with our website, including IP address, browser type, pages visited, and time spent on pages.</li>
+        <li data-i18n="privacy_s1_li3"><strong>Cookies and Preferences:</strong> Language preferences and other functional cookies necessary for the proper operation of the website.</li>
+    </ul>
+
+    <h2 data-i18n="privacy_s2_title">2. How We Use Your Information</h2>
+    <p data-i18n="privacy_s2_p1">We use the information we collect for the following purposes:</p>
+    <ul>
+        <li data-i18n="privacy_s2_li1">To respond to your inquiries and provide requested services</li>
+        <li data-i18n="privacy_s2_li2">To improve and optimize our website experience</li>
+        <li data-i18n="privacy_s2_li3">To comply with legal obligations</li>
+        <li data-i18n="privacy_s2_li4">To communicate with you about our services, updates, and relevant information</li>
+    </ul>
+
+    <h2 data-i18n="privacy_s3_title">3. Legal Basis for Processing</h2>
+    <p data-i18n="privacy_s3_p1">We process your personal data based on the following legal grounds under GDPR:</p>
+    <ul>
+        <li data-i18n="privacy_s3_li1"><strong>Consent:</strong> When you voluntarily submit your information through our contact form.</li>
+        <li data-i18n="privacy_s3_li2"><strong>Legitimate Interest:</strong> For website analytics and improvement of our services.</li>
+        <li data-i18n="privacy_s3_li3"><strong>Contract Performance:</strong> When processing is necessary for the performance of a contract with you.</li>
+    </ul>
+
+    <h2 data-i18n="privacy_s4_title">4. Data Sharing</h2>
+    <p data-i18n="privacy_s4_p1">We do not sell, trade, or rent your personal information to third parties. We may share your data with trusted service providers who assist us in operating our website and conducting our business, provided they agree to keep your information confidential.</p>
+
+    <h2 data-i18n="privacy_s5_title">5. Data Retention</h2>
+    <p data-i18n="privacy_s5_p1">We retain your personal data only for as long as necessary to fulfill the purposes for which it was collected, or as required by applicable laws. Contact form submissions are retained for a maximum of 24 months unless ongoing business relationship requires longer retention.</p>
+
+    <h2 data-i18n="privacy_s6_title">6. Your Rights</h2>
+    <p data-i18n="privacy_s6_p1">Under GDPR, you have the following rights regarding your personal data:</p>
+    <ul>
+        <li data-i18n="privacy_s6_li1"><strong>Right of Access:</strong> You can request a copy of your personal data.</li>
+        <li data-i18n="privacy_s6_li2"><strong>Right to Rectification:</strong> You can request correction of inaccurate data.</li>
+        <li data-i18n="privacy_s6_li3"><strong>Right to Erasure:</strong> You can request deletion of your personal data.</li>
+        <li data-i18n="privacy_s6_li4"><strong>Right to Restrict Processing:</strong> You can request limitation of data processing.</li>
+        <li data-i18n="privacy_s6_li5"><strong>Right to Data Portability:</strong> You can request transfer of your data to another controller.</li>
+        <li data-i18n="privacy_s6_li6"><strong>Right to Object:</strong> You can object to processing based on legitimate interests.</li>
+    </ul>
+    <p data-i18n="privacy_s6_p2">To exercise any of these rights, please contact us at <a href="mailto:info@imationgroup.com">info@imationgroup.com</a>.</p>
+
+    <h2 data-i18n="privacy_s7_title">7. Cookies</h2>
+    <p data-i18n="privacy_s7_p1">Our website uses essential cookies to store your language preference (localStorage). We do not use tracking cookies or third-party analytics cookies. No personal data is stored in cookies.</p>
+
+    <h2 data-i18n="privacy_s8_title">8. Data Security</h2>
+    <p data-i18n="privacy_s8_p1">We implement appropriate technical and organizational measures to protect your personal data against unauthorized access, alteration, disclosure, or destruction. However, no method of transmission over the Internet is 100% secure.</p>
+
+    <h2 data-i18n="privacy_s9_title">9. International Transfers</h2>
+    <p data-i18n="privacy_s9_p1">Your data may be processed within the European Economic Area (EEA). If any transfer outside the EEA is necessary, we will ensure appropriate safeguards are in place in accordance with GDPR requirements.</p>
+
+    <h2 data-i18n="privacy_s10_title">10. Changes to This Policy</h2>
+    <p data-i18n="privacy_s10_p1">We may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated revision date. We encourage you to review this policy periodically.</p>
+
+    <h2 data-i18n="privacy_s11_title">11. Contact Us</h2>
+    <p data-i18n="privacy_s11_p1">If you have any questions about this Privacy Policy or wish to exercise your data protection rights, please contact us:</p>
+    <ul>
+        <li>Email: <a href="mailto:info@imationgroup.com">info@imationgroup.com</a></li>
+        <li><span data-i18n="privacy_contact_phone">Phone</span>: <a href="tel:+34633756999">+34 633 756 999</a></li>
+        <li><span data-i18n="privacy_contact_address">Address</span>: Sepapaja tn 6, 15551 Tallinn, Harju Maakond, Estonia</li>
+    </ul>
+</main>
+
+<footer>
+    <p>&copy; 2024 Imationgroup OÜ. <span data-i18n="footer_rights">All rights reserved.</span> | <a href="privacy.html" data-i18n="footer_privacy">Privacy Policy</a> | <a href="terms.html" data-i18n="footer_terms">Terms of Service</a></p>
+</footer>
+
+<script>
+const translations = {
+    en: {
+        privacy_page_title: "Privacy Policy | ImationGroup",
+        back_home: "\u2190 Back to Home",
+        privacy_title: "Privacy Policy",
+        privacy_updated: "Last updated: April 2026",
+        privacy_intro: "At Imationgroup O\u00dc, we are committed to protecting your privacy and personal data. This Privacy Policy explains how we collect, use, and safeguard your information when you visit our website or use our services.",
+        privacy_controller_label: "Data Controller:",
+        privacy_reg_label: "Registration Code:",
+        privacy_address_label: "Address:",
+        privacy_contact_label: "Contact:",
+        privacy_s1_title: "1. Information We Collect",
+        privacy_s1_p1: "We may collect the following types of information:",
+        privacy_s1_li1: "Contact Information: Name, email address, phone number, and any other information you provide when contacting us through our website form.",
+        privacy_s1_li2: "Usage Data: Information about how you interact with our website, including IP address, browser type, pages visited, and time spent on pages.",
+        privacy_s1_li3: "Cookies and Preferences: Language preferences and other functional cookies necessary for the proper operation of the website.",
+        privacy_s2_title: "2. How We Use Your Information",
+        privacy_s2_p1: "We use the information we collect for the following purposes:",
+        privacy_s2_li1: "To respond to your inquiries and provide requested services",
+        privacy_s2_li2: "To improve and optimize our website experience",
+        privacy_s2_li3: "To comply with legal obligations",
+        privacy_s2_li4: "To communicate with you about our services, updates, and relevant information",
+        privacy_s3_title: "3. Legal Basis for Processing",
+        privacy_s3_p1: "We process your personal data based on the following legal grounds under GDPR:",
+        privacy_s3_li1: "Consent: When you voluntarily submit your information through our contact form.",
+        privacy_s3_li2: "Legitimate Interest: For website analytics and improvement of our services.",
+        privacy_s3_li3: "Contract Performance: When processing is necessary for the performance of a contract with you.",
+        privacy_s4_title: "4. Data Sharing",
+        privacy_s4_p1: "We do not sell, trade, or rent your personal information to third parties. We may share your data with trusted service providers who assist us in operating our website and conducting our business, provided they agree to keep your information confidential.",
+        privacy_s5_title: "5. Data Retention",
+        privacy_s5_p1: "We retain your personal data only for as long as necessary to fulfill the purposes for which it was collected, or as required by applicable laws. Contact form submissions are retained for a maximum of 24 months unless ongoing business relationship requires longer retention.",
+        privacy_s6_title: "6. Your Rights",
+        privacy_s6_p1: "Under GDPR, you have the following rights regarding your personal data:",
+        privacy_s6_li1: "Right of Access: You can request a copy of your personal data.",
+        privacy_s6_li2: "Right to Rectification: You can request correction of inaccurate data.",
+        privacy_s6_li3: "Right to Erasure: You can request deletion of your personal data.",
+        privacy_s6_li4: "Right to Restrict Processing: You can request limitation of data processing.",
+        privacy_s6_li5: "Right to Data Portability: You can request transfer of your data to another controller.",
+        privacy_s6_li6: "Right to Object: You can object to processing based on legitimate interests.",
+        privacy_s6_p2: "To exercise any of these rights, please contact us at info@imationgroup.com.",
+        privacy_s7_title: "7. Cookies",
+        privacy_s7_p1: "Our website uses essential cookies to store your language preference (localStorage). We do not use tracking cookies or third-party analytics cookies. No personal data is stored in cookies.",
+        privacy_s8_title: "8. Data Security",
+        privacy_s8_p1: "We implement appropriate technical and organizational measures to protect your personal data against unauthorized access, alteration, disclosure, or destruction. However, no method of transmission over the Internet is 100% secure.",
+        privacy_s9_title: "9. International Transfers",
+        privacy_s9_p1: "Your data may be processed within the European Economic Area (EEA). If any transfer outside the EEA is necessary, we will ensure appropriate safeguards are in place in accordance with GDPR requirements.",
+        privacy_s10_title: "10. Changes to This Policy",
+        privacy_s10_p1: "We may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated revision date. We encourage you to review this policy periodically.",
+        privacy_s11_title: "11. Contact Us",
+        privacy_s11_p1: "If you have any questions about this Privacy Policy or wish to exercise your data protection rights, please contact us:",
+        privacy_contact_phone: "Phone",
+        privacy_contact_address: "Address",
+        footer_rights: "All rights reserved.",
+        footer_privacy: "Privacy Policy",
+        footer_terms: "Terms of Service"
+    },
+    es: {
+        privacy_page_title: "Pol\u00edtica de Privacidad | ImationGroup",
+        back_home: "\u2190 Volver al Inicio",
+        privacy_title: "Pol\u00edtica de Privacidad",
+        privacy_updated: "\u00daltima actualizaci\u00f3n: Abril 2026",
+        privacy_intro: "En Imationgroup O\u00dc, estamos comprometidos con la protecci\u00f3n de su privacidad y datos personales. Esta Pol\u00edtica de Privacidad explica c\u00f3mo recopilamos, usamos y protegemos su informaci\u00f3n cuando visita nuestro sitio web o utiliza nuestros servicios.",
+        privacy_controller_label: "Responsable del Tratamiento:",
+        privacy_reg_label: "C\u00f3digo de Registro:",
+        privacy_address_label: "Direcci\u00f3n:",
+        privacy_contact_label: "Contacto:",
+        privacy_s1_title: "1. Informaci\u00f3n que Recopilamos",
+        privacy_s1_p1: "Podemos recopilar los siguientes tipos de informaci\u00f3n:",
+        privacy_s1_li1: "Informaci\u00f3n de Contacto: Nombre, direcci\u00f3n de correo electr\u00f3nico, n\u00famero de tel\u00e9fono y cualquier otra informaci\u00f3n que proporcione al contactarnos a trav\u00e9s de nuestro formulario web.",
+        privacy_s1_li2: "Datos de Uso: Informaci\u00f3n sobre c\u00f3mo interact\u00faa con nuestro sitio web, incluyendo direcci\u00f3n IP, tipo de navegador, p\u00e1ginas visitadas y tiempo de permanencia.",
+        privacy_s1_li3: "Cookies y Preferencias: Preferencias de idioma y otras cookies funcionales necesarias para el correcto funcionamiento del sitio web.",
+        privacy_s2_title: "2. C\u00f3mo Usamos su Informaci\u00f3n",
+        privacy_s2_p1: "Utilizamos la informaci\u00f3n recopilada para los siguientes fines:",
+        privacy_s2_li1: "Para responder a sus consultas y proporcionar los servicios solicitados",
+        privacy_s2_li2: "Para mejorar y optimizar la experiencia en nuestro sitio web",
+        privacy_s2_li3: "Para cumplir con obligaciones legales",
+        privacy_s2_li4: "Para comunicarnos con usted sobre nuestros servicios, actualizaciones e informaci\u00f3n relevante",
+        privacy_s3_title: "3. Base Legal del Tratamiento",
+        privacy_s3_p1: "Procesamos sus datos personales seg\u00fan las siguientes bases legales del RGPD:",
+        privacy_s3_li1: "Consentimiento: Cuando env\u00eda voluntariamente su informaci\u00f3n a trav\u00e9s de nuestro formulario de contacto.",
+        privacy_s3_li2: "Inter\u00e9s Leg\u00edtimo: Para anal\u00edticas del sitio web y mejora de nuestros servicios.",
+        privacy_s3_li3: "Ejecuci\u00f3n Contractual: Cuando el tratamiento es necesario para la ejecuci\u00f3n de un contrato con usted.",
+        privacy_s4_title: "4. Compartici\u00f3n de Datos",
+        privacy_s4_p1: "No vendemos, intercambiamos ni alquilamos su informaci\u00f3n personal a terceros. Podemos compartir sus datos con proveedores de servicios de confianza que nos ayudan a operar nuestro sitio web y llevar a cabo nuestro negocio, siempre que acepten mantener su informaci\u00f3n confidencial.",
+        privacy_s5_title: "5. Retenci\u00f3n de Datos",
+        privacy_s5_p1: "Conservamos sus datos personales solo durante el tiempo necesario para cumplir los fines para los que fueron recopilados, o seg\u00fan lo requiera la ley aplicable. Los env\u00edos del formulario de contacto se conservan durante un m\u00e1ximo de 24 meses, salvo que una relaci\u00f3n comercial en curso requiera una retenci\u00f3n m\u00e1s prolongada.",
+        privacy_s6_title: "6. Sus Derechos",
+        privacy_s6_p1: "Bajo el RGPD, usted tiene los siguientes derechos respecto a sus datos personales:",
+        privacy_s6_li1: "Derecho de Acceso: Puede solicitar una copia de sus datos personales.",
+        privacy_s6_li2: "Derecho de Rectificaci\u00f3n: Puede solicitar la correcci\u00f3n de datos inexactos.",
+        privacy_s6_li3: "Derecho de Supresi\u00f3n: Puede solicitar la eliminaci\u00f3n de sus datos personales.",
+        privacy_s6_li4: "Derecho a la Limitaci\u00f3n del Tratamiento: Puede solicitar la limitaci\u00f3n del procesamiento de datos.",
+        privacy_s6_li5: "Derecho a la Portabilidad: Puede solicitar la transferencia de sus datos a otro responsable.",
+        privacy_s6_li6: "Derecho de Oposici\u00f3n: Puede oponerse al tratamiento basado en intereses leg\u00edtimos.",
+        privacy_s6_p2: "Para ejercer cualquiera de estos derechos, cont\u00e1ctenos en info@imationgroup.com.",
+        privacy_s7_title: "7. Cookies",
+        privacy_s7_p1: "Nuestro sitio web utiliza cookies esenciales para almacenar su preferencia de idioma (localStorage). No utilizamos cookies de seguimiento ni cookies de an\u00e1lisis de terceros. No se almacenan datos personales en las cookies.",
+        privacy_s8_title: "8. Seguridad de los Datos",
+        privacy_s8_p1: "Implementamos medidas t\u00e9cnicas y organizativas apropiadas para proteger sus datos personales contra el acceso no autorizado, la alteraci\u00f3n, la divulgaci\u00f3n o la destrucci\u00f3n. Sin embargo, ning\u00fan m\u00e9todo de transmisi\u00f3n por Internet es 100% seguro.",
+        privacy_s9_title: "9. Transferencias Internacionales",
+        privacy_s9_p1: "Sus datos pueden ser procesados dentro del Espacio Econ\u00f3mico Europeo (EEE). Si fuera necesaria alguna transferencia fuera del EEE, nos aseguraremos de que existan las salvaguardas adecuadas de acuerdo con los requisitos del RGPD.",
+        privacy_s10_title: "10. Cambios en esta Pol\u00edtica",
+        privacy_s10_p1: "Podemos actualizar esta Pol\u00edtica de Privacidad de vez en cuando. Cualquier cambio se publicar\u00e1 en esta p\u00e1gina con una fecha de revisi\u00f3n actualizada. Le recomendamos revisar esta pol\u00edtica peri\u00f3dicamente.",
+        privacy_s11_title: "11. Cont\u00e1ctenos",
+        privacy_s11_p1: "Si tiene alguna pregunta sobre esta Pol\u00edtica de Privacidad o desea ejercer sus derechos de protecci\u00f3n de datos, cont\u00e1ctenos:",
+        privacy_contact_phone: "Tel\u00e9fono",
+        privacy_contact_address: "Direcci\u00f3n",
+        footer_rights: "Todos los derechos reservados.",
+        footer_privacy: "Pol\u00edtica de Privacidad",
+        footer_terms: "T\u00e9rminos de Servicio"
+    }
+};
+
+let currentLang = 'en';
+
+function detectLanguage() {
+    const saved = localStorage.getItem('lang');
+    if (saved && translations[saved]) return saved;
+    const browserLang = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+    if (browserLang.startsWith('es')) return 'es';
+    return 'en';
+}
+
+function setLanguage(lang) {
+    if (!translations[lang]) return;
+    currentLang = lang;
+    localStorage.setItem('lang', lang);
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[lang][key]) {
+            if (el.tagName === 'TITLE') document.title = translations[lang][key];
+            else el.textContent = translations[lang][key];
+        }
+    });
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+    });
+}
+
+document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => setLanguage(btn.getAttribute('data-lang')));
+});
+
+setLanguage(detectLanguage());
+</script>
+
+</body>
+</html>
