@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Message Sent | ImationGroup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-TXPKFXD9');</script>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    :root{--primary-blue:#0066CC;--primary-teal:#00A5A8;--dark-blue:#003366;--light-teal:#E6F7F7;--gradient:linear-gradient(135deg,#0066CC 0%,#00A5A8 100%);--text-dark:#1A1A2E;--text-gray:#6B7280;--white:#FFFFFF;--light-gray:#F8FAFC;--border-color:#E5E7EB}
+    html{scroll-behavior:smooth}
+    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;color:var(--text-dark);line-height:1.6;background:var(--white);min-height:100vh;display:flex;flex-direction:column}
+    .navbar{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(255,255,255,0.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border-color);box-shadow:0 4px 20px rgba(0,0,0,0.08)}
+    .nav-container{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;height:72px}
+    .logo{font-size:1.5rem;font-weight:700;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none}
+    .success-page{flex:1;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#F0F9FF 0%,#E6F7F7 50%,#F0F9FF 100%);padding:120px 24px 80px;position:relative;overflow:hidden}
+    .success-page::before{content:'';position:absolute;top:-50%;right:-20%;width:800px;height:800px;background:radial-gradient(circle,rgba(0,165,168,0.1) 0%,transparent 70%);animation:float 20s ease-in-out infinite}
+    .success-page::after{content:'';position:absolute;bottom:-30%;left:-10%;width:600px;height:600px;background:radial-gradient(circle,rgba(0,102,204,0.1) 0%,transparent 70%);animation:float 15s ease-in-out infinite reverse}
+    @keyframes float{0%,100%{transform:translate(0,0)}50%{transform:translate(30px,-30px)}}
+    .grid-pattern{position:absolute;top:0;left:0;right:0;bottom:0;background-image:linear-gradient(rgba(0,102,204,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,102,204,0.03) 1px,transparent 1px);background-size:50px 50px}
+    .success-card{background:var(--white);border-radius:24px;box-shadow:0 20px 60px rgba(0,0,0,0.1);padding:64px 56px;max-width:600px;width:100%;text-align:center;position:relative;z-index:1;animation:slideUp 0.6s ease-out both}
+    @keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+    .success-icon-wrapper{width:96px;height:96px;background:var(--gradient);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 32px;box-shadow:0 12px 30px rgba(0,102,204,0.3);animation:popIn 0.5s ease-out 0.3s both}
+    @keyframes popIn{from{opacity:0;transform:scale(0.5)}to{opacity:1;transform:scale(1)}}
+    .success-icon-wrapper svg{width:48px;height:48px;stroke:white;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+    .success-label{display:inline-block;padding:8px 16px;background:var(--light-teal);color:var(--primary-teal);border-radius:20px;font-size:0.875rem;font-weight:600;margin-bottom:20px}
+    .success-title{font-size:2rem;font-weight:700;color:var(--text-dark);margin-bottom:16px;line-height:1.2}
+    .success-message{font-size:1.05rem;color:var(--text-gray);margin-bottom:40px;max-width:420px;margin-left:auto;margin-right:auto}
+    .success-details{background:var(--light-gray);border-radius:12px;padding:24px;margin-bottom:40px;display:flex;flex-direction:column;gap:16px}
+    .detail-item{display:flex;align-items:center;gap:14px;text-align:left}
+    .detail-icon{width:40px;height:40px;background:var(--gradient);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .detail-icon svg{width:20px;height:20px;stroke:white;fill:none;stroke-width:2}
+    .detail-text{font-size:0.9rem;color:var(--text-gray)}
+    .detail-text strong{color:var(--text-dark);display:block;margin-bottom:2px}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border-radius:8px;font-weight:600;font-size:1rem;text-decoration:none;transition:all 0.3s ease;cursor:pointer;border:none;font-family:inherit}
+    .btn-primary{background:var(--gradient);color:var(--white);box-shadow:0 4px 15px rgba(0,102,204,0.3)}
+    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(0,102,204,0.4)}
+    .btn-primary svg{width:18px;height:18px;stroke:white;fill:none;stroke-width:2}
+    .footer-simple{background:var(--text-dark);color:rgba(255,255,255,0.6);text-align:center;padding:24px;font-size:0.875rem}
+    .footer-simple a{color:rgba(255,255,255,0.6);text-decoration:none}
+    .footer-simple a:hover{color:var(--primary-teal)}
+    @media(max-width:640px){.success-card{padding:40px 28px}.success-title{font-size:1.6rem}}
+  </style>
+</head>
+<body>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TXPKFXD9" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="logo">ImationGroup</a>
+    </div>
+  </nav>
+  <main class="success-page">
+    <div class="grid-pattern"></div>
+    <div class="success-card">
+      <div class="success-icon-wrapper">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      </div>
+      <span class="success-label">Message received</span>
+      <h1 class="success-title">Thank you for reaching out!</h1>
+      <p class="success-message">We've received your message and will get back to you as soon as possible. Our team typically responds within 24-48 hours.</p>
+      <div class="success-details">
+        <div class="detail-item">
+          <div class="detail-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg></div>
+          <div class="detail-text"><strong>Confirmation email</strong>You'll receive a confirmation to the email address you provided.</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></div>
+          <div class="detail-text"><strong>Response time</strong>Our team will respond within 24-48 business hours.</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
+          <div class="detail-text"><strong>Dedicated attention</strong>A specialist from our team will personally review your inquiry.</div>
+        </div>
+      </div>
+      <a href="index.html" class="btn btn-primary">
+        <svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        Back to Home
+      </a>
+    </div>
+  </main>
+  <footer class="footer-simple">
+    <p>&copy; 2025 ImationGroup. All rights reserved. &nbsp;|&nbsp; <a href="privacy.html">Privacy Policy</a> &nbsp;|&nbsp; <a href="terms.html">Terms of Service</a></p>
+  </footer>
+</body>
+</html>
