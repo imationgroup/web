@@ -15,15 +15,6 @@
     <link rel="preconnect" href="[fonts.googleapis.com](https://fonts.googleapis.com)">
     <link rel="preconnect" href="[fonts.gstatic.com](https://fonts.gstatic.com)" crossorigin>
     <link href="[fonts.googleapis.com](https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap)" rel="stylesheet">
-
-	<!-- Google Tag Manager -->
-	<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-	new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-	j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-	'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-	})(window,document,'script','dataLayer','GTM-TXPKFXD9');</script>
-	<!-- End Google Tag Manager -->
-	
     <style>
         * {
             margin: 0;
@@ -227,10 +218,10 @@
             font-weight: 600;
         }
 
-        .lang-flag {
-            font-size: 1.2rem;
-            line-height: 1;
-        }
+        .lang-flag { font-size: 1.2rem; line-height: 1; }
+        .lang-flag-icon { width: 18px; height: 14px; object-fit: cover; border-radius: 2px; flex-shrink: 0; }
+        .lang-chevron { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; margin-left: -2px; transition: transform 0.2s; }
+        .lang-btn.open .lang-chevron { transform: rotate(180deg); }
 
         /* Hero Section */
         .hero {
@@ -1232,17 +1223,32 @@
                 <li><a href="#contact" data-i18n="nav_contact">Contact</a></li>
             </ul>
             <div class="lang-switcher">
-                <button class="lang-btn" id="langToggle" aria-label="Change language">
-                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+                <button class="lang-btn" id="langToggle" aria-label="Change language" aria-expanded="false">
+                    <img class="lang-flag-icon" id="currentLangFlag" src="https://flagicons.lipis.dev/flags/4x3/gb.svg" alt="">
                     <span id="currentLangLabel">EN</span>
-                    <svg viewBox="0 0 24 24" width="12" height="12" style="margin-left:-2px"><path d="M6 9l6 6 6-6"/></svg>
+                    <svg class="lang-chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
                 </button>
                 <div class="lang-dropdown" id="langDropdown">
                     <button class="lang-option active" data-lang="en">
-                        <span class="lang-flag">🇬🇧</span> English
+                        <img class="lang-flag-icon" src="https://flagicons.lipis.dev/flags/4x3/gb.svg" alt=""> English
                     </button>
                     <button class="lang-option" data-lang="es">
-                        <span class="lang-flag">🇪🇸</span> Español
+                        <img class="lang-flag-icon" src="https://flagicons.lipis.dev/flags/4x3/es.svg" alt=""> Español
+                    </button>
+                    <button class="lang-option" data-lang="gl">
+                        <img class="lang-flag-icon" src="https://flagicons.lipis.dev/flags/4x3/es-ga.svg" alt=""> Galego
+                    </button>
+                    <button class="lang-option" data-lang="ca">
+                        <img class="lang-flag-icon" src="https://flagicons.lipis.dev/flags/4x3/es-ct.svg" alt=""> Català
+                    </button>
+                    <button class="lang-option" data-lang="pt">
+                        <img class="lang-flag-icon" src="https://flagicons.lipis.dev/flags/4x3/pt.svg" alt=""> Português
+                    </button>
+                    <button class="lang-option" data-lang="eu">
+                        <img class="lang-flag-icon" src="https://flagicons.lipis.dev/flags/4x3/es-pv.svg" alt=""> Euskera
+                    </button>
+                    <button class="lang-option" data-lang="et">
+                        <img class="lang-flag-icon" src="https://flagicons.lipis.dev/flags/4x3/ee.svg" alt=""> Eesti
                     </button>
                 </div>
             </div>
@@ -1773,7 +1779,7 @@
     <div class="footer-column">
         <h4 data-i18n="footer_follow">Follow</h4>
         <div class="social-links">
-            <a href="https://www.linkedin.com/in/andres-alonso-martinez" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2zM4 6a2 2 0 100-4 2 2 0 000 4z"/></svg></a>
+            <a href="https://www.linkedin.com/company/112659095" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2zM4 6a2 2 0 100-4 2 2 0 000 4z"/></svg></a>
             <a href="https://github.com/imationgroup" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><svg viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg></a>
         </div>
     </div>
@@ -1783,9 +1789,10 @@
 </div>
 </footer>
 
+<script src="i18n.js"></script>
 <script>
     // ========================
-    // Translations
+    // Translations (legacy inline — kept for compatibility)
     // ========================
     const translations = {
         en: {
@@ -1976,42 +1983,42 @@
     let currentLang = 'en';
 
     function detectLanguage() {
-        const saved = localStorage.getItem('lang');
-        if (saved && translations[saved]) return saved;
-
-        const browserLang = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
-        if (browserLang.startsWith('es')) return 'es';
+        const saved = localStorage.getItem('ig_lang') || localStorage.getItem('lang');
+        if (saved && (translations[saved] || TRANSLATIONS[saved])) return saved;
+        const langs = navigator.languages || [navigator.language || 'en'];
+        for (const l of langs) {
+          const code = l.toLowerCase().split('-')[0];
+          if (translations[code] || TRANSLATIONS[code]) return code;
+        }
         return 'en';
     }
 
     function setLanguage(lang) {
-        if (!translations[lang]) return;
+        const t = translations[lang] || (typeof TRANSLATIONS !== 'undefined' && TRANSLATIONS[lang]);
+        if (!t) return;
         currentLang = lang;
+        localStorage.setItem('ig_lang', lang);
         localStorage.setItem('lang', lang);
         document.documentElement.lang = lang;
 
         // Update text content
+        const _t = translations[lang] || (typeof TRANSLATIONS !== 'undefined' && TRANSLATIONS[lang]) || {};
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const key = el.getAttribute('data-i18n');
-            if (translations[lang][key]) {
-                if (el.tagName === 'TITLE') {
-                    document.title = translations[lang][key];
-                } else {
-                    el.textContent = translations[lang][key];
-                }
+            if (_t[key]) {
+                if (el.tagName === 'TITLE') document.title = _t[key];
+                else el.textContent = _t[key];
             }
         });
-
-        // Update placeholders
         document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
             const key = el.getAttribute('data-i18n-placeholder');
-            if (translations[lang][key]) {
-                el.placeholder = translations[lang][key];
-            }
+            if (_t[key]) el.placeholder = _t[key];
         });
-
-        // Update language switcher UI
-        document.getElementById('currentLangLabel').textContent = lang.toUpperCase();
+        const FLAG_MAP = { en:'gb', es:'es', gl:'es-ga', ca:'es-ct', pt:'pt', eu:'es-pv', et:'ee' };
+        const flagEl = document.getElementById('currentLangFlag');
+        const labelEl = document.getElementById('currentLangLabel');
+        if (flagEl && FLAG_MAP[lang]) flagEl.src = 'https://flagicons.lipis.dev/flags/4x3/' + FLAG_MAP[lang] + '.svg';
+        if (labelEl) labelEl.textContent = lang.toUpperCase();
         document.querySelectorAll('.lang-option').forEach(opt => {
             opt.classList.toggle('active', opt.getAttribute('data-lang') === lang);
         });
@@ -2025,7 +2032,9 @@
 
     langToggle.addEventListener('click', (e) => {
         e.stopPropagation();
-        langDropdown.classList.toggle('active');
+        const open = langDropdown.classList.toggle('active');
+        langToggle.classList.toggle('open', open);
+        langToggle.setAttribute('aria-expanded', open);
     });
 
     document.querySelectorAll('.lang-option').forEach(opt => {
@@ -2105,9 +2114,4 @@
 </script>
 
 </body>
-
-	<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TXPKFXD9"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
 </html>
