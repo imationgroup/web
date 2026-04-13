@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="svc_page_title">Technology Services | ImationGroup — Web Design, Hosting, Apps & Digital Marketing</title>
+  <meta name="description" data-i18n-meta="svc_meta_desc" content="ImationGroup offers professional web design, VPS hosting from €10/month, custom app development and digital marketing services to grow your business.">
+  <meta name="keywords" content="web design, corporate website, ecommerce, VPS hosting, app development, digital marketing, SEO, ImationGroup">
+  <meta property="og:title" content="Technology Services | ImationGroup">
+  <meta property="og:description" content="Professional web design, hosting, app development and digital marketing. Grow your business with ImationGroup.">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=GT-PHP3T9KV"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'GT-PHP3T9KV');
+  </script>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-TXPKFXD9');</script>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    :root{--primary-blue:#0066CC;--primary-teal:#00A5A8;--dark-blue:#003366;--light-teal:#E6F7F7;--gradient:linear-gradient(135deg,#0066CC 0%,#00A5A8 100%);--text-dark:#1A1A2E;--text-gray:#6B7280;--white:#FFFFFF;--light-gray:#F8FAFC;--border-color:#E5E7EB}
+    html{scroll-behavior:smooth}
+    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;color:var(--text-dark);line-height:1.6;background:var(--white)}
+    .navbar{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(255,255,255,0.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border-color);box-shadow:0 4px 20px rgba(0,0,0,0.08)}
+    .nav-container{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;height:72px}
+    .logo{font-size:1.5rem;font-weight:700;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none}
+    .nav-right{display:flex;align-items:center;gap:20px}
+    .back-link{color:var(--primary-teal);text-decoration:none;font-weight:500;font-size:0.95rem;display:flex;align-items:center;gap:6px;transition:color 0.2s}
+    .back-link:hover{color:var(--primary-blue)}
+    .lang-switch{display:flex;gap:8px;align-items:center}
+    .lang-btn{background:none;border:1px solid var(--border-color);padding:4px 10px;border-radius:4px;cursor:pointer;font-size:0.85rem;font-weight:500;color:var(--text-gray);font-family:inherit;transition:all 0.2s}
+    .lang-btn.active{background:var(--primary-teal);color:#fff;border-color:var(--primary-teal)}
+    .lang-btn:hover:not(.active){border-color:var(--primary-teal);color:var(--primary-teal)}
+
+    /* Hero */
+    .page-hero{padding:140px 24px 80px;background:linear-gradient(135deg,#F0F9FF 0%,#E6F7F7 50%,#F0F9FF 100%);text-align:center;position:relative;overflow:hidden}
+    .page-hero::before{content:'';position:absolute;top:-40%;right:-10%;width:600px;height:600px;background:radial-gradient(circle,rgba(0,165,168,0.1) 0%,transparent 70%)}
+    .page-hero::after{content:'';position:absolute;bottom:-30%;left:-10%;width:500px;height:500px;background:radial-gradient(circle,rgba(0,102,204,0.1) 0%,transparent 70%)}
+    .grid-pattern{position:absolute;top:0;left:0;right:0;bottom:0;background-image:linear-gradient(rgba(0,102,204,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,102,204,0.03) 1px,transparent 1px);background-size:50px 50px}
+    .hero-inner{position:relative;z-index:1;max-width:700px;margin:0 auto}
+    .section-label{display:inline-block;padding:8px 16px;background:var(--light-teal);color:var(--primary-teal);border-radius:20px;font-size:0.875rem;font-weight:600;margin-bottom:20px}
+    .page-hero h1{font-size:3rem;font-weight:700;line-height:1.15;margin-bottom:20px;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .page-hero p{font-size:1.15rem;color:var(--text-gray);max-width:600px;margin:0 auto}
+
+    /* Services grid */
+    .services-section{padding:100px 24px;background:var(--white)}
+    .section-container{max-width:1200px;margin:0 auto}
+    .services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(520px,1fr));gap:40px;margin-top:20px}
+    .service-card{background:var(--white);border:1px solid var(--border-color);border-radius:20px;overflow:hidden;transition:all 0.3s ease;display:flex;flex-direction:column}
+    .service-card:hover{transform:translateY(-6px);box-shadow:0 20px 50px rgba(0,102,204,0.12);border-color:var(--primary-teal)}
+    .card-header{background:var(--gradient);padding:36px 40px 32px;position:relative;overflow:hidden}
+    .card-header::after{content:'';position:absolute;top:-40%;right:-10%;width:200px;height:200px;background:rgba(255,255,255,0.08);border-radius:50%}
+    .card-icon{width:64px;height:64px;background:rgba(255,255,255,0.2);border-radius:16px;display:flex;align-items:center;justify-content:center;margin-bottom:20px}
+    .card-icon svg{width:32px;height:32px;stroke:white;fill:none;stroke-width:2}
+    .card-header h2{font-size:1.6rem;font-weight:700;color:white;margin-bottom:10px;position:relative;z-index:1}
+    .card-header p{color:rgba(255,255,255,0.85);font-size:1rem;position:relative;z-index:1;line-height:1.6}
+    .card-body{padding:36px 40px;flex:1;display:flex;flex-direction:column;gap:20px}
+    .feature-list{list-style:none;display:flex;flex-direction:column;gap:14px}
+    .feature-list li{display:flex;align-items:flex-start;gap:12px;color:var(--text-gray);font-size:0.95rem;line-height:1.5}
+    .feature-list li::before{content:'';width:20px;height:20px;min-width:20px;background:var(--gradient);border-radius:50%;display:flex;align-items:center;justify-content:center;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");background-size:12px;background-repeat:no-repeat;background-position:center;margin-top:2px}
+    .price-badge{display:inline-flex;align-items:center;gap:8px;background:var(--light-teal);color:var(--primary-teal);padding:10px 18px;border-radius:10px;font-weight:700;font-size:0.95rem;margin-top:4px;width:fit-content}
+    .price-badge svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+    .card-cta{margin-top:auto;padding-top:24px}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border-radius:8px;font-weight:600;font-size:1rem;text-decoration:none;transition:all 0.3s ease;cursor:pointer;border:none;font-family:inherit}
+    .btn-primary{background:var(--gradient);color:var(--white);box-shadow:0 4px 15px rgba(0,102,204,0.3)}
+    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(0,102,204,0.4)}
+    .btn-primary svg{width:18px;height:18px;stroke:white;fill:none;stroke-width:2}
+    .btn-outline{background:transparent;color:var(--primary-blue);border:2px solid var(--primary-blue)}
+    .btn-outline:hover{background:var(--primary-blue);color:white}
+
+    /* CTA Section */
+    .cta-section{background:linear-gradient(135deg,#003366 0%,#0066CC 100%);padding:100px 24px;text-align:center}
+    .cta-section h2{font-size:2.2rem;font-weight:700;color:white;margin-bottom:16px}
+    .cta-section p{font-size:1.1rem;color:rgba(255,255,255,0.85);max-width:550px;margin:0 auto 40px}
+    .cta-section .btn-primary{background:white;color:var(--primary-blue);box-shadow:0 4px 20px rgba(0,0,0,0.2)}
+    .cta-section .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,0.3)}
+
+    /* Footer */
+    .footer-simple{background:var(--text-dark);color:rgba(255,255,255,0.6);text-align:center;padding:28px 24px;font-size:0.875rem}
+    .footer-simple a{color:rgba(255,255,255,0.6);text-decoration:none}
+    .footer-simple a:hover{color:var(--primary-teal)}
+
+    @media(max-width:768px){
+      .page-hero h1{font-size:2rem}
+      .services-grid{grid-template-columns:1fr}
+      .card-header,.card-body{padding:28px 24px}
+      .nav-right .back-link span{display:none}
+    }
+  </style>
+</head>
+<body>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TXPKFXD9" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="logo">ImationGroup</a>
+      <div class="nav-right">
+        <a href="index.html" class="back-link">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5m7-7-7 7 7 7"/></svg>
+          <span data-i18n="back_home">Back to Home</span>
+        </a>
+        <div class="lang-switch">
+          <button class="lang-btn active" data-lang="en">EN</button>
+          <button class="lang-btn" data-lang="es">ES</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="page-hero">
+    <div class="grid-pattern"></div>
+    <div class="hero-inner">
+      <span class="section-label" data-i18n="svc_label">Services</span>
+      <h1 data-i18n="svc_hero_title">Technology Solutions That Drive Growth</h1>
+      <p data-i18n="svc_hero_desc">From a stunning website to a complete digital strategy — we deliver the tools and expertise your business needs to thrive online.</p>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section class="services-section">
+    <div class="section-container">
+      <div class="services-grid">
+
+        <!-- Web Design -->
+        <article class="service-card">
+          <div class="card-header">
+            <div class="card-icon">
+              <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+            </div>
+            <h2 data-i18n="svc_web_title">Web Design</h2>
+            <p data-i18n="svc_web_subtitle">Professional websites that convert visitors into customers — built for speed, SEO and mobile.</p>
+          </div>
+          <div class="card-body">
+            <ul class="feature-list">
+              <li data-i18n="svc_web_f1">Corporate websites — build trust and showcase your brand with a polished, high-performance site.</li>
+              <li data-i18n="svc_web_f2">Portfolio sites — elegant presentation of your work, optimised for creative professionals and agencies.</li>
+              <li data-i18n="svc_web_f3">E-commerce — full online stores with product management, secure checkout and payment integration.</li>
+              <li data-i18n="svc_web_f4">SEO-ready structure, fast loading times and responsive design included on every project.</li>
+            </ul>
+            <div class="card-cta">
+              <a href="index.html#contact" class="btn btn-primary">
+                <span data-i18n="svc_cta">Request a Quote</span>
+                <svg viewBox="0 0 24 24"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Hosting -->
+        <article class="service-card">
+          <div class="card-header">
+            <div class="card-icon">
+              <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="6" rx="1"/><rect x="2" y="11" width="20" height="6" rx="1"/><path d="M6 6h.01M6 14h.01"/></svg>
+            </div>
+            <h2 data-i18n="svc_host_title">Web Hosting</h2>
+            <p data-i18n="svc_host_subtitle">Reliable, fast and secure hosting on our own VPS servers — full control, no hidden fees.</p>
+          </div>
+          <div class="card-body">
+            <ul class="feature-list">
+              <li data-i18n="svc_host_f1">Private VPS servers with dedicated resources — no shared slowdowns or noisy neighbours.</li>
+              <li data-i18n="svc_host_f2">99.9% uptime SLA with 24/7 monitoring and automatic backups.</li>
+              <li data-i18n="svc_host_f3">Free SSL certificate, CDN configuration and DDoS protection included.</li>
+              <li data-i18n="svc_host_f4">Scalable plans — upgrade resources instantly as your traffic grows.</li>
+            </ul>
+            <div class="price-badge">
+              <svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              <span data-i18n="svc_host_price">From €10 / month</span>
+            </div>
+            <div class="card-cta">
+              <a href="index.html#contact" class="btn btn-primary">
+                <span data-i18n="svc_cta">Request a Quote</span>
+                <svg viewBox="0 0 24 24"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <!-- App Development -->
+        <article class="service-card">
+          <div class="card-header">
+            <div class="card-icon">
+              <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
+            </div>
+            <h2 data-i18n="svc_app_title">App Development</h2>
+            <p data-i18n="svc_app_subtitle">Custom web and mobile applications built to automate, engage and scale your business.</p>
+          </div>
+          <div class="card-body">
+            <ul class="feature-list">
+              <li data-i18n="svc_app_f1">Progressive Web Apps (PWA) — app-like experience accessible from any browser, no install required.</li>
+              <li data-i18n="svc_app_f2">Native and cross-platform mobile apps for iOS and Android.</li>
+              <li data-i18n="svc_app_f3">Internal business tools — dashboards, CRMs, workflow automation and data management platforms.</li>
+              <li data-i18n="svc_app_f4">API integrations — connect your app to payment gateways, ERPs, third-party services and more.</li>
+            </ul>
+            <div class="card-cta">
+              <a href="index.html#contact" class="btn btn-primary">
+                <span data-i18n="svc_cta">Request a Quote</span>
+                <svg viewBox="0 0 24 24"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Digital Marketing -->
+        <article class="service-card">
+          <div class="card-header">
+            <div class="card-icon">
+              <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            </div>
+            <h2 data-i18n="svc_mkt_title">Digital Marketing</h2>
+            <p data-i18n="svc_mkt_subtitle">Data-driven strategies that increase your visibility, attract qualified leads and grow your revenue.</p>
+          </div>
+          <div class="card-body">
+            <ul class="feature-list">
+              <li data-i18n="svc_mkt_f1">SEO — technical optimisation, keyword strategy and content that ranks on Google and brings organic traffic.</li>
+              <li data-i18n="svc_mkt_f2">SEM & Google Ads — targeted paid campaigns that maximise ROI and reach customers when they're ready to buy.</li>
+              <li data-i18n="svc_mkt_f3">Social media management — engaging content, community growth and brand consistency across platforms.</li>
+              <li data-i18n="svc_mkt_f4">Analytics & reporting — clear dashboards showing what's working, with monthly performance reviews.</li>
+            </ul>
+            <div class="card-cta">
+              <a href="index.html#contact" class="btn btn-primary">
+                <span data-i18n="svc_cta">Request a Quote</span>
+                <svg viewBox="0 0 24 24"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+              </a>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <h2 data-i18n="cta_title">Ready to grow your business?</h2>
+    <p data-i18n="cta_desc">Tell us about your project and we'll get back to you within 24 hours with a tailored proposal.</p>
+    <a href="index.html#contact" class="btn btn-primary">
+      <span data-i18n="cta_btn">Contact Us Now</span>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+    </a>
+  </section>
+
+  <footer class="footer-simple">
+    <p>&copy; 2025 ImationGroup. <span data-i18n="footer_rights">All rights reserved.</span> &nbsp;|&nbsp;
+      <a href="privacy.html" data-i18n="footer_privacy">Privacy Policy</a> &nbsp;|&nbsp;
+      <a href="terms.html" data-i18n="footer_terms">Terms of Service</a> &nbsp;|&nbsp;
+      <a href="index.html" data-i18n="back_home">Home</a>
+    </p>
+  </footer>
+
+  <script>
+  const translations = {
+    en: {
+      svc_page_title: "Technology Services | ImationGroup",
+      back_home: "Back to Home",
+      svc_label: "Services",
+      svc_hero_title: "Technology Solutions That Drive Growth",
+      svc_hero_desc: "From a stunning website to a complete digital strategy — we deliver the tools and expertise your business needs to thrive online.",
+      svc_web_title: "Web Design",
+      svc_web_subtitle: "Professional websites that convert visitors into customers — built for speed, SEO and mobile.",
+      svc_web_f1: "Corporate websites — build trust and showcase your brand with a polished, high-performance site.",
+      svc_web_f2: "Portfolio sites — elegant presentation of your work, optimised for creative professionals and agencies.",
+      svc_web_f3: "E-commerce — full online stores with product management, secure checkout and payment integration.",
+      svc_web_f4: "SEO-ready structure, fast loading times and responsive design included on every project.",
+      svc_host_title: "Web Hosting",
+      svc_host_subtitle: "Reliable, fast and secure hosting on our own VPS servers — full control, no hidden fees.",
+      svc_host_f1: "Private VPS servers with dedicated resources — no shared slowdowns or noisy neighbours.",
+      svc_host_f2: "99.9% uptime SLA with 24/7 monitoring and automatic backups.",
+      svc_host_f3: "Free SSL certificate, CDN configuration and DDoS protection included.",
+      svc_host_f4: "Scalable plans — upgrade resources instantly as your traffic grows.",
+      svc_host_price: "From \u20ac10 / month",
+      svc_app_title: "App Development",
+      svc_app_subtitle: "Custom web and mobile applications built to automate, engage and scale your business.",
+      svc_app_f1: "Progressive Web Apps (PWA) — app-like experience accessible from any browser, no install required.",
+      svc_app_f2: "Native and cross-platform mobile apps for iOS and Android.",
+      svc_app_f3: "Internal business tools — dashboards, CRMs, workflow automation and data management platforms.",
+      svc_app_f4: "API integrations — connect your app to payment gateways, ERPs, third-party services and more.",
+      svc_mkt_title: "Digital Marketing",
+      svc_mkt_subtitle: "Data-driven strategies that increase your visibility, attract qualified leads and grow your revenue.",
+      svc_mkt_f1: "SEO — technical optimisation, keyword strategy and content that ranks on Google and brings organic traffic.",
+      svc_mkt_f2: "SEM & Google Ads — targeted paid campaigns that maximise ROI and reach customers when they're ready to buy.",
+      svc_mkt_f3: "Social media management — engaging content, community growth and brand consistency across platforms.",
+      svc_mkt_f4: "Analytics & reporting — clear dashboards showing what's working, with monthly performance reviews.",
+      svc_cta: "Request a Quote",
+      cta_title: "Ready to grow your business?",
+      cta_desc: "Tell us about your project and we'll get back to you within 24 hours with a tailored proposal.",
+      cta_btn: "Contact Us Now",
+      footer_rights: "All rights reserved.",
+      footer_privacy: "Privacy Policy",
+      footer_terms: "Terms of Service"
+    },
+    es: {
+      svc_page_title: "Servicios Tecnol\u00f3gicos | ImationGroup",
+      back_home: "Volver al Inicio",
+      svc_label: "Servicios",
+      svc_hero_title: "Soluciones Tecnol\u00f3gicas que Impulsan tu Negocio",
+      svc_hero_desc: "Desde una web profesional hasta una estrategia digital completa — te damos las herramientas y el expertise que tu negocio necesita para crecer online.",
+      svc_web_title: "Dise\u00f1o Web",
+      svc_web_subtitle: "P\u00e1ginas web profesionales que convierten visitantes en clientes — r\u00e1pidas, optimizadas para SEO y 100% responsive.",
+      svc_web_f1: "P\u00e1ginas corporativas — transmite confianza y muestra tu marca con una web atractiva y de alto rendimiento.",
+      svc_web_f2: "Portfolio — presentaci\u00f3n elegante de tu trabajo, ideal para profesionales creativos y agencias.",
+      svc_web_f3: "Comercio electr\u00f3nico — tiendas online completas con gesti\u00f3n de productos, pasarela de pago y carrito de compra.",
+      svc_web_f4: "Estructura SEO desde el primer d\u00eda, carga r\u00e1pida y dise\u00f1o adaptable a todos los dispositivos.",
+      svc_host_title: "Alojamiento Web",
+      svc_host_subtitle: "Hosting fiable, r\u00e1pido y seguro en nuestros propios servidores VPS — control total, sin costes ocultos.",
+      svc_host_f1: "Servidores VPS privados con recursos dedicados — sin ralentizaciones por otros usuarios.",
+      svc_host_f2: "SLA de disponibilidad del 99,9% con monitorizaci\u00f3n 24/7 y copias de seguridad autom\u00e1ticas.",
+      svc_host_f3: "Certificado SSL gratuito, configuraci\u00f3n CDN y protecci\u00f3n DDoS incluidos.",
+      svc_host_f4: "Planes escalables — ampli\u00e1 recursos al instante seg\u00fan crece tu tr\u00e1fico.",
+      svc_host_price: "Desde 10\u20ac / mes",
+      svc_app_title: "Desarrollo de Aplicaciones",
+      svc_app_subtitle: "Aplicaciones web y m\u00f3viles a medida para automatizar procesos, captar usuarios y escalar tu negocio.",
+      svc_app_f1: "Progressive Web Apps (PWA) — experiencia de app accesible desde cualquier navegador, sin necesidad de instalaci\u00f3n.",
+      svc_app_f2: "Apps nativas y multiplataforma para iOS y Android.",
+      svc_app_f3: "Herramientas internas de negocio — dashboards, CRMs, automatizaci\u00f3n de flujos y plataformas de gesti\u00f3n de datos.",
+      svc_app_f4: "Integraciones con APIs — conecta tu aplicaci\u00f3n con pasarelas de pago, ERPs y servicios de terceros.",
+      svc_mkt_title: "Marketing Digital",
+      svc_mkt_subtitle: "Estrategias basadas en datos que aumentan tu visibilidad, atraen clientes potenciales y hacen crecer tus ventas.",
+      svc_mkt_f1: "SEO — optimizaci\u00f3n t\u00e9cnica, estrategia de palabras clave y contenido que posiciona en Google y atrae tr\u00e1fico org\u00e1nico.",
+      svc_mkt_f2: "SEM y Google Ads — campa\u00f1as de pago segmentadas que maximizan el ROI y llegan a tus clientes en el momento de compra.",
+      svc_mkt_f3: "Gesti\u00f3n de redes sociales — contenido atractivo, crecimiento de comunidad y coherencia de marca en todas las plataformas.",
+      svc_mkt_f4: "An\u00e1lisis e informes — paneles claros que muestran qu\u00e9 funciona, con revisi\u00f3n de rendimiento mensual.",
+      svc_cta: "Solicitar presupuesto",
+      cta_title: "\u00bfListo para hacer crecer tu negocio?",
+      cta_desc: "Cu\u00e9ntanos tu proyecto y te responderemos en menos de 24 horas con una propuesta personalizada.",
+      cta_btn: "Cont\u00e1ctanos ahora",
+      footer_rights: "Todos los derechos reservados.",
+      footer_privacy: "Pol\u00edtica de Privacidad",
+      footer_terms: "T\u00e9rminos de Servicio"
+    }
+  };
+
+  function detectLanguage() {
+    const saved = localStorage.getItem('lang');
+    if (saved && translations[saved]) return saved;
+    return (navigator.language || 'en').toLowerCase().startsWith('es') ? 'es' : 'en';
+  }
+
+  function setLanguage(lang) {
+    if (!translations[lang]) return;
+    localStorage.setItem('lang', lang);
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (!translations[lang][key]) return;
+      if (el.tagName === 'TITLE') document.title = translations[lang][key];
+      else el.textContent = translations[lang][key];
+    });
+    // meta description
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute('content', lang === 'es'
+        ? 'ImationGroup ofrece dise\u00f1o web profesional, alojamiento VPS desde 10\u20ac/mes, desarrollo de apps y marketing digital para hacer crecer tu negocio.'
+        : 'ImationGroup offers professional web design, VPS hosting from \u20ac10/month, custom app development and digital marketing services to grow your business.');
+    }
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+    });
+  }
+
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => setLanguage(btn.getAttribute('data-lang')));
+  });
+
+  setLanguage(detectLanguage());
+  </script>
+</body>
+</html>
