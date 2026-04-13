@@ -2069,8 +2069,7 @@
             });
 
             if (response.ok) {
-                alert(translations[currentLang].alert_success);
-                form.reset();
+                window.location.href = 'contact-success.html';
             } else {
                 alert(translations[currentLang].alert_error);
             }
