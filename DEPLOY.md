@@ -2,20 +2,31 @@
 
 Mismo flujo que **autolinked-saas**: cada push a `main` dispara
 `.github/workflows/deploy.yml`, que se conecta por SSH al VPS y ejecuta
-`scripts/deploy.sh`.
-
-El sitio se sirve **desde el VPS** (no desde GitHub Pages).
+`scripts/deploy.sh`. Nginx sirve los estáticos **directamente desde el
+directorio del repo clonado** y hace proxy al contenedor del API de
+contacto para `api.imationgroup.com`.
 
 ## Componentes en el VPS
 
 | Servicio | Subdominio | Origen |
 | --- | --- | --- |
-| Web estática | `imationgroup.com` (+ `www`) | Nginx → archivos en `/var/www/imationgroup.com` |
+| Web estática | `imationgroup.com` (+ `www`) | Nginx → `/home/deploy/apps/imationgroup-web` |
 | API de contacto | `api.imationgroup.com` | Nginx → `127.0.0.1:8001` (contenedor `contact-api`) |
 
 ## Setup inicial (UNA sola vez)
 
-### 1. Secretos en GitHub
+### 1. Clave SSH para GitHub Actions → VPS
+
+En el VPS, como `deploy`:
+
+```bash
+ssh-keygen -t ed25519 -C "github-actions-imationgroup-web" -f ~/.ssh/gha_imationgroup_web -N ""
+cat ~/.ssh/gha_imationgroup_web.pub >> ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/authorized_keys
+cat ~/.ssh/gha_imationgroup_web        # ← copia el bloque entero (BEGIN..END)
+```
+
+### 2. Secretos en GitHub
 
 `Settings → Secrets and variables → Actions` del repo `imationgroup/web`:
 
@@ -23,10 +34,10 @@ El sitio se sirve **desde el VPS** (no desde GitHub Pages).
 | --- | --- |
 | `VPS_HOST` | `76.13.56.232` |
 | `VPS_USER` | `deploy` |
-| `VPS_SSH_KEY` | la **clave privada** ed25519 que el usuario `deploy` tiene autorizada en el VPS |
+| `VPS_SSH_KEY` | el contenido de `~/.ssh/gha_imationgroup_web` (privada) |
 | `VPS_PORT` | (opcional) `22` |
 
-### 2. Clonar el repo en el VPS
+### 3. Clonar el repo en el VPS
 
 ```bash
 ssh deploy@76.13.56.232
@@ -36,23 +47,6 @@ cd imationgroup-web
 cp .env.example .env
 nano .env   # rellena los SMTP_* (mismos valores que autolinked)
 ```
-
-### 3. Permitir a `deploy` ejecutar `rsync` con sudo sin contraseña
-
-El deploy escribe en `/var/www/imationgroup.com`, así que el usuario
-necesita poder hacer `sudo mkdir` y `sudo rsync` sin que pida password:
-
-```bash
-sudo visudo -f /etc/sudoers.d/imationgroup-deploy
-```
-
-Pega esta línea exactamente:
-
-```
-deploy ALL=(root) NOPASSWD: /bin/mkdir, /usr/bin/rsync
-```
-
-Guarda y sal. Comprueba con `sudo -n mkdir -p /var/www/imationgroup.com`.
 
 ### 4. Nginx
 
@@ -66,14 +60,22 @@ server {
     listen [::]:80;
     server_name imationgroup.com www.imationgroup.com;
 
-    root /var/www/imationgroup.com;
+    root /home/deploy/apps/imationgroup-web;
     index index.html;
+
+    # Bloquea archivos del repo que NO deben servirse por HTTP
+    location ~ /\.git/ { deny all; return 404; }
+    location = /.gitignore { deny all; return 404; }
+    location ~ ^/(backend|scripts|\.github)/ { deny all; return 404; }
+    location ~ /\.env { deny all; return 404; }
+    location ~ \.(md|sh|yml|yaml|Dockerfile)$ { deny all; return 404; }
+    location = /CNAME { deny all; return 404; }
 
     location / {
         try_files $uri $uri/ =404;
     }
 
-    # Long-cache para assets versionados (si los hay)
+    # Long-cache para assets (si los hay)
     location ~* \.(?:css|js|woff2|svg|png|jpg|jpeg|webp|ico)$ {
         expires 30d;
         add_header Cache-Control "public, max-age=2592000, immutable";
@@ -86,6 +88,13 @@ sudo ln -s /etc/nginx/sites-available/imationgroup.com /etc/nginx/sites-enabled/
 sudo nginx -t && sudo systemctl reload nginx
 sudo certbot --nginx -d imationgroup.com -d www.imationgroup.com
 ```
+
+> **Permisos**: Nginx (usuario `www-data`) tiene que poder leer
+> `/home/deploy/apps/imationgroup-web`. Asegúralo con:
+> ```bash
+> sudo chmod o+x /home/deploy /home/deploy/apps
+> chmod -R o+rX /home/deploy/apps/imationgroup-web
+> ```
 
 #### Vhost del API de contacto
 
@@ -124,9 +133,9 @@ En el panel del registrador (Hostinger / Cloudflare):
 | `A` | `www.imationgroup.com` | `76.13.56.232` |
 | `A` | `api.imationgroup.com` | `76.13.56.232` |
 
-Si tenías GitHub Pages configurado, **desactívalo** desde
-`Settings → Pages → Source = None`. El archivo `CNAME` del repo
-ya no se sirve (lo excluye `deploy.sh`).
+Si tenías GitHub Pages, **desactívalo** desde
+`Settings → Pages → Source = None` cuando hayas comprobado que la versión
+del VPS funciona.
 
 ### 6. Primer deploy
 
@@ -150,5 +159,5 @@ ssh deploy@76.13.56.232
 cd ~/apps/imationgroup-web
 git log --oneline -10           # localiza el commit estable
 git reset --hard <COMMIT_HASH>
-bash scripts/deploy.sh          # reaplica
+docker compose up -d --build    # solo si afecta al backend
 ```
