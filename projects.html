@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects — ImationGroup</title>
+    <meta name="description" content="Selected projects and SaaS products by ImationGroup.">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚙️</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #0066CC;
+            --primary-teal: #00A5A8;
+            --dark-blue: #003366;
+            --light-teal: #E6F7F7;
+            --gradient: linear-gradient(135deg, #0066CC 0%, #00A5A8 100%);
+            --text-dark: #1A1A2E;
+            --text-gray: #6B7280;
+            --white: #FFFFFF;
+            --light-gray: #F8FAFC;
+            --border-color: #E5E7EB;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text-dark);
+            line-height: 1.6;
+            background: var(--white);
+        }
+        a { color: inherit; }
+
+        /* Navbar (versión simplificada) */
+        .navbar {
+            background: var(--white);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .logo {
+            font-weight: 700;
+            font-size: 1.25rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+        .nav-links { display: flex; gap: 28px; list-style: none; }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        .nav-links a:hover { color: var(--primary-blue); }
+        .nav-links a.active { color: var(--primary-teal); }
+
+        /* Hero */
+        .hero {
+            padding: 80px 24px 48px;
+            text-align: center;
+            background: linear-gradient(180deg, var(--light-teal) 0%, var(--white) 100%);
+        }
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+        }
+        .hero p {
+            color: var(--text-gray);
+            max-width: 640px;
+            margin: 0 auto;
+            font-size: 1.05rem;
+        }
+
+        /* Grid */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 48px 24px 80px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        /* Card */
+        .card {
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 28px rgba(0, 102, 204, 0.10);
+            border-color: var(--primary-teal);
+        }
+        .card-badge {
+            display: inline-block;
+            background: var(--gradient);
+            color: var(--white);
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            padding: 4px 10px;
+            border-radius: 999px;
+            width: fit-content;
+        }
+        .card-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            background: var(--light-teal);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .card-icon svg {
+            width: 28px;
+            height: 28px;
+            stroke: var(--primary-teal);
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .card h2 {
+            font-size: 1.35rem;
+            color: var(--text-dark);
+        }
+        .card p {
+            color: var(--text-gray);
+            font-size: 0.95rem;
+            flex: 1;
+        }
+        .card-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .tag {
+            background: var(--light-gray);
+            color: var(--text-gray);
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-size: 0.75rem;
+        }
+        .card-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--primary-blue);
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 0.95rem;
+        }
+        .card-cta:hover { color: var(--primary-teal); }
+        .card-cta svg {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+        }
+        .card-coming {
+            color: var(--text-gray);
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+
+        /* Highlighted card (anchor scroll target) */
+        .card:target {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.12);
+        }
+
+        footer {
+            border-top: 1px solid var(--border-color);
+            padding: 32px 24px;
+            text-align: center;
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+        footer a { color: var(--primary-blue); text-decoration: none; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="index.html" class="logo">ImationGroup</a>
+        <ul class="nav-links">
+            <li><a href="index.html#home">Home</a></li>
+            <li><a href="index.html#about">About</a></li>
+            <li><a href="index.html#services">Services</a></li>
+            <li><a href="projects.html" class="active">Projects</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+    </div>
+</nav>
+
+<section class="hero">
+    <h1>Our projects</h1>
+    <p>From data platforms to SaaS products: every line of code is built to scale and to deliver measurable business value.</p>
+</section>
+
+<main class="container">
+    <div class="grid">
+
+        <!-- AutoLinked -->
+        <article class="card" id="autolinked">
+            <span class="card-badge">SaaS</span>
+            <div class="card-icon">
+                <svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-4 0v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+            </div>
+            <h2>AutoLinked</h2>
+            <p>SaaS de automatización de contenido en LinkedIn para empresas. Genera posts orientados a captar clientes potenciales, los publica con horario configurable, mide impacto real y aprende del rendimiento de cada publicación.</p>
+            <div class="card-meta">
+                <span class="tag">FastAPI</span>
+                <span class="tag">Next.js</span>
+                <span class="tag">Stripe</span>
+                <span class="tag">Anthropic Claude</span>
+                <span class="tag">Selenium</span>
+            </div>
+            <a class="card-cta" href="https://autolinked.imationgroup.com" target="_blank" rel="noopener">
+                Visitar AutoLinked
+                <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+        </article>
+
+        <!-- Placeholder para próximos proyectos -->
+        <article class="card">
+            <span class="card-badge" style="background: var(--light-gray); color: var(--text-gray);">Coming soon</span>
+            <div class="card-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20"/></svg>
+            </div>
+            <h2>Más proyectos en camino</h2>
+            <p class="card-coming">Estamos preparando nuevos productos y casos de éxito para esta sección. Vuelve pronto o escríbenos para conocer en qué andamos.</p>
+            <a class="card-cta" href="index.html#contact">
+                Contáctanos
+                <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+        </article>
+
+    </div>
+</main>
+
+<footer>
+    © <span id="year"></span> ImationGroup ·
+    <a href="privacy.html">Privacy</a> ·
+    <a href="terms.html">Terms</a> ·
+    <a href="index.html#contact">Contact</a>
+</footer>
+
+<script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>

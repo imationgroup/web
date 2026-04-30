@@ -117,6 +117,75 @@
             color: var(--primary-blue);
         }
 
+        /* Projects dropdown in nav */
+        .nav-projects {
+            position: relative;
+        }
+        .nav-projects > a {
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .nav-projects > a::before {
+            /* Pequeña flecha ▾ que rota */
+            content: '';
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-right: 1.5px solid currentColor;
+            border-bottom: 1.5px solid currentColor;
+            transform: rotate(45deg);
+            margin-left: 6px;
+            margin-bottom: 2px;
+            transition: transform 0.2s ease;
+        }
+        .nav-projects.open > a::before {
+            transform: rotate(225deg);
+            margin-bottom: -2px;
+        }
+        .nav-projects-dropdown {
+            position: absolute;
+            top: calc(100% + 12px);
+            left: 50%;
+            transform: translateX(-50%) translateY(-8px);
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+            min-width: 220px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.25s ease;
+            z-index: 1001;
+            padding: 6px 0;
+            list-style: none;
+        }
+        .nav-projects.open .nav-projects-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+        .nav-projects-dropdown li a {
+            display: block;
+            padding: 10px 18px;
+            font-size: 0.92rem;
+            color: var(--text-dark);
+            text-decoration: none;
+        }
+        .nav-projects-dropdown li a::after {
+            display: none;
+        }
+        .nav-projects-dropdown li a:hover {
+            background: rgba(20, 184, 166, 0.08);
+            color: var(--primary-teal);
+        }
+        .nav-projects-dropdown li.divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 4px 0;
+        }
+
         .mobile-menu-btn {
             display: none;
             background: none;
@@ -1219,7 +1288,14 @@
                 <li><a href="#about" data-i18n="nav_about">About</a></li>
                 <li><a href="#services" data-i18n="nav_services">Services</a></li>
                 <li><a href="#technologies" data-i18n="nav_technologies">Technologies</a></li>
-                <li><a href="#projects" data-i18n="nav_projects">Projects</a></li>
+                <li class="nav-projects" id="navProjects">
+                    <a href="#projects" data-i18n="nav_projects" id="navProjectsToggle">Projects</a>
+                    <ul class="nav-projects-dropdown" id="navProjectsMenu">
+                        <li><a href="projects.html" data-i18n="nav_projects_all">All projects</a></li>
+                        <li class="divider"></li>
+                        <li><a href="projects.html#autolinked">AutoLinked</a></li>
+                    </ul>
+                </li>
                 <li><a href="#contact" data-i18n="nav_contact">Contact</a></li>
             </ul>
             <div class="lang-switcher">
@@ -1266,7 +1342,8 @@
         <a href="#about" data-i18n="nav_about">About</a>
         <a href="#services" data-i18n="nav_services">Services</a>
         <a href="#technologies" data-i18n="nav_technologies">Technologies</a>
-        <a href="#projects" data-i18n="nav_projects">Projects</a>
+        <a href="projects.html" data-i18n="nav_projects">Projects</a>
+        <a href="projects.html#autolinked">AutoLinked</a>
         <a href="#contact" data-i18n="nav_contact">Contact</a>
     </div>
 
@@ -1720,7 +1797,7 @@
         </div>
 
         <div class="contact-form-wrapper fade-in">
-            <form class="contact-form" action="https://api.autolinked.imationgroup.com/api/contact" method="post" novalidate>
+            <form class="contact-form" action="https://api.imationgroup.com/api/contact" method="post" novalidate>
                 <div class="form-row">
                     <div class="form-group">
                         <label for="name" data-i18n="form_name">Name</label>
@@ -1806,7 +1883,7 @@
             nav_about: "About",
             nav_services: "Services",
             nav_technologies: "Technologies",
-            nav_projects: "Projects",
+            nav_projects: "Projects", nav_projects_all: "All projects",
             nav_contact: "Contact",
             hero_tagline: "Data Engineering and Software Solutions",
             hero_description: "We transform data into actionable insights and build scalable software solutions that drive business growth. Our expertise spans data engineering, data science, and cloud-native development.",
@@ -1896,7 +1973,7 @@
             nav_about: "Nosotros",
             nav_services: "Servicios",
             nav_technologies: "Tecnolog\u00edas",
-            nav_projects: "Proyectos",
+            nav_projects: "Proyectos", nav_projects_all: "Todos los proyectos",
             nav_contact: "Contacto",
             hero_tagline: "Ingenier\u00eda de Datos y Soluciones de Software",
             hero_description: "Transformamos datos en informaci\u00f3n accionable y construimos soluciones de software escalables que impulsan el crecimiento empresarial. Nuestra experiencia abarca ingenier\u00eda de datos, ciencia de datos y desarrollo cloud-native.",
@@ -2089,6 +2166,23 @@
     }, { threshold: 0.15 });
 
     document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // Projects dropdown nav
+    (function () {
+        const wrap = document.getElementById('navProjects');
+        const toggle = document.getElementById('navProjectsToggle');
+        if (!wrap || !toggle) return;
+        toggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            wrap.classList.toggle('open');
+        });
+        document.addEventListener('click', (e) => {
+            if (!wrap.contains(e.target)) wrap.classList.remove('open');
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') wrap.classList.remove('open');
+        });
+    })();
 
     // Form submission
     const form = document.querySelector('.contact-form');
