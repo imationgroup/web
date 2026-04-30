@@ -1,282 +1,215 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Projects — ImationGroup</title>
-    <meta name="description" content="Selected projects and SaaS products by ImationGroup.">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚙️</text></svg>">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary-blue: #0066CC;
-            --primary-teal: #00A5A8;
-            --dark-blue: #003366;
-            --light-teal: #E6F7F7;
-            --gradient: linear-gradient(135deg, #0066CC 0%, #00A5A8 100%);
-            --text-dark: #1A1A2E;
-            --text-gray: #6B7280;
-            --white: #FFFFFF;
-            --light-gray: #F8FAFC;
-            --border-color: #E5E7EB;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            color: var(--text-dark);
-            line-height: 1.6;
-            background: var(--white);
-        }
-        a { color: inherit; }
-
-        /* Navbar (versión simplificada) */
-        .navbar {
-            background: var(--white);
-            border-bottom: 1px solid var(--border-color);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 16px 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .logo {
-            font-weight: 700;
-            font-size: 1.25rem;
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-decoration: none;
-        }
-        .nav-links { display: flex; gap: 28px; list-style: none; }
-        .nav-links a {
-            text-decoration: none;
-            color: var(--text-dark);
-            font-weight: 500;
-            font-size: 0.95rem;
-        }
-        .nav-links a:hover { color: var(--primary-blue); }
-        .nav-links a.active { color: var(--primary-teal); }
-
-        /* Hero */
-        .hero {
-            padding: 80px 24px 48px;
-            text-align: center;
-            background: linear-gradient(180deg, var(--light-teal) 0%, var(--white) 100%);
-        }
-        .hero h1 {
-            font-size: clamp(2rem, 5vw, 3rem);
-            font-weight: 700;
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 12px;
-        }
-        .hero p {
-            color: var(--text-gray);
-            max-width: 640px;
-            margin: 0 auto;
-            font-size: 1.05rem;
-        }
-
-        /* Grid */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 48px 24px 80px;
-        }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
-        }
-
-        /* Card */
-        .card {
-            background: var(--white);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 28px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        .card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 28px rgba(0, 102, 204, 0.10);
-            border-color: var(--primary-teal);
-        }
-        .card-badge {
-            display: inline-block;
-            background: var(--gradient);
-            color: var(--white);
-            font-size: 0.7rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            padding: 4px 10px;
-            border-radius: 999px;
-            width: fit-content;
-        }
-        .card-icon {
-            width: 56px;
-            height: 56px;
-            border-radius: 14px;
-            background: var(--light-teal);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .card-icon svg {
-            width: 28px;
-            height: 28px;
-            stroke: var(--primary-teal);
-            fill: none;
-            stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
-        .card h2 {
-            font-size: 1.35rem;
-            color: var(--text-dark);
-        }
-        .card p {
-            color: var(--text-gray);
-            font-size: 0.95rem;
-            flex: 1;
-        }
-        .card-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-        .tag {
-            background: var(--light-gray);
-            color: var(--text-gray);
-            padding: 3px 10px;
-            border-radius: 999px;
-            font-size: 0.75rem;
-        }
-        .card-cta {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            color: var(--primary-blue);
-            font-weight: 600;
-            text-decoration: none;
-            font-size: 0.95rem;
-        }
-        .card-cta:hover { color: var(--primary-teal); }
-        .card-cta svg {
-            width: 16px;
-            height: 16px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2;
-        }
-        .card-coming {
-            color: var(--text-gray);
-            font-style: italic;
-            font-size: 0.9rem;
-        }
-
-        /* Highlighted card (anchor scroll target) */
-        .card:target {
-            border-color: var(--primary-blue);
-            box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.12);
-        }
-
-        footer {
-            border-top: 1px solid var(--border-color);
-            padding: 32px 24px;
-            text-align: center;
-            color: var(--text-gray);
-            font-size: 0.9rem;
-        }
-        footer a { color: var(--primary-blue); text-decoration: none; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="proj_page_title">Projects | ImationGroup</title>
+  <meta name="description" content="Selected projects and SaaS products by ImationGroup, including AutoLinked.">
+  <meta name="keywords" content="ImationGroup, projects, SaaS, AutoLinked, LinkedIn automation, data engineering">
+  <meta property="og:title" content="Projects | ImationGroup">
+  <meta property="og:description" content="From data platforms to SaaS products like AutoLinked. Discover what we build.">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=GT-PHP3T9KV"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','GT-PHP3T9KV');</script>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-TXPKFXD9');</script>
+  <script src="i18n.js"></script>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    :root{--primary-blue:#0066CC;--primary-teal:#00A5A8;--dark-blue:#003366;--light-teal:#E6F7F7;--gradient:linear-gradient(135deg,#0066CC 0%,#00A5A8 100%);--text-dark:#1A1A2E;--text-gray:#6B7280;--white:#FFFFFF;--light-gray:#F8FAFC;--border-color:#E5E7EB}
+    html{scroll-behavior:smooth}
+    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;color:var(--text-dark);line-height:1.6;background:var(--white)}
+    /* Navbar */
+    .navbar{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(255,255,255,0.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border-color);transition:all 0.3s ease}
+    .navbar.scrolled{box-shadow:0 4px 20px rgba(0,0,0,0.08)}
+    .nav-container{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;height:72px}
+    .logo{font-size:1.5rem;font-weight:700;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none}
+    .nav-right{display:flex;align-items:center;gap:8px}
+    .back-link{color:var(--primary-teal);text-decoration:none;font-weight:500;font-size:0.9rem;display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:6px;transition:all 0.2s;white-space:nowrap}
+    .back-link:hover{background:var(--light-teal)}
+    /* Lang switcher */
+    .lang-switcher{position:relative;display:flex;align-items:center;margin-left:8px}
+    .lang-btn{display:flex;align-items:center;gap:6px;padding:6px 12px;border:1.5px solid var(--border-color);border-radius:8px;background:transparent;cursor:pointer;font-family:inherit;font-size:0.875rem;font-weight:600;color:var(--text-dark);transition:all 0.3s ease}
+    .lang-btn:hover{border-color:var(--primary-teal);color:var(--primary-teal)}
+    .lang-flag-icon{width:18px;height:14px;object-fit:cover;border-radius:2px;flex-shrink:0}
+    .lang-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:var(--white);border:1px solid var(--border-color);border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,0.12);overflow:hidden;opacity:0;visibility:hidden;transform:translateY(-8px);transition:all 0.25s ease;z-index:1001;min-width:160px}
+    .lang-dropdown.active{opacity:1;visibility:visible;transform:translateY(0)}
+    .lang-option{display:flex;align-items:center;gap:10px;width:100%;padding:10px 16px;border:none;background:none;cursor:pointer;font-family:inherit;font-size:0.9rem;color:var(--text-dark);transition:background 0.2s ease;white-space:nowrap}
+    .lang-option:hover{background:var(--light-teal)}
+    .lang-option.active{color:var(--primary-teal);font-weight:600;background:var(--light-teal)}
+    .lang-chevron{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2;margin-left:-2px;transition:transform 0.2s}
+    .lang-btn.open .lang-chevron{transform:rotate(180deg)}
+    /* Hero */
+    .page-hero{padding:140px 24px 80px;background:linear-gradient(135deg,#F0F9FF 0%,#E6F7F7 50%,#F0F9FF 100%);text-align:center;position:relative;overflow:hidden}
+    .page-hero::before{content:'';position:absolute;top:-40%;right:-10%;width:600px;height:600px;background:radial-gradient(circle,rgba(0,165,168,0.1) 0%,transparent 70%)}
+    .page-hero::after{content:'';position:absolute;bottom:-30%;left:-10%;width:500px;height:500px;background:radial-gradient(circle,rgba(0,102,204,0.1) 0%,transparent 70%)}
+    .grid-pattern{position:absolute;top:0;left:0;right:0;bottom:0;background-image:linear-gradient(rgba(0,102,204,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,102,204,0.03) 1px,transparent 1px);background-size:50px 50px}
+    .hero-inner{position:relative;z-index:1;max-width:740px;margin:0 auto}
+    .section-label{display:inline-block;padding:8px 16px;background:var(--light-teal);color:var(--primary-teal);border-radius:20px;font-size:0.875rem;font-weight:600;margin-bottom:20px}
+    .page-hero h1{font-size:3rem;font-weight:700;line-height:1.15;margin-bottom:20px;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .page-hero p{font-size:1.15rem;color:var(--text-gray);max-width:640px;margin:0 auto}
+    /* Projects grid */
+    .projects-section{padding:80px 24px;background:var(--white)}
+    .section-container{max-width:1200px;margin:0 auto}
+    .projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:28px;margin-top:20px}
+    .project-card{background:var(--white);border:1px solid var(--border-color);border-radius:18px;padding:32px;display:flex;flex-direction:column;gap:18px;transition:all 0.3s ease;position:relative;overflow:hidden}
+    .project-card:hover{transform:translateY(-6px);box-shadow:0 20px 45px rgba(0,102,204,0.12);border-color:var(--primary-teal)}
+    .project-card:target{border-color:var(--primary-blue);box-shadow:0 0 0 4px rgba(0,102,204,0.12)}
+    .card-badge{align-self:flex-start;display:inline-block;background:var(--gradient);color:var(--white);font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;padding:5px 12px;border-radius:999px}
+    .card-badge.muted{background:var(--light-gray);color:var(--text-gray)}
+    .card-icon{width:60px;height:60px;border-radius:14px;background:var(--light-teal);display:flex;align-items:center;justify-content:center}
+    .card-icon svg{width:28px;height:28px;stroke:var(--primary-teal);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .project-card h2{font-size:1.4rem;font-weight:700;color:var(--text-dark)}
+    .project-card p{color:var(--text-gray);font-size:0.95rem;flex:1}
+    .card-meta{display:flex;flex-wrap:wrap;gap:6px}
+    .tag{background:var(--light-gray);color:var(--text-gray);padding:4px 11px;border-radius:999px;font-size:0.75rem;font-weight:500}
+    .card-cta{display:inline-flex;align-items:center;gap:6px;color:var(--primary-blue);font-weight:600;text-decoration:none;font-size:0.95rem;margin-top:4px;width:fit-content}
+    .card-cta:hover{color:var(--primary-teal)}
+    .card-cta svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+    /* Footer */
+    .footer-simple{background:#1A1A2E;color:rgba(255,255,255,0.6);text-align:center;padding:26px 24px;font-size:0.875rem}
+    .footer-simple a{color:rgba(255,255,255,0.6);text-decoration:none}
+    .footer-simple a:hover{color:var(--primary-teal)}
+    @media(max-width:768px){
+      .page-hero h1{font-size:1.9rem}
+      .projects-grid{grid-template-columns:1fr}
+      .nav-right .back-link span{display:none}
+    }
+  </style>
 </head>
 <body>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TXPKFXD9" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
-<nav class="navbar">
+  <nav class="navbar">
     <div class="nav-container">
-        <a href="index.html" class="logo">ImationGroup</a>
-        <ul class="nav-links">
-            <li><a href="index.html#home">Home</a></li>
-            <li><a href="index.html#about">About</a></li>
-            <li><a href="index.html#services">Services</a></li>
-            <li><a href="projects.html" class="active">Projects</a></li>
-            <li><a href="index.html#contact">Contact</a></li>
-        </ul>
+      <a href="index.html" class="logo">ImationGroup</a>
+      <div class="nav-right">
+        <a href="index.html" class="back-link">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5m7-7-7 7 7 7"/></svg>
+          <span data-i18n="back_home">Back to Home</span>
+        </a>
+        <div class="lang-switcher">
+          <button class="lang-btn" id="langToggle" aria-label="Change language" aria-expanded="false">
+            <img class="lang-flag-icon" id="currentLangFlag" src="https://flagicons.lipis.dev/flags/4x3/gb.svg" alt="">
+            <span id="currentLangLabel">EN</span>
+            <svg class="lang-chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="lang-dropdown" id="langDropdown" role="menu">
+            <button class="lang-option" data-lang="en" role="menuitem"><img class="lang-flag-icon" src="https://flagicons.lipis.dev/flags/4x3/gb.svg" alt=""> English</button>
+            <button class="lang-option" data-lang="es" role="menuitem"><img class="lang-flag-icon" src="https://flagicons.lipis.dev/flags/4x3/es.svg" alt=""> Español</button>
+            <button class="lang-option" data-lang="gl" role="menuitem"><img class="lang-flag-icon" src="https://flagicons.lipis.dev/flags/4x3/es-ga.svg" alt=""> Galego</button>
+            <button class="lang-option" data-lang="ca" role="menuitem"><img class="lang-flag-icon" src="https://flagicons.lipis.dev/flags/4x3/es-ct.svg" alt=""> Català</button>
+            <button class="lang-option" data-lang="pt" role="menuitem"><img class="lang-flag-icon" src="https://flagicons.lipis.dev/flags/4x3/pt.svg" alt=""> Português</button>
+            <button class="lang-option" data-lang="eu" role="menuitem"><img class="lang-flag-icon" src="https://flagicons.lipis.dev/flags/4x3/es-pv.svg" alt=""> Euskera</button>
+            <button class="lang-option" data-lang="et" role="menuitem"><img class="lang-flag-icon" src="https://flagicons.lipis.dev/flags/4x3/ee.svg" alt=""> Eesti</button>
+          </div>
+        </div>
+      </div>
     </div>
-</nav>
+  </nav>
 
-<section class="hero">
-    <h1>Our projects</h1>
-    <p>From data platforms to SaaS products: every line of code is built to scale and to deliver measurable business value.</p>
-</section>
+  <section class="page-hero">
+    <div class="grid-pattern"></div>
+    <div class="hero-inner">
+      <span class="section-label" data-i18n="projects_label">Projects</span>
+      <h1 data-i18n="proj_hero_title">Our Projects</h1>
+      <p data-i18n="proj_hero_subtitle">From data platforms to SaaS products: every line of code is built to scale and to deliver measurable business value.</p>
+    </div>
+  </section>
 
-<main class="container">
-    <div class="grid">
+  <section class="projects-section">
+    <div class="section-container">
+      <div class="projects-grid">
 
         <!-- AutoLinked -->
-        <article class="card" id="autolinked">
-            <span class="card-badge">SaaS</span>
-            <div class="card-icon">
-                <svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-4 0v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-            </div>
-            <h2>AutoLinked</h2>
-            <p>SaaS de automatización de contenido en LinkedIn para empresas. Genera posts orientados a captar clientes potenciales, los publica con horario configurable, mide impacto real y aprende del rendimiento de cada publicación.</p>
-            <div class="card-meta">
-                <span class="tag">FastAPI</span>
-                <span class="tag">Next.js</span>
-                <span class="tag">Stripe</span>
-                <span class="tag">Anthropic Claude</span>
-                <span class="tag">Selenium</span>
-            </div>
-            <a class="card-cta" href="https://autolinked.imationgroup.com" target="_blank" rel="noopener">
-                Visitar AutoLinked
-                <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </a>
+        <article class="project-card" id="autolinked">
+          <span class="card-badge" data-i18n="proj_al_badge">SaaS</span>
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-4 0v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+          </div>
+          <h2>AutoLinked</h2>
+          <p data-i18n="proj_al_desc">SaaS for LinkedIn content automation aimed at companies. Generates posts targeted at potential customers, schedules and publishes them automatically, measures real impact and learns from each post's performance.</p>
+          <div class="card-meta">
+            <span class="tag">FastAPI</span>
+            <span class="tag">Next.js</span>
+            <span class="tag">Stripe</span>
+            <span class="tag">Anthropic Claude</span>
+            <span class="tag">Selenium</span>
+          </div>
+          <a class="card-cta" href="https://autolinked.imationgroup.com" target="_blank" rel="noopener">
+            <span data-i18n="proj_al_cta">Visit AutoLinked</span>
+            <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
         </article>
 
-        <!-- Placeholder para próximos proyectos -->
-        <article class="card">
-            <span class="card-badge" style="background: var(--light-gray); color: var(--text-gray);">Coming soon</span>
-            <div class="card-icon">
-                <svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20"/></svg>
-            </div>
-            <h2>Más proyectos en camino</h2>
-            <p class="card-coming">Estamos preparando nuevos productos y casos de éxito para esta sección. Vuelve pronto o escríbenos para conocer en qué andamos.</p>
-            <a class="card-cta" href="index.html#contact">
-                Contáctanos
-                <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </a>
+        <!-- Coming soon -->
+        <article class="project-card">
+          <span class="card-badge muted" data-i18n="proj_soon_badge">Coming soon</span>
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20"/></svg>
+          </div>
+          <h2 data-i18n="proj_soon_title">More projects coming</h2>
+          <p data-i18n="proj_soon_desc">We're preparing new products and case studies for this section. Come back soon or get in touch to learn what we're working on.</p>
+          <a class="card-cta" href="index.html#contact">
+            <span data-i18n="proj_soon_cta">Contact us</span>
+            <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
         </article>
 
+      </div>
     </div>
-</main>
+  </section>
 
-<footer>
-    © <span id="year"></span> ImationGroup ·
-    <a href="privacy.html">Privacy</a> ·
-    <a href="terms.html">Terms</a> ·
-    <a href="index.html#contact">Contact</a>
-</footer>
+  <footer class="footer-simple">
+    <p>&copy; 2025 ImationGroup. <span data-i18n="footer_rights">All rights reserved.</span> &nbsp;|&nbsp;
+      <a href="privacy.html" data-i18n="footer_privacy">Privacy Policy</a> &nbsp;|&nbsp;
+      <a href="terms.html" data-i18n="footer_terms">Terms of Service</a> &nbsp;|&nbsp;
+      <a href="index.html" data-i18n="back_home">Home</a>
+    </p>
+  </footer>
 
-<script>
-    document.getElementById('year').textContent = new Date().getFullYear();
-</script>
-
+  <script>
+    // Navbar scroll
+    window.addEventListener('scroll', () => {
+      document.querySelector('.navbar').classList.toggle('scrolled', window.scrollY > 50);
+    });
+    // Lang switcher
+    const FLAG_MAP = { en:'gb', es:'es', gl:'es-ga', ca:'es-ct', pt:'pt', eu:'es-pv', et:'ee' };
+    const LANG_LABEL = { en:'EN', es:'ES', gl:'GL', ca:'CA', pt:'PT', eu:'EU', et:'ET' };
+    const langToggle = document.getElementById('langToggle');
+    const langDropdown = document.getElementById('langDropdown');
+    const currentFlag = document.getElementById('currentLangFlag');
+    const currentLabel = document.getElementById('currentLangLabel');
+    langToggle.addEventListener('click', e => {
+      e.stopPropagation();
+      const open = langDropdown.classList.toggle('active');
+      langToggle.classList.toggle('open', open);
+      langToggle.setAttribute('aria-expanded', open);
+    });
+    document.addEventListener('click', () => {
+      langDropdown.classList.remove('active');
+      langToggle.classList.remove('open');
+      langToggle.setAttribute('aria-expanded', false);
+    });
+    document.querySelectorAll('.lang-option[data-lang]').forEach(opt => {
+      opt.addEventListener('click', e => {
+        e.stopPropagation();
+        const lang = opt.getAttribute('data-lang');
+        setLanguage(lang);
+        currentFlag.src = 'https://flagicons.lipis.dev/flags/4x3/' + FLAG_MAP[lang] + '.svg';
+        currentLabel.textContent = LANG_LABEL[lang];
+        langDropdown.classList.remove('active');
+        langToggle.classList.remove('open');
+      });
+    });
+    const initLang = detectLanguage();
+    setLanguage(initLang);
+    currentFlag.src = 'https://flagicons.lipis.dev/flags/4x3/' + FLAG_MAP[initLang] + '.svg';
+    currentLabel.textContent = LANG_LABEL[initLang];
+  </script>
 </body>
 </html>
