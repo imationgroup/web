@@ -1,0 +1,10 @@
+services:
+  contact-api:
+    build: ./backend
+    image: imationgroup-contact:prod
+    restart: unless-stopped
+    ports:
+      # Solo localhost → Nginx del host hace proxy a https://api.imationgroup.com/api/contact
+      - "127.0.0.1:8001:8000"
+    env_file:
+      - .env
