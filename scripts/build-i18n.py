@@ -41,6 +41,12 @@ PAGES = [
 OG_LOCALE = {'en':'en_US','es':'es_ES','gl':'gl_ES','ca':'ca_ES','pt':'pt_PT','eu':'eu_ES','et':'et_EE'}
 FLAGS = {'en':'gb','es':'es','gl':'es-ga','ca':'es-ct','pt':'pt','eu':'es-pv','et':'ee'}
 
+# Public profiles and contact for JSON-LD
+LINKEDIN_URL = 'https://www.linkedin.com/company/112659095'
+CONTACT_EMAIL = 'info@imationgroup.com'
+THEME_COLOR = '#0066CC'
+BRAND = 'ImationGroup'
+
 
 def esc(s):
     s = '' if s is None else str(s)
@@ -132,16 +138,126 @@ def patch_lang_switcher(html, lang):
 
 
 def strip_meta(html):
-    """Remove existing og/twitter/description/keywords/canonical/hreflang so we can rebuild cleanly."""
-    html = re.sub(r'\s*<meta\s+property="og:[^"]+"\s+content="[^"]*"\s*/?>', '', html)
-    html = re.sub(r'\s*<meta\s+name="twitter:[^"]+"\s+content="[^"]*"\s*/?>', '', html)
-    html = re.sub(r'\s*<meta\s+name="description"\s+content="[^"]*"\s*/?>', '', html)
-    html = re.sub(r'\s*<meta\s+name="keywords"\s+content="[^"]*"\s*/?>', '', html)
-    html = re.sub(r'\s*<meta\s+name="robots"\s+content="[^"]*"\s*/?>', '', html)
-    html = re.sub(r'\s*<link\s+rel="canonical"[^>]*/?>', '', html)
-    html = re.sub(r'\s*<link\s+rel="alternate"\s+hreflang="[^"]+"[^>]*/?>', '', html)
-    html = re.sub(r'\s*<script\s+type="application/ld\+json"[^>]*>[\s\S]*?</script>', '', html)
+    """Remove existing meta/links we'll regenerate so we can rebuild cleanly."""
+    pats = [
+        r'\s*<meta\s+property="og:[^"]+"\s+content="[^"]*"\s*/?>',
+        r'\s*<meta\s+name="twitter:[^"]+"\s+content="[^"]*"\s*/?>',
+        r'\s*<meta\s+name="description"\s+content="[^"]*"\s*/?>',
+        r'\s*<meta\s+name="keywords"\s+content="[^"]*"\s*/?>',
+        r'\s*<meta\s+name="robots"\s+content="[^"]*"\s*/?>',
+        r'\s*<meta\s+name="theme-color"\s+content="[^"]*"\s*/?>',
+        r'\s*<meta\s+name="application-name"\s+content="[^"]*"\s*/?>',
+        r'\s*<meta\s+name="apple-mobile-web-app-[a-z-]+"\s+content="[^"]*"\s*/?>',
+        r'\s*<meta\s+name="mobile-web-app-capable"\s+content="[^"]*"\s*/?>',
+        r'\s*<meta\s+name="msapplication-[A-Za-z-]+"\s+content="[^"]*"\s*/?>',
+        r'\s*<meta\s+name="format-detection"\s+content="[^"]*"\s*/?>',
+        r'\s*<meta\s+name="color-scheme"\s+content="[^"]*"\s*/?>',
+        r'\s*<link\s+rel="canonical"[^>]*/?>',
+        r'\s*<link\s+rel="alternate"\s+hreflang="[^"]+"[^>]*/?>',
+        r'\s*<link\s+rel="icon"[^>]*/?>',
+        r'\s*<link\s+rel="apple-touch-icon"[^>]*/?>',
+        r'\s*<link\s+rel="manifest"[^>]*/?>',
+        r'\s*<link\s+rel="me"[^>]*/?>',
+        r'\s*<script\s+type="application/ld\+json"[^>]*>[\s\S]*?</script>',
+    ]
+    for p in pats:
+        html = re.sub(p, '', html)
     return html
+
+
+def build_jsonld(lang, page, t):
+    """Build @graph JSON-LD: WebSite + Organization + WebPage + (BreadcrumbList) + (ItemList)."""
+    site_id = f"{SITE}/#website"
+    org_id = f"{SITE}/#organization"
+    page_url = f"{SITE}/{lang}/{page['file']}"
+    page_id = f"{page_url}#webpage"
+    page_title = get_title(t, page)
+    page_desc = get_meta_desc(t, page['file'])
+
+    website = {
+        "@type": "WebSite", "@id": site_id, "url": f"{SITE}/", "name": BRAND,
+        "description": t.get('hero_description') or t.get('hero_tagline') or '',
+        "inLanguage": lang, "publisher": {"@id": org_id},
+    }
+    organization = {
+        "@type": "Organization", "@id": org_id, "name": BRAND, "url": f"{SITE}/",
+        "description": t.get('about_who_p1') or t.get('hero_description') or '',
+        "logo": {"@type": "ImageObject", "url": f"{SITE}/og-image.svg", "width": 1200, "height": 630},
+        "image": f"{SITE}/og-image.svg",
+        "email": CONTACT_EMAIL, "sameAs": [LINKEDIN_URL],
+        "contactPoint": [{
+            "@type": "ContactPoint", "email": CONTACT_EMAIL,
+            "contactType": "customer service", "availableLanguage": LANGS,
+        }],
+    }
+    webpage = {
+        "@type": "WebPage", "@id": page_id, "url": page_url,
+        "name": page_title, "description": page_desc,
+        "isPartOf": {"@id": site_id}, "about": {"@id": org_id},
+        "inLanguage": lang,
+        "primaryImageOfPage": {"@type": "ImageObject", "url": f"{SITE}/og-image.svg"},
+    }
+    graph = [website, organization, webpage]
+
+    if page['file'] != 'index.html':
+        crumb = {
+            'services.html': t.get('nav_services', 'Services'),
+            'projects.html': t.get('nav_projects', 'Projects'),
+            'terms.html':    t.get('footer_terms', 'Terms of Service'),
+            'privacy.html':  t.get('footer_privacy', 'Privacy Policy'),
+            'contact-success.html': t.get('cs_label', 'Message received'),
+        }.get(page['file'], page['file'])
+        graph.append({
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {"@type": "ListItem", "position": 1, "name": t.get('nav_home', 'Home'),
+                 "item": f"{SITE}/{lang}/index.html"},
+                {"@type": "ListItem", "position": 2, "name": crumb, "item": page_url},
+            ],
+        })
+
+    if page['file'] == 'services.html':
+        svc_keys = [
+            ('svc_web_title', 'svc_web_subtitle'), ('svc_host_title', 'svc_host_subtitle'),
+            ('svc_app_title', 'svc_app_subtitle'), ('svc_mkt_title', 'svc_mkt_subtitle'),
+            ('svc_de_title',  'svc_de_subtitle'),  ('svc_ds_title',  'svc_ds_subtitle'),
+        ]
+        items = []
+        for i, (k_t, k_d) in enumerate(svc_keys, start=1):
+            if not t.get(k_t): continue
+            items.append({
+                "@type": "ListItem", "position": i,
+                "item": {"@type": "Service", "name": t[k_t],
+                         "description": t.get(k_d, ''),
+                         "provider": {"@id": org_id}, "areaServed": "Worldwide"},
+            })
+        if items:
+            graph.append({"@type": "ItemList",
+                          "name": t.get('svc_hero_title') or t.get('nav_services', 'Services'),
+                          "itemListElement": items})
+
+    if page['file'] == 'projects.html':
+        projs = [
+            ('AutoLinked',   'https://autolinked.imationgroup.com',   t.get('proj_al_desc', '')),
+            ('AutoWhatsapp', 'https://autowhatsapp.imationgroup.com', t.get('proj_aw_desc', '')),
+            ('AutoX',        'https://autox.imationgroup.com',        t.get('proj_ax_desc', '')),
+        ]
+        items = []
+        for i, (name, url, dsc) in enumerate(projs, start=1):
+            items.append({
+                "@type": "ListItem", "position": i,
+                "item": {"@type": "SoftwareApplication", "name": name, "url": url,
+                         "description": dsc,
+                         "applicationCategory": "BusinessApplication",
+                         "operatingSystem": "Web",
+                         "publisher": {"@id": org_id},
+                         "offers": {"@type": "Offer", "price": "0", "priceCurrency": "EUR"}},
+            })
+        graph.append({"@type": "ItemList",
+                      "name": t.get('proj_hero_title', 'Projects'),
+                      "itemListElement": items})
+
+    return {"@context": "https://schema.org", "@graph": graph}
 
 
 def inject_seo(html, lang, page, t):
@@ -154,38 +270,47 @@ def inject_seo(html, lang, page, t):
     )
     x_default = f'  <link rel="alternate" hreflang="x-default" href="{SITE}/{DEFAULT}/{page["file"]}" />'
     robots_content = 'noindex, follow' if page['noindex'] else 'index, follow'
+    alt_text = f"{BRAND} — {t.get('hero_tagline', 'Data Engineering and Software Solutions')}"
 
-    json_ld = json.dumps({
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "ImationGroup",
-        "url": SITE,
-        "logo": f"{SITE}/og-image.svg",
-        "sameAs": []
-    }, ensure_ascii=False)
+    json_ld = json.dumps(build_jsonld(lang, page, t), ensure_ascii=False, separators=(',', ':'))
 
     seo = f'''
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/favicon.svg" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <meta name="theme-color" content="{THEME_COLOR}" />
+  <meta name="color-scheme" content="light" />
+  <meta name="application-name" content="{BRAND}" />
+  <meta name="apple-mobile-web-app-title" content="{BRAND}" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="msapplication-TileColor" content="{THEME_COLOR}" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="robots" content="{robots_content}" />
+  <meta name="description" content="{esc(desc)}" />
   <link rel="canonical" href="{url}" />
 {hreflang_lines}
 {x_default}
-  <meta name="robots" content="{robots_content}" />
-  <meta name="description" content="{esc(desc)}" />
+  <link rel="me" href="{LINKEDIN_URL}" />
   <meta property="og:title" content="{esc(title)}" />
   <meta property="og:description" content="{esc(desc)}" />
   <meta property="og:url" content="{url}" />
   <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="ImationGroup" />
+  <meta property="og:site_name" content="{BRAND}" />
   <meta property="og:locale" content="{OG_LOCALE[lang]}" />
   <meta property="og:image" content="{SITE}/og-image.svg" />
+  <meta property="og:image:type" content="image/svg+xml" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="{esc(alt_text)}" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="{esc(title)}" />
   <meta name="twitter:description" content="{esc(desc)}" />
   <meta name="twitter:image" content="{SITE}/og-image.svg" />
+  <meta name="twitter:image:alt" content="{esc(BRAND)}" />
   <script type="application/ld+json">{json_ld}</script>
 '''
-    # Set <html lang="..."> attribute
     html = re.sub(r'<html\s+lang="[^"]*"', f'<html lang="{lang}"', html, count=1, flags=re.IGNORECASE)
-    # Inject SEO block before </head>
     html = re.sub(r'</head>', seo + '</head>', html, count=1, flags=re.IGNORECASE)
     return html
 
@@ -225,6 +350,12 @@ def generate_root_stub(page):
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(desc)}" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/favicon.svg" />
+<link rel="manifest" href="/site.webmanifest" />
+<meta name="theme-color" content="{THEME_COLOR}" />
+<meta name="application-name" content="{BRAND}" />
+<meta name="apple-mobile-web-app-title" content="{BRAND}" />
 <link rel="canonical" href="{canonical_url}" />
 {hreflang_lines}
 {x_default}
@@ -233,7 +364,10 @@ def generate_root_stub(page):
 <meta property="og:description" content="{esc(desc)}" />
 <meta property="og:url" content="{canonical_url}" />
 <meta property="og:type" content="website" />
+<meta property="og:site_name" content="{BRAND}" />
 <meta property="og:image" content="{SITE}/og-image.svg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
 <script>
 (function(){{
   var L={langs_json};
