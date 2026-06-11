@@ -287,40 +287,35 @@ const LANG_META = {
   et: { label: "Eesti",    flag: "🇪🇪" }
 };
 
-// Language detection — respects browser locale
+// Language detection — URL takes precedence (so direct links and crawlers respect /<lang>/),
+// then user preference (localStorage), then browser locale.
+function detectLanguageFromUrl() {
+  if (typeof window === 'undefined') return null;
+  const m = window.location.pathname.match(/^\/([a-z]{2})(\/|$)/);
+  return m && TRANSLATIONS[m[1]] ? m[1] : null;
+}
+
 function detectLanguage() {
-  const saved = localStorage.getItem('ig_lang');
-  if (saved && TRANSLATIONS[saved]) return saved;
-  const langs = navigator.languages || [navigator.language || 'en'];
+  const urlLang = detectLanguageFromUrl();
+  if (urlLang) return urlLang;
+  try {
+    const saved = localStorage.getItem('ig_lang');
+    if (saved && TRANSLATIONS[saved]) return saved;
+  } catch (_) {}
+  const langs = (typeof navigator !== 'undefined' && (navigator.languages || [navigator.language])) || ['en'];
   for (const l of langs) {
+    if (!l) continue;
     const code = l.toLowerCase().split('-')[0];
     if (TRANSLATIONS[code]) return code;
-    // region-based fallback
-    if (l.toLowerCase().startsWith('gl')) return 'gl';
-    if (l.toLowerCase().startsWith('ca')) return 'ca';
-    if (l.toLowerCase().startsWith('eu')) return 'eu';
-    if (l.toLowerCase().startsWith('pt')) return 'pt';
-    if (l.toLowerCase().startsWith('et')) return 'et';
   }
   return 'en';
 }
 
-function setLanguage(lang) {
-  if (!TRANSLATIONS[lang]) return;
-  localStorage.setItem('ig_lang', lang);
+// Update the language switcher UI without navigating. Used at page boot
+// once the URL language is already correct.
+function updateSwitcherUI(lang) {
+  if (typeof document === 'undefined') return;
   document.documentElement.lang = lang;
-  const t = TRANSLATIONS[lang];
-  document.querySelectorAll('[data-i18n]').forEach(el => {
-    const key = el.getAttribute('data-i18n');
-    if (!t[key]) return;
-    if (el.tagName === 'TITLE') document.title = t[key];
-    else el.textContent = t[key];
-  });
-  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-    const key = el.getAttribute('data-i18n-placeholder');
-    if (t[key]) el.placeholder = t[key];
-  });
-  // Update switcher UI
   document.querySelectorAll('.lang-option[data-lang]').forEach(opt => {
     opt.classList.toggle('active', opt.getAttribute('data-lang') === lang);
   });
@@ -329,8 +324,30 @@ function setLanguage(lang) {
   });
 }
 
+// Setting a language now means navigating to the URL of that language for the current page.
+// Each /<lang>/<page>.html is pre-rendered server-side, so crawlers see the translated content.
+function setLanguage(lang) {
+  if (!TRANSLATIONS[lang]) return;
+  try { localStorage.setItem('ig_lang', lang); } catch (_) {}
+  if (typeof window === 'undefined') return;
+  const path = window.location.pathname;
+  const urlMatch = path.match(/^\/([a-z]{2})\/(.+)$/);
+  if (urlMatch && TRANSLATIONS[urlMatch[1]]) {
+    if (urlMatch[1] === lang) {
+      // Already in the correct language URL — just refresh the switcher UI.
+      updateSwitcherUI(lang);
+      return;
+    }
+    window.location.href = '/' + lang + '/' + urlMatch[2] + window.location.hash;
+    return;
+  }
+  // We are not under /<lang>/… (e.g. legacy URL or root): go to the language version.
+  const file = (path === '/' || path === '') ? 'index.html' : (path.split('/').pop() || 'index.html');
+  window.location.href = '/' + lang + '/' + file + window.location.hash;
+}
+
 function getCurrentLang() {
-  return localStorage.getItem('ig_lang') || detectLanguage();
+  return detectLanguage();
 }
 
 if (typeof module !== 'undefined') module.exports = { TRANSLATIONS, LANG_META, detectLanguage, setLanguage, getCurrentLang };

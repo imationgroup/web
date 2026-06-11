@@ -152,6 +152,23 @@ curl https://api.imationgroup.com/api/health
 Cada `git push` a `main` lanza el workflow automáticamente. Si quieres
 forzar uno, `Actions → Deploy to VPS → Run workflow`.
 
+### Antes de commit: regenerar i18n + SEO
+
+Las páginas viven en `templates/` (fuente de verdad). El comando
+
+```bash
+python scripts/build-i18n.py
+```
+
+regenera para cada idioma soportado:
+
+- `/<lang>/<file>.html` con contenido pre-traducido y meta tags por idioma
+- `index.html`, `services.html`, … (stubs en la raíz) que detectan idioma y redirigen
+- `sitemap.xml` y `robots.txt`
+
+Requisito: `pip install json5`. Hay que correrlo siempre que cambies
+templates o `i18n.js`, y commitear el resultado.
+
 ## Rollback
 
 ```bash

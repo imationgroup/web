@@ -1,0 +1,2257 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=GT-PHP3T9KV"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GT-PHP3T9KV');
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="page_title">ImationGroup | Andmete Inseneeria ja Tarkvaralahendused</title>
+    <link rel="preconnect" href="[fonts.googleapis.com](https://fonts.googleapis.com)">
+    <link rel="preconnect" href="[fonts.gstatic.com](https://fonts.gstatic.com)" crossorigin>
+    <link href="[fonts.googleapis.com](https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap)" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-blue: #0066CC;
+            --primary-teal: #00A5A8;
+            --dark-blue: #003366;
+            --light-teal: #E6F7F7;
+            --gradient: linear-gradient(135deg, #0066CC 0%, #00A5A8 100%);
+            --text-dark: #1A1A2E;
+            --text-gray: #6B7280;
+            --white: #FFFFFF;
+            --light-gray: #F8FAFC;
+            --border-color: #E5E7EB;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text-dark);
+            line-height: 1.6;
+            background: var(--white);
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 72px;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-blue);
+        }
+
+        /* Projects dropdown in nav */
+        .nav-projects {
+            position: relative;
+        }
+        .nav-projects > a {
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .nav-projects > a::before {
+            /* Pequeña flecha ▾ que rota */
+            content: '';
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-right: 1.5px solid currentColor;
+            border-bottom: 1.5px solid currentColor;
+            transform: rotate(45deg);
+            margin-left: 6px;
+            margin-bottom: 2px;
+            transition: transform 0.2s ease;
+        }
+        .nav-projects.open > a::before {
+            transform: rotate(225deg);
+            margin-bottom: -2px;
+        }
+        .nav-projects-dropdown {
+            position: absolute;
+            top: calc(100% + 12px);
+            left: 50%;
+            transform: translateX(-50%) translateY(-8px);
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+            min-width: 220px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.25s ease;
+            z-index: 1001;
+            padding: 6px 0;
+            list-style: none;
+        }
+        .nav-projects.open .nav-projects-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+        .nav-projects-dropdown li a {
+            display: block;
+            padding: 10px 18px;
+            font-size: 0.92rem;
+            color: var(--text-dark);
+            text-decoration: none;
+        }
+        .nav-projects-dropdown li a::after {
+            display: none;
+        }
+        .nav-projects-dropdown li a:hover {
+            background: rgba(20, 184, 166, 0.08);
+            color: var(--primary-teal);
+        }
+        .nav-projects-dropdown li.divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 4px 0;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .mobile-menu-btn span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: var(--text-dark);
+            margin: 6px 0;
+            transition: all 0.3s ease;
+        }
+
+        /* Language Switcher */
+        .lang-switcher {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin-left: 16px;
+        }
+
+        .lang-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            background: transparent;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            transition: all 0.3s ease;
+        }
+
+        .lang-btn:hover {
+            border-color: var(--primary-teal);
+            color: var(--primary-teal);
+        }
+
+        .lang-btn svg {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .lang-dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px);
+            transition: all 0.25s ease;
+            z-index: 1001;
+            min-width: 140px;
+        }
+
+        .lang-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .lang-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 10px 16px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            transition: background 0.2s ease;
+        }
+
+        .lang-option:hover {
+            background: var(--light-teal);
+        }
+
+        .lang-option.active {
+            color: var(--primary-teal);
+            font-weight: 600;
+        }
+
+        .lang-flag { font-size: 1.2rem; line-height: 1; }
+        .lang-flag-icon { width: 18px; height: 14px; object-fit: cover; border-radius: 2px; flex-shrink: 0; }
+        .lang-chevron { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; margin-left: -2px; transition: transform 0.2s; }
+        .lang-btn.open .lang-chevron { transform: rotate(180deg); }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #F0F9FF 0%, #E6F7F7 50%, #F0F9FF 100%);
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+        }
+
+        .hero-bg::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(0, 165, 168, 0.1) 0%, transparent 70%);
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .hero-bg::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 102, 204, 0.1) 0%, transparent 70%);
+            animation: float 15s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, -30px); }
+        }
+
+        .grid-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(0, 102, 204, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 102, 204, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+        }
+
+        .floating-element {
+            position: absolute;
+            opacity: 0.6;
+            animation: floatElement 6s ease-in-out infinite;
+        }
+
+        .floating-element:nth-child(1) {
+            top: 20%;
+            right: 15%;
+            animation-delay: 0s;
+        }
+
+        .floating-element:nth-child(2) {
+            top: 60%;
+            right: 25%;
+            animation-delay: 1s;
+        }
+
+        .floating-element:nth-child(3) {
+            top: 40%;
+            right: 10%;
+            animation-delay: 2s;
+        }
+
+        .floating-element:nth-child(4) {
+            top: 70%;
+            right: 35%;
+            animation-delay: 3s;
+        }
+
+        .floating-element:nth-child(5) {
+            top: 25%;
+            right: 30%;
+            animation-delay: 4s;
+        }
+
+        @keyframes floatElement {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 120px 24px 80px;
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .hero-text h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 16px;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-tagline {
+            font-size: 1.5rem;
+            color: var(--primary-teal);
+            font-weight: 500;
+            margin-bottom: 24px;
+        }
+
+        .hero-description {
+            font-size: 1.125rem;
+            color: var(--text-gray);
+            max-width: 500px;
+            margin-bottom: 40px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            color: var(--white);
+            box-shadow: 0 4px 15px rgba(0, 102, 204, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 102, 204, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--white);
+            color: var(--primary-blue);
+            border: 2px solid var(--primary-blue);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .hero-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hero-graphic {
+            width: 100%;
+            max-width: 500px;
+            aspect-ratio: 1;
+            position: relative;
+        }
+
+        .data-visualization {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .circle-ring {
+            position: absolute;
+            border: 2px solid;
+            border-radius: 50%;
+            animation: rotate 20s linear infinite;
+        }
+
+        .circle-ring:nth-child(1) {
+            width: 100%;
+            height: 100%;
+            border-color: rgba(0, 102, 204, 0.2);
+            animation-duration: 25s;
+        }
+
+        .circle-ring:nth-child(2) {
+            width: 80%;
+            height: 80%;
+            top: 10%;
+            left: 10%;
+            border-color: rgba(0, 165, 168, 0.3);
+            animation-duration: 20s;
+            animation-direction: reverse;
+        }
+
+        .circle-ring:nth-child(3) {
+            width: 60%;
+            height: 60%;
+            top: 20%;
+            left: 20%;
+            border-color: rgba(0, 102, 204, 0.4);
+            animation-duration: 15s;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .center-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            background: var(--gradient);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 20px 40px rgba(0, 102, 204, 0.3);
+        }
+
+        .center-icon svg {
+            width: 60px;
+            height: 60px;
+            fill: white;
+        }
+
+        /* Sections Common Styles */
+        section {
+            padding: 100px 24px;
+        }
+
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-label {
+            display: inline-block;
+            padding: 8px 16px;
+            background: var(--light-teal);
+            color: var(--primary-teal);
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 16px;
+        }
+
+        .section-subtitle {
+            font-size: 1.125rem;
+            color: var(--text-gray);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* About Section */
+        .about {
+            background: var(--white);
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .about-text h3 {
+            font-size: 1.75rem;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+        }
+
+        .about-text p {
+            color: var(--text-gray);
+            margin-bottom: 16px;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-top: 40px;
+        }
+
+        .value-item {
+            padding: 24px;
+            background: var(--light-gray);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .value-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .value-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        .value-icon svg {
+            width: 24px;
+            height: 24px;
+            stroke: white;
+            fill: none;
+        }
+
+        .value-item h4 {
+            font-size: 1.125rem;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .value-item p {
+            font-size: 0.9rem;
+            color: var(--text-gray);
+            margin: 0;
+        }
+
+        .about-visual {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .stat-card {
+            padding: 32px;
+            border-radius: 16px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:nth-child(1) { background: linear-gradient(135deg, #0066CC 0%, #0088DD 100%); }
+        .stat-card:nth-child(2) { background: linear-gradient(135deg, #00A5A8 0%, #00C4C7 100%); }
+        .stat-card:nth-child(3) { background: linear-gradient(135deg, #00A5A8 0%, #00C4C7 100%); }
+        .stat-card:nth-child(4) { background: linear-gradient(135deg, #0066CC 0%, #0088DD 100%); }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px rgba(0, 102, 204, 0.3);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Services Section */
+        .services {
+            background: var(--light-gray);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .service-card {
+            background: var(--white);
+            padding: 40px;
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .service-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .service-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, rgba(0, 102, 204, 0.1) 0%, rgba(0, 165, 168, 0.1) 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+
+        .service-icon svg {
+            width: 32px;
+            height: 32px;
+            stroke: var(--primary-blue);
+            fill: none;
+        }
+
+        .service-card h3 {
+            font-size: 1.375rem;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+        }
+
+        .service-card p {
+            color: var(--text-gray);
+            font-size: 0.95rem;
+        }
+
+        /* Technologies Section */
+        .technologies {
+            background: var(--white);
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 24px;
+        }
+
+        .tech-item {
+            background: var(--light-gray);
+            padding: 32px 24px;
+            border-radius: 16px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .tech-item:hover {
+            background: var(--white);
+            border-color: var(--primary-teal);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0, 165, 168, 0.15);
+        }
+
+        .tech-icon {
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tech-icon svg {
+            width: 48px;
+            height: 48px;
+        }
+
+        .tech-icon img {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+        }
+
+        .tech-item span {
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+        }
+
+        /* Projects Section */
+        .projects {
+            background: linear-gradient(135deg, #003366 0%, #0066CC 100%);
+            color: white;
+        }
+
+        .projects .section-label {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+
+        .projects .section-title {
+            color: white;
+        }
+
+        .projects .section-subtitle {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .project-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .project-card:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .project-icon {
+            width: 56px;
+            height: 56px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .project-icon svg {
+            width: 28px;
+            height: 28px;
+            stroke: white;
+            fill: none;
+        }
+
+        .project-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 12px;
+        }
+
+        .project-card p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.95rem;
+        }
+
+        /* Contact Section */
+        .contact {
+            background: var(--light-gray);
+        }
+
+        .contact-content {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 60px;
+        }
+
+        .contact-info h3 {
+            font-size: 1.75rem;
+            color: var(--text-dark);
+            margin-bottom: 16px;
+        }
+
+        .contact-info > p {
+            color: var(--text-gray);
+            margin-bottom: 32px;
+        }
+
+        .contact-details {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .contact-item-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .contact-item-icon svg {
+            width: 24px;
+            height: 24px;
+            stroke: white;
+            fill: none;
+        }
+
+        .contact-item-text h4 {
+            font-size: 0.875rem;
+            color: var(--text-gray);
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .contact-item-text p {
+            font-size: 1rem;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        .contact-form-wrapper {
+            background: var(--white);
+            padding: 48px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            padding: 14px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            background: var(--light-gray);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-teal);
+            background: var(--white);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 140px;
+        }
+
+        .contact-form .btn {
+            align-self: flex-start;
+            padding: 16px 40px;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--text-dark);
+            color: white;
+            padding: 60px 24px 30px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 60px;
+            margin-bottom: 40px;
+        }
+
+        .footer-brand h3 {
+            font-size: 1.5rem;
+            margin-bottom: 16px;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .footer-brand p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.95rem;
+            max-width: 300px;
+        }
+
+        .footer-column h4 {
+            font-size: 1rem;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .footer-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-teal);
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-bottom p {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.875rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 16px;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--primary-teal);
+        }
+
+        .social-links svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 72px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            padding: 0;
+            z-index: 999;
+            overflow-y: auto;
+            flex-direction: column;
+        }
+
+        .mobile-menu.active {
+            display: flex;
+        }
+
+        .mobile-menu a {
+            display: block;
+            padding: 16px 24px;
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.05rem;
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.2s ease;
+        }
+
+        .mobile-menu a:last-child {
+            border-bottom: none;
+        }
+
+        .mobile-menu a:hover {
+            background: var(--light-teal);
+            color: var(--primary-teal);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-text h1 {
+                font-size: 2.75rem;
+            }
+
+            .hero-description {
+                margin: 0 auto 40px;
+            }
+
+            .hero-buttons {
+                justify-content: center;
+            }
+
+            .hero-visual {
+                display: none;
+            }
+
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+
+            .about-visual {
+                order: -1;
+            }
+
+            .contact-content {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero-text h1 {
+                font-size: 2.25rem;
+            }
+
+            .hero-tagline {
+                font-size: 1.25rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .values-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .services-grid,
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+
+            .contact-form-wrapper {
+                padding: 32px 24px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            section {
+                padding: 60px 16px;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .tech-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+
+  <link rel="canonical" href="https://imationgroup.com/et/index.html" />
+  <link rel="alternate" hreflang="en" href="https://imationgroup.com/en/index.html" />
+  <link rel="alternate" hreflang="es" href="https://imationgroup.com/es/index.html" />
+  <link rel="alternate" hreflang="gl" href="https://imationgroup.com/gl/index.html" />
+  <link rel="alternate" hreflang="ca" href="https://imationgroup.com/ca/index.html" />
+  <link rel="alternate" hreflang="pt" href="https://imationgroup.com/pt/index.html" />
+  <link rel="alternate" hreflang="eu" href="https://imationgroup.com/eu/index.html" />
+  <link rel="alternate" hreflang="et" href="https://imationgroup.com/et/index.html" />
+  <link rel="alternate" hreflang="x-default" href="https://imationgroup.com/en/index.html" />
+  <meta name="robots" content="index, follow" />
+  <meta name="description" content="Andmete Inseneeria ja Tarkvaralahendused — Me muudame andmed rakendatavateks teadmisteks ja ehitame skaleeritavaid tarkvaralahendusi, mis soodustavad ärikasvu." />
+  <meta property="og:title" content="ImationGroup | Andmete Inseneeria ja Tarkvaralahendused" />
+  <meta property="og:description" content="Andmete Inseneeria ja Tarkvaralahendused — Me muudame andmed rakendatavateks teadmisteks ja ehitame skaleeritavaid tarkvaralahendusi, mis soodustavad ärikasvu." />
+  <meta property="og:url" content="https://imationgroup.com/et/index.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="ImationGroup" />
+  <meta property="og:locale" content="et_EE" />
+  <meta property="og:image" content="https://imationgroup.com/og-image.svg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="ImationGroup | Andmete Inseneeria ja Tarkvaralahendused" />
+  <meta name="twitter:description" content="Andmete Inseneeria ja Tarkvaralahendused — Me muudame andmed rakendatavateks teadmisteks ja ehitame skaleeritavaid tarkvaralahendusi, mis soodustavad ärikasvu." />
+  <meta name="twitter:image" content="https://imationgroup.com/og-image.svg" />
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "ImationGroup", "url": "https://imationgroup.com", "logo": "https://imationgroup.com/og-image.svg", "sameAs": []}</script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#home" class="logo">ImationGroup</a>
+            <ul class="nav-links">
+                <li><a href="#home" data-i18n="nav_home">Avaleht</a></li>
+                <li><a href="#about" data-i18n="nav_about">Meist</a></li>
+                <li><a href="#services" data-i18n="nav_services">Teenused</a></li>
+                <li><a href="#technologies" data-i18n="nav_technologies">Tehnoloogiad</a></li>
+                <li class="nav-projects" id="navProjects">
+                    <a href="#projects" data-i18n="nav_projects" id="navProjectsToggle">Projektid</a>
+                    <ul class="nav-projects-dropdown" id="navProjectsMenu">
+                        <li><a href="/et/projects.html" data-i18n="nav_projects_all">Kõik projektid</a></li>
+                        <li class="divider"></li>
+                        <li><a href="/et/projects.html#autolinked">AutoLinked</a></li>
+                        <li><a href="/et/projects.html#autowhatsapp">AutoWhatsapp</a></li>
+                        <li><a href="/et/projects.html#autox">AutoX</a></li>
+                    </ul>
+                </li>
+                <li><a href="#contact" data-i18n="nav_contact">Kontakt</a></li>
+            </ul>
+            <div class="lang-switcher">
+                <button class="lang-btn" id="langToggle" aria-label="Change language" aria-expanded="false">
+                    <img class="lang-flag-icon" id="currentLangFlag" src="https://flagicons.lipis.dev/flags/4x3/ee.svg" alt="">
+                    <span id="currentLangLabel">ET</span>
+                    <svg class="lang-chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <div class="lang-dropdown" id="langDropdown">
+                    <button class="lang-option active" data-lang="en">
+                        <img class="lang-flag-icon" src="https://flagicons.lipis.dev/flags/4x3/gb.svg" alt=""> English
+                    </button>
+                    <button class="lang-option" data-lang="es">
+                        <img class="lang-flag-icon" src="https://flagicons.lipis.dev/flags/4x3/es.svg" alt=""> Español
+                    </button>
+                    <button class="lang-option" data-lang="gl">
+                        <img class="lang-flag-icon" src="https://flagicons.lipis.dev/flags/4x3/es-ga.svg" alt=""> Galego
+                    </button>
+                    <button class="lang-option" data-lang="ca">
+                        <img class="lang-flag-icon" src="https://flagicons.lipis.dev/flags/4x3/es-ct.svg" alt=""> Català
+                    </button>
+                    <button class="lang-option" data-lang="pt">
+                        <img class="lang-flag-icon" src="https://flagicons.lipis.dev/flags/4x3/pt.svg" alt=""> Português
+                    </button>
+                    <button class="lang-option" data-lang="eu">
+                        <img class="lang-flag-icon" src="https://flagicons.lipis.dev/flags/4x3/es-pv.svg" alt=""> Euskera
+                    </button>
+                    <button class="lang-option" data-lang="et">
+                        <img class="lang-flag-icon" src="https://flagicons.lipis.dev/flags/4x3/ee.svg" alt=""> Eesti
+                    </button>
+                </div>
+            </div>
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu">
+        <a href="#home" data-i18n="nav_home">Avaleht</a>
+        <a href="#about" data-i18n="nav_about">Meist</a>
+        <a href="#services" data-i18n="nav_services">Teenused</a>
+        <a href="#technologies" data-i18n="nav_technologies">Tehnoloogiad</a>
+        <a href="/et/projects.html" data-i18n="nav_projects">Projektid</a>
+        <a href="/et/projects.html#autolinked">AutoLinked</a>
+        <a href="/et/projects.html#autowhatsapp">AutoWhatsapp</a>
+        <a href="/et/projects.html#autox">AutoX</a>
+        <a href="#contact" data-i18n="nav_contact">Kontakt</a>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-bg">
+            <div class="grid-pattern"></div>
+            <div class="floating-elements">
+                <div class="floating-element">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#0066CC" stroke-width="1.5">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1m15.5-6.5l-4 4m-4 4l-4 4m12 0l-4-4m-4-4l-4-4"/>
+                    </svg>
+                </div>
+                <div class="floating-element">
+                    <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="#00A5A8" stroke-width="1.5">
+                        <rect x="3" y="3" width="18" height="18" rx="2"/>
+                        <path d="M7 7h4v4H7zm6 0h4v4h-4zm-6 6h4v4H7zm6 0h4v4h-4z"/>
+                    </svg>
+                </div>
+                <div class="floating-element">
+                    <svg width="45" height="45" viewBox="0 0 24 24" fill="none" stroke="#0066CC" stroke-width="1.5">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                        <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    </svg>
+                </div>
+                <div class="floating-element">
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#00A5A8" stroke-width="1.5">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
+                    </svg>
+                </div>
+                <div class="floating-element">
+                    <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#0066CC" stroke-width="1.5">
+                        <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>ImationGroup</h1>
+                <p class="hero-tagline" data-i18n="hero_tagline">Andmete Inseneeria ja Tarkvaralahendused</p>
+                <p class="hero-description" data-i18n="hero_description">Me muudame andmed rakendatavateks teadmisteks ja ehitame skaleeritavaid tarkvaralahendusi, mis soodustavad ärikasvu.</p>
+                <div class="hero-buttons">
+                    <a href="#contact" class="btn btn-primary">
+                        <span data-i18n="hero_btn_contact">Võta Ühendust</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14m-7-7l7 7-7 7"/>
+                        </svg>
+                    </a>
+                    <a href="#services" class="btn btn-secondary" data-i18n="hero_btn_services">Meie Teenused</a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="hero-graphic">
+                    <div class="data-visualization">
+                        <div class="circle-ring"></div>
+                        <div class="circle-ring"></div>
+                        <div class="circle-ring"></div>
+                        <div class="center-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="section-container">
+            <div class="section-header fade-in">
+                <span class="section-label" data-i18n="about_label">Meist</span>
+                <h2 class="section-title" data-i18n="about_title">Pioneersed Andmepõhised Lahendused</h2>
+                <p class="section-subtitle" data-i18n="about_subtitle">Ettevõtluse tuleviku ehitamine innovatsiooni ja ekspertiisi kaudu</p>
+            </div>
+            <div class="about-content">
+                <div class="about-text fade-in">
+                    <h3 data-i18n="about_who_title">Kes Me Oleme</h3>
+                    <p data-i18n="about_who_p1">ImationGroup on edasivaatav tehnoloogiaettevõte, mis on spetsialiseerunud andmete inseneeriale, andmeteadusele ja skaleeritavatele tarkvaralahendustele.</p>
+                    <p data-i18n="about_who_p2">Meie meeskond ühendab sügava tehnilise ekspertiisi kire lahendada keerulisi äriprobleeme.</p>
+                    <div class="values-grid">
+                        <div class="value-item">
+                            <div class="value-icon">
+                                <svg viewBox="0 0 24 24" stroke-width="2">
+                                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                                </svg>
+                            </div>
+                            <h4 data-i18n="value_innovation">Innovatsioon</h4>
+                            <p data-i18n="value_innovation_desc">Tipptasemel tehnoloogiate kasutamine läbimurdelahenduste pakkumiseks</p>
+                        </div>
+                        <div class="value-item">
+                            <div class="value-icon">
+                                <svg viewBox="0 0 24 24" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <path d="M12 6v6l4 2"/>
+                                </svg>
+                            </div>
+                            <h4 data-i18n="value_reliability">Usaldusväärsus</h4>
+                            <p data-i18n="value_reliability_desc">Vastupidavate süsteemide ehitamine, mis töötavad järjepidevalt igas olukorras</p>
+                        </div>
+                        <div class="value-item">
+                            <div class="value-icon">
+                                <svg viewBox="0 0 24 24" stroke-width="2">
+                                    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                                    <circle cx="9" cy="7" r="4"/>
+                                    <path d="M23 21v-2a4 4 0 00-3-3.87m-4-12a4 4 0 010 7.75"/>
+                                </svg>
+                            </div>
+                            <h4 data-i18n="value_partnership">Partnerlus</h4>
+                            <p data-i18n="value_partnership_desc">Tihe koostöö klientidega nende ootuste mõistmiseks ja ületamiseks</p>
+                        </div>
+                        <div class="value-item">
+                            <div class="value-icon">
+                                <svg viewBox="0 0 24 24" stroke-width="2">
+                                    <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                                    <path d="M22 4L12 14.01l-3-3"/>
+                                </svg>
+                            </div>
+                            <h4 data-i18n="value_excellence">Tipptase</h4>
+                            <p data-i18n="value_excellence_desc">Pühendunud kõrgeima kvaliteedi saavutamisele igas projektis</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-visual fade-in">
+                    <div class="stat-card">
+                        <div class="stat-number">50+</div>
+                        <div class="stat-label" data-i18n="stat_projects">Teostatud Projekte</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">99%</div>
+                        <div class="stat-label" data-i18n="stat_satisfaction">Klientide Rahulolu</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label" data-i18n="stat_support">Tugi Saadaval</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">10+</div>
+                        <div class="stat-label" data-i18n="stat_experience">Kogemuse Aastat</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services">
+        <div class="section-container">
+            <div class="section-header fade-in">
+                <span class="section-label" data-i18n="services_label">Teenused</span>
+                <h2 class="section-title" data-i18n="services_title">Mida Me Pakume</h2>
+                <p class="section-subtitle" data-i18n="services_subtitle">Teie ärile kohandatud terviklikud tehnoloogilahendused</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card fade-in">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" stroke-width="2">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                            <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
+                        </svg>
+                    </div>
+                    <h3 data-i18n="svc_data_eng">Andmete Inseneeria</h3>
+                    <p data-i18n="svc_data_eng_desc">Disainime ja ehitame robustseid andmetorustikke ja ETL-protsesse, mis käsitlevad suuri andmemahtusid.</p>
+                </div>
+                <div class="service-card fade-in">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" stroke-width="2">
+                            <path d="M21.21 15.89A10 10 0 118 2.83"/>
+                            <path d="M22 12A10 10 0 0012 2v10z"/>
+                        </svg>
+                    </div>
+                    <h3 data-i18n="svc_data_sci">Andmeteadus</h3>
+                    <p data-i18n="svc_data_sci_desc">Muudame toorandmed rakendatavateks teadmisteks täiustatud analüütika ja ennustavate algoritmide abil.</p>
+                </div>
+                <div class="service-card fade-in">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" stroke-width="2">
+                            <polyline points="16 18 22 12 16 6"/>
+                            <polyline points="8 6 2 12 8 18"/>
+                        </svg>
+                    </div>
+                    <h3 data-i18n="svc_soft_dev">Tarkvaraarendus</h3>
+                    <p data-i18n="svc_soft_dev_desc">Ehitame kohandatud tarkvaralahendusi kaasaegsete arhitektuuridega, mis kasvavad koos teie äriga.</p>
+                </div>
+                <div class="service-card fade-in">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" stroke-width="2">
+                            <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"/>
+                            <ellipse cx="12" cy="12" rx="10" ry="10" fill="none"/>
+                            <path d="M7 14.5s1.5 2 5 2 5-2 5-2"/>
+                            <path d="M8.5 9h.01M15.5 9h.01"/>
+                            <circle cx="12" cy="5" r="2" fill="none"/>
+                            <path d="M12 3v4"/>
+                        </svg>
+                    </div>
+                    <h3 data-i18n="svc_cloud">Pilvlahendused</h3>
+                    <p data-i18n="svc_cloud_desc">Migreerume, optimiseerime ja haldame pilveinfrastruktuuri AWS-is, Azure'is või GCP-s.</p>
+                </div>
+                <div class="service-card fade-in">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 00-3-3.87m-4-12a4 4 0 010 7.75"/>
+                        </svg>
+                    </div>
+                    <h3 data-i18n="svc_consulting">Konsultatsioon</h3>
+                    <p data-i18n="svc_consulting_desc">Strateegiline tehnoloogiakonsultatsioon teadlike otsuste tegemiseks.</p>
+                </div>
+            
+				<div class="service-card fade-in visible">
+				  <div class="service-icon">
+				    <svg viewBox="0 0 24 24" stroke-width="2">
+				      <path d="M3 3v18h18"/>
+				      <rect x="7" y="13" width="3" height="5" rx="0.5"/>
+				      <rect x="12" y="9" width="3" height="9" rx="0.5"/>
+				      <rect x="17" y="5" width="3" height="13" rx="0.5"/>
+				    </svg>
+				  </div>
+				  <h3 data-i18n="svc_bi">Business Intelligence</h3>
+				  <p data-i18n="svc_bi_desc">Aitame meeskondadel luua aruandluskihte ja analüütilisi keskkondi usaldusväärsete andmetega.</p>
+				</div>
+			
+            <!-- Ver más servicios -->
+            <div style="text-align:center;margin-top:48px;">
+                <a href="/et/services.html" class="btn btn-primary" data-i18n="services_more">
+                    See All Services
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
+                </a>
+            </div>
+        </div>
+    </section>
+    <!-- Technologies Section -->
+    <section id="technologies" class="technologies">
+        <div class="section-container">
+            <div class="section-header fade-in">
+                <span class="section-label" data-i18n="tech_label">Tehnoloogiad</span>
+                <h2 class="section-title" data-i18n="tech_title">Meie Tehnoloogiavirn</h2>
+                <p class="section-subtitle" data-i18n="tech_subtitle">Juhtivad tehnoloogiad, mis toitavad meie lahendusi</p>
+            </div>
+            <div class="tech-grid fade-in">
+                <div class="tech-item">
+                    <div class="tech-icon">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" alt="Python">
+                    </div>
+                    <span>Python</span>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg" alt="SQL">
+                    </div>
+                    <span>SQL</span>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/apachespark/apachespark-original.svg" alt="Apache Spark">
+                    </div>
+                    <span>Apache Spark</span>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/apacheairflow/apacheairflow-original.svg" alt="Airflow">
+                    </div>
+                    <span>Airflow</span>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg" alt="Docker">
+                    </div>
+                    <span>Docker</span>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/kubernetes/kubernetes-original.svg" alt="Kubernetes">
+                    </div>
+                    <span>Kubernetes</span>
+                </div>
+<div class="tech-item">
+    <div class="tech-icon">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" alt="AWS">
+    </div>
+    <span>AWS</span>
+</div>
+
+
+<div class="tech-item">
+    <div class="tech-icon">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg" alt="PostgreSQL">
+    </div>
+    <span>PostgreSQL</span>
+</div>
+
+<div class="tech-item">
+    <div class="tech-icon">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mariadb/mariadb-original.svg" alt="MariaDB">
+    </div>
+    <span>MariaDB</span>
+</div>
+
+<div class="tech-item">
+    <div class="tech-icon">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/apachekafka/apachekafka-original.svg" alt="Apache Kafka">
+    </div>
+    <span>Apache Kafka</span>
+</div>
+
+<div class="tech-item">
+    <div class="tech-icon">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/hadoop/hadoop-original.svg" alt="Hadoop">
+    </div>
+    <span>Hadoop</span>
+</div>
+
+<div class="tech-item">
+    <div class="tech-icon">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/amazons3.svg" alt="Amazon S3">
+    </div>
+    <span>Amazon S3</span>
+</div>
+
+<div class="tech-item">
+    <div class="tech-icon">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/googlebigquery.svg" alt="BigQuery">
+    </div>
+    <span>BigQuery</span>
+</div>
+
+<div class="tech-item">
+    <div class="tech-icon">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/oracle/oracle-original.svg" alt="Oracle">
+    </div>
+    <span>Oracle</span>
+</div>
+
+</div>
+
+
+</div>
+</section>
+
+<!-- Projects Section -->
+<section id="projects" class="projects">
+<div class="section-container">
+    <div class="section-header fade-in">
+        <span class="section-label" data-i18n="projects_label">Projektid</span>
+        <h2 class="section-title" data-i18n="projects_title">Skaleeritavad Lahendused Tegevuses</h2>
+        <p class="section-subtitle" data-i18n="projects_subtitle">Terviklike süsteemide tarnimmine, mis muudavad andmed väärtuseks</p>
+    </div>
+    <div class="projects-grid">
+        <div class="project-card fade-in">
+            <div class="project-icon">
+                <svg viewBox="0 0 24 24"><path d="M3 4h18M3 12h18M3 20h18"/></svg>
+            </div>
+            <h3 data-i18n="proj_pipelines">Andmetorustikud</h3>
+            <p data-i18n="proj_pipelines_desc">Automatiseeritud andmetorustikud analüütikasüsteemidele usaldusväärseks tarnimiseks.</p>
+        </div>
+        <div class="project-card fade-in">
+            <div class="project-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 20v-8m0 0l8-8m-8 8l-8-8"/></svg>
+            </div>
+            <h3 data-i18n="proj_etl">ETL Süsteemid</h3>
+            <p data-i18n="proj_etl_desc">Suure jõudlusega ETL-raamistikud sujuvaks andmete integreerimiseks.</p>
+        </div>
+        <div class="project-card fade-in">
+            <div class="project-icon">
+                <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><rect x="6" y="14" width="3" height="4" rx="0.5"/><rect x="11" y="10" width="3" height="8" rx="0.5"/><rect x="16" y="6" width="3" height="12" rx="0.5"/></svg>
+            </div>
+            <h3 data-i18n="proj_bi">Business Intelligence</h3>
+            <p data-i18n="proj_bi_desc">BI ja analüütika armatuurlauad strateegiliseks otsuste tegemiseks reaalajas.</p>
+        </div>
+        <div class="project-card fade-in">
+            <div class="project-icon">
+                <svg viewBox="0 0 24 24"><path d="M8 21h8M12 17V3"/></svg>
+            </div>
+            <h3 data-i18n="proj_custom">Kohandatud Tarkvara</h3>
+            <p data-i18n="proj_custom_desc">Teie ökosüsteemile kohandatud tarkvara — skaleeritav, turvaline ja pilvevalmis.</p>
+        </div>
+        <div class="project-card fade-in">
+            <div class="project-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 2l9 4v9a9 9 0 01-18 0V6l9-4z"/></svg>
+            </div>
+            <h3 data-i18n="proj_cloud">Pilveinfrastruktuur</h3>
+            <p data-i18n="proj_cloud_desc">Cloud-native arhitektuurid AWS-is skaleeritavuse ja tõhususe jaoks.</p>
+        </div>
+		<div class="project-card fade-in visible">
+          <div class="project-icon">
+              <svg viewBox="0 0 24 24"><rect x="2" y="2" width="8" height="8" rx="1"/><rect x="14" y="2" width="8" height="8" rx="1"/><rect x="2" y="14" width="8" height="8" rx="1"/><rect x="14" y="14" width="8" height="8" rx="1"/><path d="M6 6h0M18 6h0M6 18h0M18 18h0" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <h3 data-i18n="proj_scalable">Skaleeritavad Arhitektuurid</h3>
+          <p data-i18n="proj_scalable_desc">Arhitektuuri disain hajutatud süsteemide ja andmeplatvormide jaoks.</p>
+        </div>
+    </div>
+</div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="contact">
+<div class="section-container">
+    <div class="section-header fade-in">
+        <span class="section-label" data-i18n="contact_label">Kontakt</span>
+        <h2 class="section-title" data-i18n="contact_title">Võta Ühendust</h2>
+        <p class="section-subtitle" data-i18n="contact_subtitle">Arutame, kuidas ImationGroup saab teie andme- ja tehnoloogiastrateegia muuta</p>
+    </div>
+    <div class="contact-content">
+        <div class="contact-info fade-in">
+            <h3>ImationGroup</h3>
+            <p data-i18n="contact_desc">Oleme valmis koostööks teie järgmises projektis.</p>
+            <div class="contact-details">
+                <div class="contact-item">
+                    <div class="contact-item-icon">
+                        <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    </div>
+                    <div class="contact-item-text">
+                        <h4 data-i18n="contact_email_label">E-post</h4>
+                        <p><a href="mailto:info@imationgroup.com" style="color: var(--primary-teal); text-decoration: none;">info@imationgroup.com</a></p>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-item-icon">
+                        <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+                    </div>
+                    <div class="contact-item-text">
+                        <h4 data-i18n="contact_phone_label">Telefon</h4>
+                        <p><a href="tel:+34613018419" style="color: var(--primary-teal); text-decoration: none;">+34 613 018 419</a></p>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-item-icon">
+                        <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    </div>
+                    <div class="contact-item-text">
+                        <h4 data-i18n="contact_location_label">Asukoht</h4>
+                        <p data-i18n="contact_location">Globaalne — Kaugtöö Projektid Üle Maailma</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="contact-form-wrapper fade-in">
+            <form class="contact-form" action="https://api.imationgroup.com/api/contact" method="post" novalidate>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="name" data-i18n="form_name">Nimi</label>
+                        <input id="name" name="name" type="text" data-i18n-placeholder="form_name_placeholder" placeholder="Teie nimi" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email" data-i18n="form_email">E-post</label>
+                        <input id="email" name="email" type="email" data-i18n-placeholder="form_email_placeholder" placeholder="teie@naite.ee" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="message" data-i18n="form_message">Sõnum</label>
+                    <textarea id="message" name="message" data-i18n-placeholder="form_message_placeholder" placeholder="Kuidas saame aidata?" required></textarea>
+                </div>
+                <!-- Honeypot anti-bot: humanos no rellenan este campo (oculto por CSS). -->
+                <div style="position:absolute;left:-9999px;top:-9999px;" aria-hidden="true">
+                    <label for="website">Website</label>
+                    <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
+                </div>
+                <button class="btn btn-primary" type="submit" data-i18n="form_submit">Saada Sõnum</button>
+            </form>
+        </div>
+    </div>
+</div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+<div class="footer-content">
+    <div class="footer-brand">
+        <h3>ImationGroup</h3>
+        <p data-i18n="footer_desc">Andmete inseneeria ja tarkvaralahendused teie äri tulemuslikkuse tõstmiseks.</p>
+        <div style="margin-top: 16px; display: flex; flex-direction: column; gap: 8px;">
+            <a href="mailto:info@imationgroup.com" style="color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 8px;">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                info@imationgroup.com
+            </a>
+            <a href="tel:+34613018419" style="color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 8px;">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+                +34 613 018 419
+            </a>
+        </div>
+    </div>
+    <div class="footer-column">
+        <h4 data-i18n="footer_company">Ettevõte</h4>
+        <ul class="footer-links">
+            <li><a href="#about" data-i18n="nav_about">Meist</a></li>
+            <li><a href="#services" data-i18n="nav_services">Teenused</a></li>
+            <li><a href="#technologies" data-i18n="nav_technologies">Tehnoloogiad</a></li>
+            <li><a href="#projects" data-i18n="nav_projects">Projektid</a></li>
+        </ul>
+    </div>
+    <div class="footer-column">
+        <h4 data-i18n="footer_support">Tugi</h4>
+        <ul class="footer-links">
+            <li><a href="/et/privacy.html" data-i18n="footer_privacy">Privaatsuspoliitika</a></li>
+            <li><a href="/et/terms.html" data-i18n="footer_terms">Teenusetingimused</a></li>
+            <li><a href="#contact" data-i18n="nav_contact">Kontakt</a></li>
+        </ul>
+    </div>
+    <div class="footer-column">
+        <h4 data-i18n="footer_follow">Jälgi</h4>
+        <div class="social-links">
+            <a href="https://www.linkedin.com/company/112659095" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2zM4 6a2 2 0 100-4 2 2 0 000 4z"/></svg></a>
+            <a href="https://github.com/imationgroup" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><svg viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg></a>
+        </div>
+    </div>
+</div>
+<div class="footer-bottom">
+    <p data-i18n="footer_copyright">© 2025 ImationGroup. Kõik õigused kaitstud.</p>
+</div>
+</footer>
+
+<script src="/i18n.js"></script>
+<script>
+    // ========================
+    // Translations (legacy inline — kept for compatibility)
+    // ========================
+    const translations = {
+        en: {
+            page_title: "ImationGroup | Data Engineering and Software Solutions",
+            nav_home: "Home",
+            nav_about: "About",
+            nav_services: "Services",
+            nav_technologies: "Technologies",
+            nav_projects: "Projects", nav_projects_all: "All projects",
+            nav_contact: "Contact",
+            hero_tagline: "Data Engineering and Software Solutions",
+            hero_description: "We transform data into actionable insights and build scalable software solutions that drive business growth. Our expertise spans data engineering, data science, and cloud-native development.",
+            hero_btn_contact: "Contact Us",
+            hero_btn_services: "Our Services",
+            about_label: "About Us",
+            about_title: "Pioneering Data-Driven Solutions",
+            about_subtitle: "Building the future of enterprise technology through innovation and expertise",
+            about_who_title: "Who We Are",
+            about_who_p1: "ImationGroup is a forward-thinking technology company specializing in data engineering, data science, and scalable software solutions. We partner with organizations to unlock the full potential of their data and transform it into competitive advantage.",
+            about_who_p2: "Our team of experienced engineers and data scientists brings together deep technical expertise with a passion for solving complex business challenges. We believe in building systems that are not only powerful but also maintainable, scalable, and future-proof.",
+            value_innovation: "Innovation",
+            value_innovation_desc: "Leveraging cutting-edge technologies to deliver breakthrough solutions",
+            value_reliability: "Reliability",
+            value_reliability_desc: "Building robust systems that perform consistently under any conditions",
+            value_partnership: "Partnership",
+            value_partnership_desc: "Working closely with clients to understand and exceed their expectations",
+            value_excellence: "Excellence",
+            value_excellence_desc: "Committed to delivering the highest quality in every project we undertake",
+            stat_projects: "Projects Delivered",
+            stat_satisfaction: "Client Satisfaction",
+            stat_support: "Support Available",
+            stat_experience: "Years Experience",
+            services_label: "Services",
+            services_title: "What We Offer",
+            services_subtitle: "Comprehensive technology solutions tailored to your business needs",
+            services_more: "See All Services",
+            svc_data_eng: "Data Engineering",
+            svc_data_eng_desc: "Design and build robust data pipelines, data warehouses, and ETL processes that handle massive volumes of data efficiently and reliably.",
+            svc_data_sci: "Data Science",
+            svc_data_sci_desc: "Transform raw data into actionable insights using advanced analytics, machine learning models, and predictive algorithms.",
+            svc_soft_dev: "Software Development",
+            svc_soft_dev_desc: "Build custom software solutions using modern architectures and best practices that scale with your business growth.",
+            svc_cloud: "Cloud Solutions",
+            svc_cloud_desc: "Migrate, optimize, and manage cloud infrastructure on AWS, Azure, or GCP with security and cost-efficiency in mind.",
+            svc_consulting: "Consulting",
+            svc_consulting_desc: "Strategic technology consulting to help you make informed decisions about your data strategy and digital transformation journey.",
+            svc_bi: "Business Intelligence",
+            svc_bi_desc: "We help teams create reporting layers and analytics environments that support faster decisions with trustworthy, well-structured data.",
+            tech_label: "Technologies",
+            tech_title: "Our Tech Stack",
+            tech_subtitle: "Industry-leading technologies powering our solutions",
+            projects_label: "Projects",
+            projects_title: "Scalable Solutions in Action",
+            projects_subtitle: "Delivering end-to-end systems that turn data into value and insight",
+            proj_pipelines: "Data Pipelines",
+            proj_pipelines_desc: "Automated, fault-tolerant data pipelines that connect sources, transform data, and ensure reliable delivery to analytics systems.",
+            proj_etl: "ETL Systems",
+            proj_etl_desc: "Designed and optimized high-performance ETL frameworks enabling seamless data integration across platforms and domains.",
+            proj_bi: "Business Intelligence",
+            proj_bi_desc: "Developed BI and analytics dashboards that empower strategic, data-informed decision-making in real time.",
+            proj_custom: "Custom Software",
+            proj_custom_desc: "End-to-end software tailored to your operational ecosystem — scalable, secure, and cloud-ready.",
+            proj_cloud: "Cloud Infrastructure",
+            proj_cloud_desc: "Cloud-native architectures on AWS designed for scalability, performance, and cost efficiency.",
+            proj_scalable: "Scalable Architectures",
+            proj_scalable_desc: "End-to-end architecture design for distributed systems, data platforms, and software ecosystems that grow with your business.",
+            contact_label: "Contact",
+            contact_title: "Get in Touch",
+            contact_subtitle: "Let's discuss how ImationGroup can help transform your data and technology strategy",
+            contact_desc: "We are ready to collaborate on your next data and software project. Reach out to discuss your challenges and goals.",
+            contact_email_label: "Email",
+            contact_phone_label: "Phone",
+            contact_location_label: "Location",
+            contact_location: "Global — Remote Projects Worldwide",
+            form_name: "Name",
+            form_name_placeholder: "Your name",
+            form_email: "Email",
+            form_email_placeholder: "you@example.com",
+            form_message: "Message",
+            form_message_placeholder: "How can we help you?",
+            form_submit: "Send Message",
+            footer_desc: "Data engineering, data science, and scalable software solutions designed to elevate your business performance.",
+            footer_company: "Company",
+            footer_support: "Support",
+            footer_privacy: "Privacy Policy",
+            footer_terms: "Terms of Service",
+            footer_follow: "Follow",
+            footer_copyright: "\u00a9 2024 ImationGroup. All rights reserved.",
+            alert_success: "Thank you for reaching out! We'll be in touch soon.",
+            alert_error: "Something went wrong. Please try again.",
+            alert_network: "Network error. Please try again."
+        },
+        es: {
+            page_title: "ImationGroup | Ingenier\u00eda de Datos y Soluciones de Software",
+            nav_home: "Inicio",
+            nav_about: "Nosotros",
+            nav_services: "Servicios",
+            nav_technologies: "Tecnolog\u00edas",
+            nav_projects: "Proyectos", nav_projects_all: "Todos los proyectos",
+            nav_contact: "Contacto",
+            hero_tagline: "Ingenier\u00eda de Datos y Soluciones de Software",
+            hero_description: "Transformamos datos en informaci\u00f3n accionable y construimos soluciones de software escalables que impulsan el crecimiento empresarial. Nuestra experiencia abarca ingenier\u00eda de datos, ciencia de datos y desarrollo cloud-native.",
+            hero_btn_contact: "Cont\u00e1ctanos",
+            hero_btn_services: "Nuestros Servicios",
+            about_label: "Nosotros",
+            about_title: "Soluciones Pioneras Basadas en Datos",
+            about_subtitle: "Construyendo el futuro de la tecnolog\u00eda empresarial a trav\u00e9s de la innovaci\u00f3n y la experiencia",
+            about_who_title: "Qui\u00e9nes Somos",
+            about_who_p1: "ImationGroup es una empresa tecnol\u00f3gica de vanguardia especializada en ingenier\u00eda de datos, ciencia de datos y soluciones de software escalables. Nos asociamos con organizaciones para liberar todo el potencial de sus datos y transformarlos en ventaja competitiva.",
+            about_who_p2: "Nuestro equipo de ingenieros y cient\u00edficos de datos experimentados combina una profunda experiencia t\u00e9cnica con la pasi\u00f3n por resolver desaf\u00edos empresariales complejos. Creemos en construir sistemas que no solo sean potentes, sino tambi\u00e9n mantenibles, escalables y preparados para el futuro.",
+            value_innovation: "Innovaci\u00f3n",
+            value_innovation_desc: "Aprovechando tecnolog\u00edas de vanguardia para ofrecer soluciones revolucionarias",
+            value_reliability: "Fiabilidad",
+            value_reliability_desc: "Construyendo sistemas robustos que funcionan consistentemente bajo cualquier condici\u00f3n",
+            value_partnership: "Colaboraci\u00f3n",
+            value_partnership_desc: "Trabajando estrechamente con los clientes para comprender y superar sus expectativas",
+            value_excellence: "Excelencia",
+            value_excellence_desc: "Comprometidos con ofrecer la m\u00e1xima calidad en cada proyecto que emprendemos",
+            stat_projects: "Proyectos Entregados",
+            stat_satisfaction: "Satisfacci\u00f3n del Cliente",
+            stat_support: "Soporte Disponible",
+            stat_experience: "A\u00f1os de Experiencia",
+            services_label: "Servicios",
+            services_title: "Lo Que Ofrecemos",
+            services_subtitle: "Soluciones tecnol\u00f3gicas integrales adaptadas a las necesidades de tu negocio",
+            services_more: "Ver todos los servicios",
+            svc_data_eng: "Ingenier\u00eda de Datos",
+            svc_data_eng_desc: "Dise\u00f1amos y construimos pipelines de datos robustos, almacenes de datos y procesos ETL que manejan grandes vol\u00famenes de datos de forma eficiente y fiable.",
+            svc_data_sci: "Ciencia de Datos",
+            svc_data_sci_desc: "Transformamos datos en bruto en informaci\u00f3n accionable utilizando an\u00e1lisis avanzado, modelos de aprendizaje autom\u00e1tico y algoritmos predictivos.",
+            svc_soft_dev: "Desarrollo de Software",
+            svc_soft_dev_desc: "Construimos soluciones de software personalizadas con arquitecturas modernas y mejores pr\u00e1cticas que escalan con el crecimiento de tu negocio.",
+            svc_cloud: "Soluciones Cloud",
+            svc_cloud_desc: "Migramos, optimizamos y gestionamos infraestructura en la nube en AWS, Azure o GCP con seguridad y eficiencia de costes.",
+            svc_consulting: "Consultor\u00eda",
+            svc_consulting_desc: "Consultor\u00eda tecnol\u00f3gica estrat\u00e9gica para ayudarte a tomar decisiones informadas sobre tu estrategia de datos y transformaci\u00f3n digital.",
+            svc_bi: "Business Intelligence",
+            svc_bi_desc: "Ayudamos a los equipos a crear capas de reporting y entornos anal\u00edticos que permiten decisiones m\u00e1s r\u00e1pidas con datos fiables y bien estructurados.",
+            tech_label: "Tecnolog\u00edas",
+            tech_title: "Nuestro Stack Tecnol\u00f3gico",
+            tech_subtitle: "Tecnolog\u00edas l\u00edderes en la industria que impulsan nuestras soluciones",
+            projects_label: "Proyectos",
+            projects_title: "Soluciones Escalables en Acci\u00f3n",
+            projects_subtitle: "Entregando sistemas de extremo a extremo que convierten datos en valor e informaci\u00f3n",
+            proj_pipelines: "Pipelines de Datos",
+            proj_pipelines_desc: "Pipelines de datos automatizados y tolerantes a fallos que conectan fuentes, transforman datos y aseguran la entrega fiable a sistemas anal\u00edticos.",
+            proj_etl: "Sistemas ETL",
+            proj_etl_desc: "Frameworks ETL de alto rendimiento dise\u00f1ados y optimizados que permiten la integraci\u00f3n de datos sin interrupciones entre plataformas y dominios.",
+            proj_bi: "Business Intelligence",
+            proj_bi_desc: "Desarrollamos dashboards de BI y anal\u00edtica que potencian la toma de decisiones estrat\u00e9gicas basadas en datos en tiempo real.",
+            proj_custom: "Software Personalizado",
+            proj_custom_desc: "Software de extremo a extremo adaptado a tu ecosistema operativo \u2014 escalable, seguro y preparado para la nube.",
+            proj_cloud: "Infraestructura Cloud",
+            proj_cloud_desc: "Arquitecturas cloud-native en AWS dise\u00f1adas para escalabilidad, rendimiento y eficiencia de costes.",
+            proj_scalable: "Arquitecturas Escalables",
+            proj_scalable_desc: "Dise\u00f1o de arquitectura de extremo a extremo para sistemas distribuidos, plataformas de datos y ecosistemas de software que crecen con tu negocio.",
+            contact_label: "Contacto",
+            contact_title: "Ponte en Contacto",
+            contact_subtitle: "Hablemos de c\u00f3mo ImationGroup puede ayudar a transformar tu estrategia de datos y tecnolog\u00eda",
+            contact_desc: "Estamos listos para colaborar en tu pr\u00f3ximo proyecto de datos y software. Cont\u00e1ctanos para hablar de tus desaf\u00edos y objetivos.",
+            contact_email_label: "Correo electr\u00f3nico",
+            contact_phone_label: "Tel\u00e9fono",
+            contact_location_label: "Ubicaci\u00f3n",
+            contact_location: "Global \u2014 Proyectos Remotos en Todo el Mundo",
+            form_name: "Nombre",
+            form_name_placeholder: "Tu nombre",
+            form_email: "Correo electr\u00f3nico",
+            form_email_placeholder: "tu@ejemplo.com",
+            form_message: "Mensaje",
+            form_message_placeholder: "\u00bfC\u00f3mo podemos ayudarte?",
+            form_submit: "Enviar Mensaje",
+            footer_desc: "Ingenier\u00eda de datos, ciencia de datos y soluciones de software escalables dise\u00f1adas para elevar el rendimiento de tu negocio.",
+            footer_company: "Empresa",
+            footer_support: "Soporte",
+            footer_privacy: "Pol\u00edtica de Privacidad",
+            footer_terms: "T\u00e9rminos de Servicio",
+            footer_follow: "S\u00edguenos",
+            footer_copyright: "\u00a9 2024 ImationGroup. Todos los derechos reservados.",
+            alert_success: "\u00a1Gracias por contactarnos! Nos pondremos en contacto pronto.",
+            alert_error: "Algo sali\u00f3 mal. Por favor, int\u00e9ntalo de nuevo.",
+            alert_network: "Error de red. Por favor, int\u00e9ntalo de nuevo."
+        }
+    };
+
+    // ========================
+    // i18n Engine
+    // ========================
+    let currentLang = 'en';
+
+    function detectLanguage() {
+        const saved = localStorage.getItem('ig_lang') || localStorage.getItem('lang');
+        if (saved && (translations[saved] || TRANSLATIONS[saved])) return saved;
+        const langs = navigator.languages || [navigator.language || 'en'];
+        for (const l of langs) {
+          const code = l.toLowerCase().split('-')[0];
+          if (translations[code] || TRANSLATIONS[code]) return code;
+        }
+        return 'en';
+    }
+
+    function setLanguage(lang) {
+        const t = translations[lang] || (typeof TRANSLATIONS !== 'undefined' && TRANSLATIONS[lang]);
+        if (!t) return;
+        currentLang = lang;
+        localStorage.setItem('ig_lang', lang);
+        localStorage.setItem('lang', lang);
+        document.documentElement.lang = lang;
+
+        // Update text content
+        const _t = translations[lang] || (typeof TRANSLATIONS !== 'undefined' && TRANSLATIONS[lang]) || {};
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (_t[key]) {
+                if (el.tagName === 'TITLE') document.title = _t[key];
+                else el.textContent = _t[key];
+            }
+        });
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+            const key = el.getAttribute('data-i18n-placeholder');
+            if (_t[key]) el.placeholder = _t[key];
+        });
+        const FLAG_MAP = { en:'gb', es:'es', gl:'es-ga', ca:'es-ct', pt:'pt', eu:'es-pv', et:'ee' };
+        const flagEl = document.getElementById('currentLangFlag');
+        const labelEl = document.getElementById('currentLangLabel');
+        if (flagEl && FLAG_MAP[lang]) flagEl.src = 'https://flagicons.lipis.dev/flags/4x3/' + FLAG_MAP[lang] + '.svg';
+        if (labelEl) labelEl.textContent = lang.toUpperCase();
+        document.querySelectorAll('.lang-option').forEach(opt => {
+            opt.classList.toggle('active', opt.getAttribute('data-lang') === lang);
+        });
+    }
+
+    // ========================
+    // Language Switcher
+    // ========================
+    const langToggle = document.getElementById('langToggle');
+    const langDropdown = document.getElementById('langDropdown');
+
+    langToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const open = langDropdown.classList.toggle('active');
+        langToggle.classList.toggle('open', open);
+        langToggle.setAttribute('aria-expanded', open);
+    });
+
+    document.querySelectorAll('.lang-option').forEach(opt => {
+        opt.addEventListener('click', () => {
+            setLanguage(opt.getAttribute('data-lang'));
+            langDropdown.classList.remove('active');
+        });
+    });
+
+    document.addEventListener('click', () => {
+        langDropdown.classList.remove('active');
+    });
+
+    // Initialize language
+    setLanguage(detectLanguage());
+
+    // ========================
+    // Navbar scroll shadow
+    // ========================
+    window.addEventListener('scroll', () => {
+        const nav = document.querySelector('.navbar');
+        if (window.scrollY > 50) nav.classList.add('scrolled');
+        else nav.classList.remove('scrolled');
+    });
+
+    // Mobile menu toggle
+    const menuBtn = document.querySelector('.mobile-menu-btn');
+    const mobileMenu = document.querySelector('.mobile-menu');
+    menuBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('active');
+        menuBtn.classList.toggle('open');
+    });
+
+    // Close mobile menu on link click
+    mobileMenu.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+            mobileMenu.classList.remove('active');
+            menuBtn.classList.remove('open');
+        });
+    });
+
+    // Fade-in on scroll
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) entry.target.classList.add('visible');
+        });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // Projects dropdown nav
+    (function () {
+        const wrap = document.getElementById('navProjects');
+        const toggle = document.getElementById('navProjectsToggle');
+        if (!wrap || !toggle) return;
+        toggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            wrap.classList.toggle('open');
+        });
+        document.addEventListener('click', (e) => {
+            if (!wrap.contains(e.target)) wrap.classList.remove('open');
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') wrap.classList.remove('open');
+        });
+    })();
+
+    // Form submission
+    const form = document.querySelector('.contact-form');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const fd = new FormData(form);
+        const payload = {
+            name: (fd.get('name') || '').toString().trim(),
+            email: (fd.get('email') || '').toString().trim(),
+            message: (fd.get('message') || '').toString().trim(),
+            website: (fd.get('website') || '').toString(),
+        };
+
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalLabel = submitBtn ? submitBtn.textContent : null;
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = '…';
+        }
+
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST',
+                body: JSON.stringify(payload),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                window.location.href = 'contact-success.html';
+                return;
+            }
+            if (response.status === 429) {
+                alert(translations[currentLang].alert_rate || 'Has enviado demasiados mensajes. Inténtalo más tarde.');
+            } else {
+                alert(translations[currentLang].alert_error);
+            }
+        } catch (error) {
+            alert(translations[currentLang].alert_network);
+        } finally {
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                if (originalLabel !== null) submitBtn.textContent = originalLabel;
+            }
+        }
+    });
+</script>
+
+</body>
+</html>

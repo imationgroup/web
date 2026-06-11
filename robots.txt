@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /backend/
+Disallow: /scripts/
+Disallow: /templates/
+Disallow: /.github/
+Disallow: /contact-success.html
+
+Sitemap: https://imationgroup.com/sitemap.xml
