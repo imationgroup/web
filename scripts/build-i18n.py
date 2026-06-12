@@ -434,14 +434,41 @@ def generate_root_stub(page):
     (REPO / page['file']).write_text(stub, encoding='utf-8')
 
 
-def generate_sitemap():
+def _git_lastmod(*paths):
+    """Most recent committer date (ISO date, no time) across the given source
+    files. Falls back to today if git is unavailable or the files have no
+    history yet."""
+    import subprocess
     from datetime import date
-    today = date.today().isoformat()
+    best = ''
+    for p in paths:
+        try:
+            r = subprocess.run(
+                ['git', '-C', str(REPO), 'log', '-1', '--format=%cs', '--', str(p)],
+                capture_output=True, text=True, timeout=5,
+            )
+            d = (r.stdout or '').strip()
+            if d and d > best:
+                best = d
+        except (FileNotFoundError, subprocess.SubprocessError):
+            pass
+    return best or date.today().isoformat()
+
+
+def generate_sitemap():
+    # Per-page lastmod: max(commit date of template, commit date of i18n.js).
+    # i18n.js touches every page (it's the source of all translated strings),
+    # so a translation tweak bumps every page. The template path bumps only
+    # the page whose markup actually changed. Honest enough for Google to
+    # keep trusting the dates, which is the whole point.
+    i18n_path = REPO / 'i18n.js'
     items = []
     for lang in LANGS:
         for page in PAGES:
             if page['noindex']:
                 continue
+            tpl_path = REPO / 'templates' / page['file']
+            lastmod = _git_lastmod(tpl_path, i18n_path)
             url = page_canonical(lang, page['file'])
             alts = '\n'.join(
                 f'    <xhtml:link rel="alternate" hreflang="{l}" href="{page_canonical(l, page["file"])}" />'
@@ -451,7 +478,7 @@ def generate_sitemap():
             priority = '1.0' if page['file'] == 'index.html' else '0.8'
             items.append(f'''  <url>
     <loc>{url}</loc>
-    <lastmod>{today}</lastmod>
+    <lastmod>{lastmod}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>{priority}</priority>
 {alts}
