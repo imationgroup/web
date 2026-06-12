@@ -2192,6 +2192,7 @@
             name: (fd.get('name') || '').toString().trim(),
             email: (fd.get('email') || '').toString().trim(),
             message: (fd.get('message') || '').toString().trim(),
+            lang: (document.documentElement.lang || 'en').toLowerCase().split('-')[0],
             website: (fd.get('website') || '').toString(),
         };
 

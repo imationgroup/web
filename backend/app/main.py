@@ -123,8 +123,116 @@ class ContactPayload(BaseModel):
     name: str = Field(min_length=1, max_length=120)
     email: EmailStr
     message: str = Field(min_length=4, max_length=4000)
+    # Lengua del visitante para devolverle la confirmación en su idioma.
+    lang: str | None = Field(default=None, max_length=8)
     # Honeypot — humanos no rellenan, los bots sí.
     website: str | None = None
+
+
+# Confirmación al remitente — subject + body por idioma.
+# Sin acuse de recibo, no hay manera de que la persona guarde lo que envió.
+CONFIRMATIONS: Dict[str, Dict[str, str]] = {
+    "en": {
+        "subject": "We received your message — ImationGroup",
+        "body": (
+            "Hi {name},\n\n"
+            "Thanks for reaching out to ImationGroup. We've received your message "
+            "and will get back to you within 1-2 business days.\n\n"
+            "For your records, here's a copy of what you sent:\n"
+            "---------\n{message}\n---------\n\n"
+            "Just reply to this email if anything else comes to mind — it goes "
+            "straight to our team.\n\n"
+            "— ImationGroup\ninfo@imationgroup.com"
+        ),
+    },
+    "es": {
+        "subject": "Hemos recibido tu mensaje — ImationGroup",
+        "body": (
+            "Hola {name},\n\n"
+            "Gracias por contactar con ImationGroup. Hemos recibido tu mensaje y "
+            "te responderemos en un plazo de 1-2 días laborables.\n\n"
+            "Para tu referencia, aquí tienes una copia de lo que enviaste:\n"
+            "---------\n{message}\n---------\n\n"
+            "Si necesitas añadir algo, responde a este mismo correo — llegará "
+            "directamente a nuestro equipo.\n\n"
+            "— Equipo de ImationGroup\ninfo@imationgroup.com"
+        ),
+    },
+    "gl": {
+        "subject": "Recibimos a túa mensaxe — ImationGroup",
+        "body": (
+            "Ola {name},\n\n"
+            "Grazas por contactar con ImationGroup. Recibimos a túa mensaxe e "
+            "responderémosche en 1-2 días laborables.\n\n"
+            "Para a túa referencia, aquí tes unha copia do que enviaches:\n"
+            "---------\n{message}\n---------\n\n"
+            "Se precisas engadir algo, responde a este mesmo correo — chegará "
+            "directamente ao noso equipo.\n\n"
+            "— Equipo de ImationGroup\ninfo@imationgroup.com"
+        ),
+    },
+    "ca": {
+        "subject": "Hem rebut el teu missatge — ImationGroup",
+        "body": (
+            "Hola {name},\n\n"
+            "Gràcies per contactar amb ImationGroup. Hem rebut el teu missatge i "
+            "et respondrem en un termini d'1-2 dies laborables.\n\n"
+            "Per a la teva referència, aquí tens una còpia del que has enviat:\n"
+            "---------\n{message}\n---------\n\n"
+            "Si necessites afegir alguna cosa, respon a aquest mateix correu — "
+            "arribarà directament al nostre equip.\n\n"
+            "— Equip d'ImationGroup\ninfo@imationgroup.com"
+        ),
+    },
+    "pt": {
+        "subject": "Recebemos a sua mensagem — ImationGroup",
+        "body": (
+            "Olá {name},\n\n"
+            "Obrigado por entrar em contacto com a ImationGroup. Recebemos a sua "
+            "mensagem e responderemos em 1-2 dias úteis.\n\n"
+            "Para sua referência, aqui está uma cópia do que enviou:\n"
+            "---------\n{message}\n---------\n\n"
+            "Se precisar de acrescentar algo, responda a este e-mail — irá "
+            "directamente para a nossa equipa.\n\n"
+            "— Equipa ImationGroup\ninfo@imationgroup.com"
+        ),
+    },
+    "eu": {
+        "subject": "Zure mezua jaso dugu — ImationGroup",
+        "body": (
+            "Kaixo {name},\n\n"
+            "Eskerrik asko ImationGroup-ekin harremanetan jartzeagatik. Zure "
+            "mezua jaso dugu eta 1-2 lanegunen barruan erantzungo dizugu.\n\n"
+            "Zure erreferentziarako, hau da bidali zenuena:\n"
+            "---------\n{message}\n---------\n\n"
+            "Zerbait gehiago gehitu nahi baduzu, erantzun email honi — gure "
+            "taldera zuzenean iritsiko da.\n\n"
+            "— ImationGroup taldea\ninfo@imationgroup.com"
+        ),
+    },
+    "et": {
+        "subject": "Saime teie sõnumi kätte — ImationGroup",
+        "body": (
+            "Tere {name},\n\n"
+            "Aitäh, et võtsite ImationGroup'iga ühendust. Saime teie sõnumi "
+            "kätte ja vastame 1-2 tööpäeva jooksul.\n\n"
+            "Teie tarbeks on siin koopia sellest, mida saatsite:\n"
+            "---------\n{message}\n---------\n\n"
+            "Kui soovite midagi lisada, vastake lihtsalt sellele e-kirjale — "
+            "see jõuab otse meie meeskonnani.\n\n"
+            "— ImationGroup meeskond\ninfo@imationgroup.com"
+        ),
+    },
+}
+
+
+def confirmation_for(lang: str | None) -> Dict[str, str]:
+    """Return confirmation subject+body for the closest matching language."""
+    if lang:
+        code = lang.lower().split("-")[0]
+        if code in CONFIRMATIONS:
+            return CONFIRMATIONS[code]
+    return CONFIRMATIONS["en"]
 
 
 class ContactResponse(BaseModel):
@@ -162,4 +270,17 @@ def contact(payload: ContactPayload, request: Request):
     ok = send_email(to=SUPPORT_EMAIL, subject=subject, body=body, reply_to=sender_email)
     if not ok:
         log.error("[contact] send_email devolvió False (ip=%s, from=%s)", ip, sender_email)
+
+    # Confirmación al remitente — en su idioma cuando lo conocemos.
+    # Si falla, NO falla el request: ya tenemos el mensaje principal en soporte.
+    tpl = confirmation_for(payload.lang)
+    confirm_ok = send_email(
+        to=sender_email,
+        subject=tpl["subject"],
+        body=tpl["body"].format(name=name, message=payload.message.strip()),
+        reply_to=SUPPORT_EMAIL,
+    )
+    if not confirm_ok:
+        log.warning("[contact] confirmación al remitente falló (to=%s)", sender_email)
+
     return ContactResponse(sent=True)
