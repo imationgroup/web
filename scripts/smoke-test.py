@@ -71,13 +71,12 @@ def status_only(url: str) -> int:
 
 def check_basics():
     print('\n[1/6] Basic assets')
-    # site.webmanifest is accepted with manifest+json, json, or octet-stream
-    # (nginx default for unknown extension). Chrome reads it either way.
     for path, accepted_cts in [
         ('/favicon.svg',       ['image/svg']),
-        ('/site.webmanifest',  ['manifest+json', 'json', 'octet-stream']),
+        ('/site.webmanifest',  ['manifest+json']),
         ('/robots.txt',        ['text']),
-        ('/og-image.svg',      ['image/svg']),
+        ('/og-image.png',      ['image/png']),
+        ('/og-image.svg',      ['image/svg']),  # kept as fallback
     ]:
         code, body, headers = fetch(BASE + path)
         ct = headers.get('Content-Type', '').lower()
@@ -219,25 +218,83 @@ def check_seo_per_lang():
         ok(f"/{lang}/ ({len(INDEXED_PAGES)} pages) - canonical, hreflang, JSON-LD all good")
 
 
-def check_root_stubs():
-    print(f'\n[5/6] Root redirect stubs')
-    for stub in ROOT_STUBS:
-        code = status_only(f"{BASE}/{stub}")
-        if code != 200:
-            fail(f"/{stub} -> {code}")
+def check_redirects_and_stubs():
+    print(f'\n[5/7] .html -> clean URL redirects + root stubs')
+
+    def head_no_follow(url: str) -> tuple[int, str]:
+        opener = urllib.request.build_opener(NoRedirect)
+        req = urllib.request.Request(url, method='HEAD',
+                                     headers={'User-Agent': 'imationgroup-smoke/1.0'})
+        try:
+            with opener.open(req, timeout=10) as r:
+                return r.status, r.headers.get('Location', '')
+        except urllib.error.HTTPError as e:
+            return e.code, e.headers.get('Location', '') if e.headers else ''
+
+    # /<lang>/index.html -> /<lang>/  (301)
+    for lang in ['en', 'es']:
+        code, loc = head_no_follow(f"{BASE}/{lang}/index.html")
+        want = f"{BASE}/{lang}/"
+        if code == 301 and loc == want:
+            ok(f"/{lang}/index.html -> 301 {loc}")
         else:
-            ok(f"/{stub} 200 (stub serves for legacy crawlers)")
-    # Clean root paths also work via try_files
+            fail(f"/{lang}/index.html -> {code} {loc} (want 301 {want})")
+
+    # /<lang>/services.html -> /<lang>/services  (301)
+    for lang in ['en', 'es']:
+        code, loc = head_no_follow(f"{BASE}/{lang}/services.html")
+        want = f"{BASE}/{lang}/services"
+        if code == 301 and loc == want:
+            ok(f"/{lang}/services.html -> 301 {loc}")
+        else:
+            fail(f"/{lang}/services.html -> {code} {loc} (want 301 {want})")
+
+    # Root stubs: /services.html -> 301 /services -> 200 (serves stub via try_files)
+    for stub_html, clean in [('services.html', 'services'), ('projects.html', 'projects'),
+                             ('terms.html', 'terms'), ('privacy.html', 'privacy')]:
+        code, loc = head_no_follow(f"{BASE}/{stub_html}")
+        want = f"{BASE}/{clean}"
+        if code == 301 and loc == want:
+            ok(f"/{stub_html} -> 301 /{clean}")
+        else:
+            fail(f"/{stub_html} -> {code} {loc} (want 301 {want})")
+
+    # Clean root paths return 200 (stub HTML with JS redirect)
     for path in ['services', 'projects']:
         code = status_only(f"{BASE}/{path}")
         if code != 200:
             fail(f"/{path} -> {code}")
         else:
-            ok(f"/{path} 200 (clean root path)")
+            ok(f"/{path} 200 (root stub via try_files)")
+
+
+class NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, hdrs, newurl):
+        return None  # don't follow
+
+
+def check_security_headers():
+    print(f'\n[6/7] Security headers')
+    _, _, headers = fetch(f"{BASE}/en/services")
+    # Header name comparison is case-insensitive in HTTP
+    h = {k.lower(): v for k, v in headers.items()}
+    required = {
+        'strict-transport-security': 'max-age=',
+        'x-content-type-options':    'nosniff',
+        'x-frame-options':           'SAMEORIGIN',
+        'referrer-policy':           'strict-origin',
+        'permissions-policy':        'interest-cohort',
+    }
+    for name, must_contain in required.items():
+        v = h.get(name, '')
+        if must_contain.lower() in v.lower():
+            ok(f"{name}: {v}")
+        else:
+            fail(f"{name} missing or wrong (got '{v}', want substring '{must_contain}')")
 
 
 def check_backend():
-    print(f'\n[6/6] Backend API')
+    print(f'\n[7/7] Backend API')
     code = status_only(f"{API}/api/contact")
     if code == 405:
         ok(f"{API}/api/contact -> 405 (alive, allows POST)")
@@ -256,7 +313,8 @@ def main():
     if locs:
         check_all_urls_200(locs)
     check_seo_per_lang()
-    check_root_stubs()
+    check_redirects_and_stubs()
+    check_security_headers()
     check_backend()
 
     print()

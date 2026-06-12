@@ -195,8 +195,8 @@ def build_jsonld(lang, page, t):
     organization = {
         "@type": "Organization", "@id": org_id, "name": BRAND, "url": f"{SITE}/",
         "description": t.get('about_who_p1') or t.get('hero_description') or '',
-        "logo": {"@type": "ImageObject", "url": f"{SITE}/og-image.svg", "width": 1200, "height": 630},
-        "image": f"{SITE}/og-image.svg",
+        "logo": {"@type": "ImageObject", "url": f"{SITE}/og-image.png", "width": 1200, "height": 630},
+        "image": f"{SITE}/og-image.png",
         "email": CONTACT_EMAIL, "sameAs": [LINKEDIN_URL],
         "contactPoint": [{
             "@type": "ContactPoint", "email": CONTACT_EMAIL,
@@ -208,7 +208,7 @@ def build_jsonld(lang, page, t):
         "name": page_title, "description": page_desc,
         "isPartOf": {"@id": site_id}, "about": {"@id": org_id},
         "inLanguage": lang,
-        "primaryImageOfPage": {"@type": "ImageObject", "url": f"{SITE}/og-image.svg"},
+        "primaryImageOfPage": {"@type": "ImageObject", "url": f"{SITE}/og-image.png"},
     }
     graph = [website, organization, webpage]
 
@@ -311,15 +311,15 @@ def inject_seo(html, lang, page, t):
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="{BRAND}" />
   <meta property="og:locale" content="{OG_LOCALE[lang]}" />
-  <meta property="og:image" content="{SITE}/og-image.svg" />
-  <meta property="og:image:type" content="image/svg+xml" />
+  <meta property="og:image" content="{SITE}/og-image.png" />
+  <meta property="og:image:type" content="image/png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:alt" content="{esc(alt_text)}" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="{esc(title)}" />
   <meta name="twitter:description" content="{esc(desc)}" />
-  <meta name="twitter:image" content="{SITE}/og-image.svg" />
+  <meta name="twitter:image" content="{SITE}/og-image.png" />
   <meta name="twitter:image:alt" content="{esc(BRAND)}" />
   <script type="application/ld+json">{json_ld}</script>
 '''
@@ -381,7 +381,7 @@ def generate_root_stub(page):
 <meta property="og:url" content="{canonical_url}" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="{BRAND}" />
-<meta property="og:image" content="{SITE}/og-image.svg" />
+<meta property="og:image" content="{SITE}/og-image.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <script>
