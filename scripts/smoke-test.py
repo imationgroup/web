@@ -30,6 +30,12 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from xml.etree import ElementTree as ET
 from html.parser import HTMLParser
 
+# Force line-buffered stdout so CI shows progress immediately
+try:
+    sys.stdout.reconfigure(line_buffering=True)
+except Exception:
+    pass
+
 BASE = (sys.argv[1] if len(sys.argv) > 1 else os.environ.get('BASE_URL', 'https://imationgroup.com')).rstrip('/')
 API = os.environ.get('API_URL', 'https://api.imationgroup.com')
 LANGS = ['en', 'es', 'gl', 'ca', 'pt', 'eu', 'et']
