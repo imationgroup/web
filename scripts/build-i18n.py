@@ -20,13 +20,24 @@ import json5
 try:
     import minify_html
     def minify(html):
-        return minify_html.minify(
+        # Conservative: don't touch JS, keep all closing tags. The aggressive
+        # output broke Lighthouse Chrome with NO_FCP — most likely the JS
+        # template-string rewrite combined with our (pre-existing) unclosed
+        # <section> in templates/index.html. ~15% savings + gzip still helps.
+        out = minify_html.minify(
             html,
-            minify_js=True, minify_css=True,
+            minify_css=True,
             remove_processing_instructions=True,
-            keep_closing_tags=True,        # preserve </body></html> for smoke-test regex
-            keep_html_and_head_opening_tags=True,  # preserve <html lang> for SEO
+            keep_closing_tags=True,
+            keep_html_and_head_opening_tags=True,
         )
+        # Belt-and-braces: ensure </body></html> is present even if the
+        # minifier decided they're optional per HTML5.
+        if '</body>' not in out:
+            out = out.rstrip() + '</body></html>'
+        elif '</html>' not in out:
+            out = out.rstrip() + '</html>'
+        return out
 except ImportError:
     print('  (minify-html not installed; output not minified — `pip install minify-html`)')
     def minify(html):
