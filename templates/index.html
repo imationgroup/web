@@ -2117,10 +2117,21 @@
     });
 
     document.querySelectorAll('.lang-option').forEach(opt => {
-        opt.addEventListener('click', () => {
-            setLanguage(opt.getAttribute('data-lang'));
-            langDropdown.classList.remove('active');
-        });
+        opt.addEventListener('click', function(e){
+        e.stopPropagation();
+        var newLang = opt.getAttribute('data-lang');
+        try { localStorage.setItem('ig_lang', newLang); localStorage.setItem('lang', newLang); } catch (_) {}
+        if (newLang === document.documentElement.lang) {
+          var dd = document.getElementById('langDropdown');
+          if (dd) dd.classList.remove('active');
+          return;
+        }
+        var path = window.location.pathname;
+        var m = path.match(/^\/([a-z]{2})(\/.*)?$/);
+        var rest = m ? (m[2] || '/') : (path.length > 1 ? path : '/');
+        if (rest.charAt(0) !== '/') rest = '/' + rest;
+        window.location.assign('/' + newLang + rest + window.location.search + window.location.hash);
+      });
     });
 
     document.addEventListener('click', () => {

@@ -290,14 +290,20 @@
       langToggle.setAttribute('aria-expanded', false);
     });
     document.querySelectorAll('.lang-option[data-lang]').forEach(opt => {
-      opt.addEventListener('click', e => {
+      opt.addEventListener('click', function(e){
         e.stopPropagation();
-        const lang = opt.getAttribute('data-lang');
-        setLanguage(lang);
-        currentFlag.src = 'https://flagicons.lipis.dev/flags/4x3/' + FLAG_MAP[lang] + '.svg';
-        currentLabel.textContent = LANG_LABEL[lang];
-        langDropdown.classList.remove('active');
-        langToggle.classList.remove('open');
+        var newLang = opt.getAttribute('data-lang');
+        try { localStorage.setItem('ig_lang', newLang); localStorage.setItem('lang', newLang); } catch (_) {}
+        if (newLang === document.documentElement.lang) {
+          var dd = document.getElementById('langDropdown');
+          if (dd) dd.classList.remove('active');
+          return;
+        }
+        var path = window.location.pathname;
+        var m = path.match(/^\/([a-z]{2})(\/.*)?$/);
+        var rest = m ? (m[2] || '/') : (path.length > 1 ? path : '/');
+        if (rest.charAt(0) !== '/') rest = '/' + rest;
+        window.location.assign('/' + newLang + rest + window.location.search + window.location.hash);
       });
     });
     const initLang = detectLanguage();
