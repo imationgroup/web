@@ -73,6 +73,17 @@ def get_title(t, page):
     return 'ImationGroup'
 
 
+def url_path(lang, page_file):
+    """Public path for a page: clean, no .html. index.html -> /<lang>/, others -> /<lang>/<basename>."""
+    if page_file == 'index.html':
+        return f"/{lang}/"
+    return f"/{lang}/{page_file[:-5]}"
+
+
+def page_canonical(lang, page_file):
+    return SITE + url_path(lang, page_file)
+
+
 # Regex helpers
 TITLE_RE = re.compile(r'<title([^>]*?)\sdata-i18n="([^"]+)"([^>]*)>([^<]*)</title>', re.DOTALL)
 TAG_RE   = re.compile(r'<(\w+)([^>]*?)\sdata-i18n="([^"]+)"([^>]*)>([^<]*)</\1>', re.DOTALL)
@@ -115,9 +126,11 @@ PAGE_NAMES = ['index', 'services', 'projects', 'terms', 'privacy', 'contact-succ
 
 
 def rewrite_links(html, lang):
-    """href="services.html" → href="/<lang>/services.html" (preserves anchors)."""
+    """href="services.html" → clean URL href="/<lang>/services" (preserves anchors via the trailing context)."""
     for p in PAGE_NAMES:
-        html = re.sub(rf'href="{p}\.html', f'href="/{lang}/{p}.html', html)
+        target = f'/{lang}/' if p == 'index' else f'/{lang}/{p}'
+        html = re.sub(rf'href="{p}\.html"', f'href="{target}"', html)
+        html = re.sub(rf'href="{p}\.html#', f'href="{target}#', html)
     html = html.replace('src="i18n.js"', 'src="/i18n.js"')
     return html
 
@@ -169,7 +182,7 @@ def build_jsonld(lang, page, t):
     """Build @graph JSON-LD: WebSite + Organization + WebPage + (BreadcrumbList) + (ItemList)."""
     site_id = f"{SITE}/#website"
     org_id = f"{SITE}/#organization"
-    page_url = f"{SITE}/{lang}/{page['file']}"
+    page_url = page_canonical(lang, page['file'])
     page_id = f"{page_url}#webpage"
     page_title = get_title(t, page)
     page_desc = get_meta_desc(t, page['file'])
@@ -211,7 +224,7 @@ def build_jsonld(lang, page, t):
             "@type": "BreadcrumbList",
             "itemListElement": [
                 {"@type": "ListItem", "position": 1, "name": t.get('nav_home', 'Home'),
-                 "item": f"{SITE}/{lang}/index.html"},
+                 "item": page_canonical(lang, 'index.html')},
                 {"@type": "ListItem", "position": 2, "name": crumb, "item": page_url},
             ],
         })
@@ -263,12 +276,12 @@ def build_jsonld(lang, page, t):
 def inject_seo(html, lang, page, t):
     title = get_title(t, page)
     desc = get_meta_desc(t, page['file'])
-    url = f"{SITE}/{lang}/{page['file']}"
+    url = page_canonical(lang, page['file'])
     hreflang_lines = '\n'.join(
-        f'  <link rel="alternate" hreflang="{l}" href="{SITE}/{l}/{page["file"]}" />'
+        f'  <link rel="alternate" hreflang="{l}" href="{page_canonical(l, page["file"])}" />'
         for l in LANGS
     )
-    x_default = f'  <link rel="alternate" hreflang="x-default" href="{SITE}/{DEFAULT}/{page["file"]}" />'
+    x_default = f'  <link rel="alternate" hreflang="x-default" href="{page_canonical(DEFAULT, page["file"])}" />'
     robots_content = 'noindex, follow' if page['noindex'] else 'index, follow'
     alt_text = f"{BRAND} — {t.get('hero_tagline', 'Data Engineering and Software Solutions')}"
 
@@ -335,13 +348,16 @@ def generate_root_stub(page):
     t = TRANSLATIONS[DEFAULT]
     title = get_title(t, page)
     desc = get_meta_desc(t, page['file'])
-    canonical_url = f"{SITE}/{DEFAULT}/{page['file']}"
+    canonical_url = page_canonical(DEFAULT, page['file'])
     hreflang_lines = '\n'.join(
-        f'  <link rel="alternate" hreflang="{l}" href="{SITE}/{l}/{page["file"]}" />'
+        f'  <link rel="alternate" hreflang="{l}" href="{page_canonical(l, page["file"])}" />'
         for l in LANGS
     )
-    x_default = f'  <link rel="alternate" hreflang="x-default" href="{SITE}/{DEFAULT}/{page["file"]}" />'
+    x_default = f'  <link rel="alternate" hreflang="x-default" href="{page_canonical(DEFAULT, page["file"])}" />'
     langs_json = json.dumps(LANGS)
+    redirect_path = url_path('PLACEHOLDER', page['file']).replace('/PLACEHOLDER/', '/')  # body used as template
+    # Build language-specific paths (relative) for the redirect JS
+    page_basename = '' if page['file'] == 'index.html' else page['file'][:-5]
 
     stub = f'''<!DOCTYPE html>
 <html lang="en">
@@ -378,10 +394,10 @@ def generate_root_stub(page):
     for(var i=0;i<nl.length&&!lang;i++){{var c=(nl[i]||'').toLowerCase().split('-')[0];if(L.indexOf(c)>-1)lang=c;}}
   }}
   if(!lang)lang='{DEFAULT}';
-  location.replace('/'+lang+'/{page["file"]}');
+  location.replace('/'+lang+'/{page_basename}');
 }})();
 </script>
-<meta http-equiv="refresh" content="0; url=/{DEFAULT}/{page["file"]}" />
+<meta http-equiv="refresh" content="0; url=/{DEFAULT}/{page_basename}" />
 </head>
 <body>
 <p>Redirecting to <a href="{canonical_url}">{canonical_url}</a>…</p>
@@ -399,12 +415,12 @@ def generate_sitemap():
         for page in PAGES:
             if page['noindex']:
                 continue
-            url = f"{SITE}/{lang}/{page['file']}"
+            url = page_canonical(lang, page['file'])
             alts = '\n'.join(
-                f'    <xhtml:link rel="alternate" hreflang="{l}" href="{SITE}/{l}/{page["file"]}" />'
+                f'    <xhtml:link rel="alternate" hreflang="{l}" href="{page_canonical(l, page["file"])}" />'
                 for l in LANGS
             )
-            xd = f'    <xhtml:link rel="alternate" hreflang="x-default" href="{SITE}/{DEFAULT}/{page["file"]}" />'
+            xd = f'    <xhtml:link rel="alternate" hreflang="x-default" href="{page_canonical(DEFAULT, page["file"])}" />'
             priority = '1.0' if page['file'] == 'index.html' else '0.8'
             items.append(f'''  <url>
     <loc>{url}</loc>
