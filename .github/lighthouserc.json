@@ -9,15 +9,19 @@
     },
     "assert": {
       "assertions": {
-        "categories:performance":    ["warn",  { "minScore": 0.70 }],
-        "categories:accessibility":  ["warn",  { "minScore": 0.85 }],
+        "categories:performance":    ["error", { "minScore": 0.90 }],
+        "categories:accessibility":  ["error", { "minScore": 1.00 }],
         "categories:best-practices": ["warn",  { "minScore": 0.80 }],
         "categories:seo":            ["error", { "minScore": 1.00 }],
 
+        "third-party-cookies": "off",
+        "inspector-issues": "off",
         "uses-text-compression": "off",
         "uses-long-cache-ttl": "off",
         "csp-xss": "off",
         "uses-http2": "off",
+        "tap-targets": "off",
+
         "is-on-https": "error",
         "viewport": "error",
         "document-title": "error",
@@ -27,9 +31,8 @@
         "hreflang": "error",
         "canonical": "error",
         "robots-txt": "error",
-        "image-alt": "warn",
-        "tap-targets": "warn",
-        "color-contrast": "warn"
+        "image-alt": "error",
+        "color-contrast": "error"
       }
     }
   }
