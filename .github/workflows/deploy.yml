@@ -39,3 +39,24 @@ jobs:
           sparse-checkout: scripts/smoke-test.py
           sparse-checkout-cone-mode: false
       - run: python3 scripts/smoke-test.py https://imationgroup.com
+
+  lighthouse:
+    name: Lighthouse CI (performance + SEO)
+    needs: smoke-test
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: .github/lighthouserc.json
+          sparse-checkout-cone-mode: false
+      - uses: treosh/lighthouse-ci-action@12.1.0
+        with:
+          urls: |
+            https://imationgroup.com/en/
+            https://imationgroup.com/es/
+            https://imationgroup.com/en/services
+            https://imationgroup.com/es/projects
+          configPath: .github/lighthouserc.json
+          uploadArtifacts: true
+          temporaryPublicStorage: false

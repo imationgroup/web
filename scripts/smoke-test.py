@@ -28,6 +28,7 @@ import urllib.request
 import urllib.error
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from xml.etree import ElementTree as ET
+from html.parser import HTMLParser
 
 BASE = (sys.argv[1] if len(sys.argv) > 1 else os.environ.get('BASE_URL', 'https://imationgroup.com')).rstrip('/')
 API = os.environ.get('API_URL', 'https://api.imationgroup.com')
@@ -158,68 +159,101 @@ def check_all_urls_200(urls: list[str]):
         ok(f"all {len(urls)} URLs return 200")
 
 
+class HeadExtractor(HTMLParser):
+    """Pulls structured info out of <link>, <meta>, <script type=ld+json> tags.
+    Robust to attribute reordering and quote-stripping done by HTML minifiers."""
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.canonical = None
+        self.og_url = None
+        self.hreflang: dict[str, str] = {}
+        self.ldjson_blocks: list[str] = []
+        self._in_ldjson = False
+        self._buf = []
+    def handle_starttag(self, tag, attrs):
+        a = {k.lower(): (v or '') for k, v in attrs}
+        if tag == 'link':
+            rel = a.get('rel', '').lower()
+            if rel == 'canonical':
+                self.canonical = a.get('href')
+            elif rel == 'alternate':
+                hl = a.get('hreflang')
+                if hl:
+                    self.hreflang[hl.lower()] = a.get('href', '')
+        elif tag == 'meta':
+            if a.get('property', '').lower() == 'og:url':
+                self.og_url = a.get('content')
+        elif tag == 'script':
+            if a.get('type', '').lower() == 'application/ld+json':
+                self._in_ldjson = True; self._buf = []
+    def handle_endtag(self, tag):
+        if tag == 'script' and self._in_ldjson:
+            self.ldjson_blocks.append(''.join(self._buf)); self._in_ldjson = False
+    def handle_data(self, data):
+        if self._in_ldjson:
+            self._buf.append(data)
+
+
 def check_seo_per_lang():
-    print(f'\n[4/6] Per-language SEO (canonical, hreflang, og:url, JSON-LD)')
-    page_re = re.compile(r'<link rel="canonical" href="([^"]+)"')
-    og_re = re.compile(r'<meta property="og:url" content="([^"]+)"')
-    hreflang_re = re.compile(r'<link rel="alternate" hreflang="([a-z-]+)" href="([^"]+)"')
-    ldjson_re = re.compile(r'<script type="application/ld\+json"[^>]*>(.+?)</script>', re.S)
-    markdown_href_re = re.compile(r'href="\[[^\]]+\]\(https?://')
+    print(f'\n[4/7] Per-language SEO (canonical, hreflang, og:url, JSON-LD)')
+    markdown_href_re = re.compile(r'href=["\'\s]*\[[^\]]+\]\(https?://')
 
     for lang in LANGS:
+        bad = []
         for page in INDEXED_PAGES:
             url = f"{BASE}/{lang}/{page}" if page else f"{BASE}/{lang}/"
             code, body, _ = fetch(url)
             if code != 200:
-                fail(f"GET {url} -> {code}")
-                continue
+                bad.append(f"{url} -> {code}"); continue
 
-            m = page_re.search(body)
-            if not m:
-                fail(f"{url} no canonical")
-                continue
-            if m.group(1) != url:
-                fail(f"{url} canonical mismatch: '{m.group(1)}'")
-                continue
+            p = HeadExtractor()
+            p.feed(body)
 
-            mo = og_re.search(body)
-            if not mo or mo.group(1) != url:
-                fail(f"{url} og:url missing or mismatch")
-                continue
-
-            hl = {l: u for l, u in hreflang_re.findall(body)}
-            missing_langs = set(LANGS) - set(hl.keys())
-            if missing_langs:
-                fail(f"{url} missing hreflang for {sorted(missing_langs)}")
-                continue
-            if 'x-default' not in hl:
-                fail(f"{url} missing x-default hreflang")
-                continue
-
-            ld = ldjson_re.search(body)
-            if not ld:
-                fail(f"{url} no JSON-LD")
-                continue
+            if p.canonical != url:
+                bad.append(f"{url} canonical='{p.canonical}'"); continue
+            if p.og_url != url:
+                bad.append(f"{url} og:url='{p.og_url}'"); continue
+            missing = set(LANGS) - set(p.hreflang)
+            if missing:
+                bad.append(f"{url} missing hreflang {sorted(missing)}"); continue
+            if 'x-default' not in p.hreflang:
+                bad.append(f"{url} missing x-default"); continue
+            if not p.ldjson_blocks:
+                bad.append(f"{url} no JSON-LD"); continue
             try:
-                data = json.loads(ld.group(1))
+                data = json.loads(p.ldjson_blocks[0])
                 graph = data.get('@graph', [data])
                 types = {item.get('@type') for item in graph}
                 if 'Organization' not in types or 'WebPage' not in types:
-                    fail(f"{url} JSON-LD missing Organization/WebPage (got {types})")
-                    continue
+                    bad.append(f"{url} JSON-LD types={types}"); continue
             except json.JSONDecodeError as e:
-                fail(f"{url} JSON-LD invalid: {e}")
-                continue
+                bad.append(f"{url} JSON-LD invalid: {e}"); continue
 
             if markdown_href_re.search(body):
-                fail(f"{url} has markdown-wrapped href (regression!)")
-                continue
+                bad.append(f"{url} has markdown-wrapped href!"); continue
 
-        ok(f"/{lang}/ ({len(INDEXED_PAGES)} pages) - canonical, hreflang, JSON-LD all good")
+        if bad:
+            for msg in bad: fail(msg)
+        else:
+            ok(f"/{lang}/ ({len(INDEXED_PAGES)} pages) - canonical, hreflang, JSON-LD all good")
+
+
+def check_404_page():
+    print(f'\n[5/8] 404 page')
+    # Hit a URL that should 404 (no template ever named "this-page-does-not-exist")
+    bogus = f"{BASE}/this-page-does-not-exist-{int.from_bytes(b'x',1)}"
+    code, body, _ = fetch(bogus)
+    if code != 404:
+        fail(f"GET {bogus} -> {code} (want 404)"); return
+    # Must mention all 7 languages and link to /<lang>/
+    missing = [l for l in LANGS if f'/{l}/' not in body]
+    if missing:
+        fail(f"404 page missing links for {missing}"); return
+    ok(f"404 returns 404 status + links to all {len(LANGS)} languages")
 
 
 def check_redirects_and_stubs():
-    print(f'\n[5/7] .html -> clean URL redirects + root stubs')
+    print(f'\n[6/8] .html -> clean URL redirects + root stubs')
 
     def head_no_follow(url: str) -> tuple[int, str]:
         opener = urllib.request.build_opener(NoRedirect)
@@ -274,7 +308,7 @@ class NoRedirect(urllib.request.HTTPRedirectHandler):
 
 
 def check_security_headers():
-    print(f'\n[6/7] Security headers')
+    print(f'\n[7/8] Security headers')
     _, _, headers = fetch(f"{BASE}/en/services")
     # Header name comparison is case-insensitive in HTTP
     h = {k.lower(): v for k, v in headers.items()}
@@ -294,7 +328,7 @@ def check_security_headers():
 
 
 def check_backend():
-    print(f'\n[7/7] Backend API')
+    print(f'\n[8/8] Backend API')
     code = status_only(f"{API}/api/contact")
     if code == 405:
         ok(f"{API}/api/contact -> 405 (alive, allows POST)")
@@ -313,6 +347,7 @@ def main():
     if locs:
         check_all_urls_200(locs)
     check_seo_per_lang()
+    check_404_page()
     check_redirects_and_stubs()
     check_security_headers()
     check_backend()

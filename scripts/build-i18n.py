@@ -17,6 +17,21 @@ import re
 from pathlib import Path
 import json5
 
+try:
+    import minify_html
+    def minify(html):
+        return minify_html.minify(
+            html,
+            minify_js=True, minify_css=True,
+            remove_processing_instructions=True,
+            keep_closing_tags=True,        # preserve </body></html> for smoke-test regex
+            keep_html_and_head_opening_tags=True,  # preserve <html lang> for SEO
+        )
+except ImportError:
+    print('  (minify-html not installed; output not minified — `pip install minify-html`)')
+    def minify(html):
+        return html
+
 REPO = Path(__file__).resolve().parent.parent
 TEMPLATES = REPO / 'templates'
 SITE = 'https://imationgroup.com'
@@ -337,6 +352,7 @@ def build_lang_page(lang, page):
     html = patch_lang_switcher(html, lang)
     html = rewrite_links(html, lang)
     html = inject_seo(html, lang, page, t)
+    html = minify(html)
     out_dir = REPO / lang
     out_dir.mkdir(exist_ok=True)
     (out_dir / page['file']).write_text(html, encoding='utf-8')
@@ -439,6 +455,78 @@ def generate_sitemap():
     (REPO / 'sitemap.xml').write_text(xml, encoding='utf-8')
 
 
+def generate_404():
+    """Multilingual 404 page. Server-side: nginx maps error_page 404 /404.html.
+    Client-side: detects browser language and shows the right block; provides
+    links back to home in all 7 languages so even bots see them."""
+    # Per-language strings, with English fallback for any missing key.
+    msgs = []
+    for lang in LANGS:
+        t = TRANSLATIONS[lang]
+        msgs.append({
+            'lang': lang,
+            'title': t.get('e404_title', 'Page not found'),
+            'desc':  t.get('e404_desc',  'The page you were looking for does not exist or has moved.'),
+            'home':  t.get('nav_home',   'Back to home'),
+        })
+    blocks = '\n'.join(
+        f'<div class="msg" data-lang="{m["lang"]}" lang="{m["lang"]}" hidden>'
+        f'<h1>{esc(m["title"])}</h1><p>{esc(m["desc"])}</p>'
+        f'<p><a href="/{m["lang"]}/">{esc(m["home"])}</a></p></div>'
+        for m in msgs
+    )
+    langs_json = json.dumps(LANGS)
+    html = f'''<!DOCTYPE html>
+<html lang="{DEFAULT}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 — {BRAND}</title>
+<meta name="robots" content="noindex, follow">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>
+body{{font-family:system-ui,sans-serif;max-width:560px;margin:8vh auto;padding:0 1.5rem;color:#1a1a2e;text-align:center;line-height:1.6}}
+h1{{font-size:2rem;margin-bottom:.5rem;color:#0066CC}}
+p{{margin:.5rem 0}}
+a{{color:#0066CC;text-decoration:none;border-bottom:1px solid #0066CC}}
+a:hover{{color:#00A5A8;border-color:#00A5A8}}
+.msg{{margin-bottom:2rem}}
+.alts{{margin-top:2rem;font-size:.9rem;color:#666}}
+.alts a{{margin:0 .4rem}}
+</style>
+</head>
+<body>
+{blocks}
+<noscript>
+<div class="msg" lang="{DEFAULT}">
+<h1>Page not found</h1><p>The page you were looking for does not exist or has moved.</p>
+<p><a href="/{DEFAULT}/">Back to home</a></p>
+</div>
+</noscript>
+<div class="alts">
+{' '.join(f'<a href="/{l}/" hreflang="{l}">{l.upper()}</a>' for l in LANGS)}
+</div>
+<script>
+(function(){{
+  var L={langs_json};
+  var s=null; try{{s=localStorage.getItem('ig_lang');}}catch(e){{}}
+  var lang=(s&&L.indexOf(s)>-1)?s:null;
+  if(!lang){{
+    var nl=navigator.languages||[navigator.language||'en'];
+    for(var i=0;i<nl.length&&!lang;i++){{var c=(nl[i]||'').toLowerCase().split('-')[0];if(L.indexOf(c)>-1)lang=c;}}
+  }}
+  if(!lang)lang='{DEFAULT}';
+  var el=document.querySelector('.msg[data-lang="'+lang+'"]');
+  if(el)el.removeAttribute('hidden');
+  document.documentElement.lang=lang;
+}})();
+</script>
+</body>
+</html>
+'''
+    (REPO / '404.html').write_text(minify(html), encoding='utf-8')
+
+
 def generate_robots():
     txt = f'''User-agent: *
 Allow: /
@@ -462,6 +550,8 @@ def main():
     for page in PAGES:
         generate_root_stub(page)
     print('  [ok] root redirect stubs')
+    generate_404()
+    print('  [ok] 404.html')
     generate_sitemap()
     print('  [ok] sitemap.xml')
     generate_robots()
