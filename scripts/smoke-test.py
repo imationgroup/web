@@ -363,13 +363,16 @@ def check_security_headers():
 
 def check_backend():
     print(f'\n[9/9] Backend API')
-    code = status_only(f"{API}/api/contact")
-    if code == 405:
-        ok(f"{API}/api/contact -> 405 (alive, allows POST)")
-    elif code == 200:
-        ok(f"{API}/api/contact -> 200")
-    else:
-        fail(f"{API}/api/contact -> {code} (expected 405 or 200, anything else = backend down)")
+    import time
+    url = f"{API}/api/contact"
+    # The deploy step restarts the backend container; give it up to 20s to come back.
+    for attempt in range(10):
+        code = status_only(url)
+        if code in (200, 405):
+            ok(f"{url} -> {code} (alive, allows POST)" + (f" after {attempt+1} attempts" if attempt else ""))
+            return
+        time.sleep(2)
+    fail(f"{url} -> {code} after 10 attempts (expected 405 or 200, anything else = backend down)")
 
 
 # ────────────────────────────── main ────────────────────────────────────────
