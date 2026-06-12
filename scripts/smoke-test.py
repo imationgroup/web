@@ -313,8 +313,36 @@ class NoRedirect(urllib.request.HTTPRedirectHandler):
         return None  # don't follow
 
 
+def check_compression_and_cache():
+    print(f'\n[7/9] Compression + cache TTL on assets')
+    # HTML must be gzipped
+    req = urllib.request.Request(f"{BASE}/en/", headers={
+        'Accept-Encoding': 'gzip', 'User-Agent': 'imationgroup-smoke/1.0'})
+    with urllib.request.urlopen(req, timeout=10) as r:
+        if r.headers.get('Content-Encoding', '').lower() in ('gzip', 'br'):
+            ok(f"/en/ Content-Encoding={r.headers.get('Content-Encoding')}")
+        else:
+            fail(f"/en/ not compressed (Content-Encoding='{r.headers.get('Content-Encoding')}')")
+    # JS must be gzipped + cached >= 30 days
+    req = urllib.request.Request(f"{BASE}/i18n.js", headers={
+        'Accept-Encoding': 'gzip', 'User-Agent': 'imationgroup-smoke/1.0'})
+    with urllib.request.urlopen(req, timeout=10) as r:
+        ce = r.headers.get('Content-Encoding', '').lower()
+        cc = r.headers.get('Cache-Control', '')
+        if ce in ('gzip', 'br'):
+            ok(f"/i18n.js Content-Encoding={ce}")
+        else:
+            fail(f"/i18n.js not compressed")
+        m = re.search(r'max-age=(\d+)', cc)
+        days = int(m.group(1)) // 86400 if m else 0
+        if days >= 30:
+            ok(f"/i18n.js Cache-Control max-age={m.group(1)} (>= 30 days)")
+        else:
+            fail(f"/i18n.js Cache-Control max-age too low: '{cc}'")
+
+
 def check_security_headers():
-    print(f'\n[7/8] Security headers')
+    print(f'\n[8/9] Security headers')
     _, _, headers = fetch(f"{BASE}/en/services")
     # Header name comparison is case-insensitive in HTTP
     h = {k.lower(): v for k, v in headers.items()}
@@ -334,7 +362,7 @@ def check_security_headers():
 
 
 def check_backend():
-    print(f'\n[8/8] Backend API')
+    print(f'\n[9/9] Backend API')
     code = status_only(f"{API}/api/contact")
     if code == 405:
         ok(f"{API}/api/contact -> 405 (alive, allows POST)")
@@ -355,6 +383,7 @@ def main():
     check_seo_per_lang()
     check_404_page()
     check_redirects_and_stubs()
+    check_compression_and_cache()
     check_security_headers()
     check_backend()
 
