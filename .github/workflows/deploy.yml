@@ -27,22 +27,12 @@ jobs:
             set -e
             cd ~/apps/imationgroup-web
             bash scripts/deploy.sh
-
-  smoke-test:
-    name: Post-deploy smoke test
-    needs: deploy
-    runs-on: ubuntu-latest
-    timeout-minutes: 3
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          sparse-checkout: scripts/smoke-test.py
-          sparse-checkout-cone-mode: false
-      - run: python3 -u scripts/smoke-test.py https://imationgroup.com
+            echo "▶ Post-deploy smoke test"
+            python3 -u scripts/smoke-test.py https://imationgroup.com
 
   lighthouse:
     name: Lighthouse CI (performance + SEO)
-    needs: smoke-test
+    needs: deploy
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
