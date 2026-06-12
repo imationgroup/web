@@ -241,7 +241,7 @@ def check_seo_per_lang():
 def check_404_page():
     print(f'\n[5/8] 404 page')
     # Hit a URL that should 404 (no template ever named "this-page-does-not-exist")
-    bogus = f"{BASE}/this-page-does-not-exist-{int.from_bytes(b'x',1)}"
+    bogus = f"{BASE}/smoke-test-this-page-does-not-exist"
     code, body, _ = fetch(bogus)
     if code != 404:
         fail(f"GET {bogus} -> {code} (want 404)"); return
