@@ -15,20 +15,21 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - name: Run deploy script on VPS
-        uses: appleboy/ssh-action@v1.2.0
+      # Azure runners occasionally fail TCP dial to this VPS (i/o timeout
+      # on port 22). Retry up to 3 attempts before giving up.
+      - name: Run deploy + smoke on VPS
+        uses: nick-fields/retry@v3
         with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_SSH_KEY }}
-          port: ${{ secrets.VPS_PORT || 22 }}
-          command_timeout: 15m
-          script: |
-            set -e
-            cd ~/apps/imationgroup-web
-            bash scripts/deploy.sh
-            echo "▶ Post-deploy smoke test"
-            python3 -u scripts/smoke-test.py https://imationgroup.com
+          timeout_minutes: 12
+          max_attempts: 3
+          retry_wait_seconds: 30
+          command: |
+            mkdir -p ~/.ssh
+            echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/id_deploy
+            chmod 600 ~/.ssh/id_deploy
+            ssh-keyscan -p ${{ secrets.VPS_PORT || 22 }} -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
+            ssh -i ~/.ssh/id_deploy -p ${{ secrets.VPS_PORT || 22 }} -o ConnectTimeout=30 \
+                ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} 'set -e; cd ~/apps/imationgroup-web && bash scripts/deploy.sh && echo "▶ Smoke test" && python3 -u scripts/smoke-test.py https://imationgroup.com'
 
   lighthouse:
     name: Lighthouse CI (performance + SEO)
