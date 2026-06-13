@@ -48,4 +48,34 @@
   </footer>
   {% endif %}
 </article>
+
+<script>
+// On a blog-post URL the lang switcher in the inherited chrome assumes the
+// slug is the same across languages. For posts, slugs are translated -- so a
+// blind /es/blog/<slug> -> /en/blog/<slug> swap 404s. Override.
+(function(){
+  var slugByLang = {
+    {%- for l, s in sibling_by_lang.items() -%}
+    {{ l|tojson }}: {{ s.slug|tojson }}{% if not loop.last %}, {% endif %}
+    {%- endfor -%}
+  };
+  function onLangClick(e){
+    var btn = e.currentTarget;
+    var newLang = btn.getAttribute('data-lang');
+    if (!newLang) return;
+    e.preventDefault();
+    e.stopPropagation();
+    e.stopImmediatePropagation();
+    try { localStorage.setItem('ig_lang', newLang); localStorage.setItem('lang', newLang); } catch (_) {}
+    var target = slugByLang[newLang]
+      ? '/' + newLang + '/blog/' + slugByLang[newLang]
+      : '/' + newLang + '/blog/';   // no sibling published -> blog index
+    window.location.assign(target);
+  }
+  // Attach in capture phase BEFORE the chrome's own handler so ours wins.
+  document.querySelectorAll('.lang-option[data-lang], .lang-btn[data-lang]').forEach(function(el){
+    el.addEventListener('click', onLangClick, true);
+  });
+})();
+</script>
 {% endblock %}
