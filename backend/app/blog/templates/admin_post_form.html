@@ -9,6 +9,15 @@
   <a class="btn" href="/admin/">← Back to list</a>
 </div>
 
+{% if request.query_params.get('translating') %}
+<div id="translatingBanner" style="background:#dbeafe;border:1px solid #3b82f6;color:#1e3a8a;padding:12px 16px;border-radius:8px;margin-bottom:18px;display:flex;align-items:center;gap:10px;">
+  <span style="display:inline-block;width:14px;height:14px;border:2px solid #3b82f6;border-top-color:transparent;border-radius:50%;animation:spin 0.8s linear infinite;"></span>
+  <span>Traduciendo a los otros idiomas en segundo plano. Suele tardar 10-30 s. <a href="?refresh={{ post.id if post else '' }}" id="refreshNow">Refrescar ahora</a> o esperar — la página se refresca sola en 30 s.</span>
+  <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
+  <script>setTimeout(function(){ location.href = location.pathname; }, 30000);</script>
+</div>
+{% endif %}
+
 <form method="post" action="/admin/posts" enctype="multipart/form-data">
   {% if post %}<input type="hidden" name="post_id" value="{{ post.id }}">{% endif %}
   {% if post %}<input type="hidden" name="group_id" value="{{ post.group_id }}">{% endif %}

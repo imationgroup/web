@@ -1,13 +1,16 @@
 """Admin panel: login, list, create/edit, delete, translate, publish."""
 from __future__ import annotations
 import json
+import logging
 import secrets
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
 
 from fastapi import (
     APIRouter,
+    BackgroundTasks,
     Depends,
     File,
     Form,
@@ -19,6 +22,8 @@ from fastapi import (
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlmodel import Session, select
+
+log = logging.getLogger(__name__)
 
 from .auth import (
     clear_cookie,
@@ -280,72 +285,104 @@ def delete_post(
 @router.post("/posts/{post_id}/translate", include_in_schema=False)
 def translate_to_all(
     post_id: int,
+    bg: BackgroundTasks,
     admin: str = Depends(require_admin),
     session: Session = Depends(get_session),
 ):
-    """Create / refresh auto-translated versions in every other lang.
-    Existing siblings that were hand-edited (is_auto_translated=False) are
-    NOT overwritten -- safety against losing manual work."""
+    """Kick off translations to every other lang as a background task and
+    redirect immediately. 6 calls to Claude on a long post can easily
+    exceed nginx's proxy_read_timeout (504), so we run them async and
+    in parallel. Existing siblings that were hand-edited
+    (is_auto_translated=False) are NOT overwritten."""
     src = session.get(Post, post_id)
     if not src:
         raise HTTPException(404)
 
-    for target_lang in LANGS:
-        if target_lang == src.lang:
-            continue
-        existing = session.exec(
-            select(Post).where(Post.group_id == src.group_id, Post.lang == target_lang)
-        ).first()
-        if existing and not existing.is_auto_translated:
-            continue  # admin edited it; don't clobber
+    # Snapshot the source fields so the background worker doesn't share
+    # the request-scoped Session.
+    snapshot = {
+        "group_id": src.group_id,
+        "lang": src.lang,
+        "title": src.title,
+        "excerpt": src.excerpt,
+        "body_html": src.body_html,
+        "cover_image": src.cover_image,
+        "category_id": src.category_id,
+        "source_lang": src.source_lang,
+    }
+    bg.add_task(_run_translations, post_id, snapshot)
+    return RedirectResponse(
+        f"/admin/posts/{post_id}/edit?translating=1", status_code=303
+    )
 
-        result = translate_post(
-            source_lang=src.lang,
+
+def _run_translations(post_id: int, src: dict) -> None:
+    """Fan out one Claude call per missing/auto target language, in
+    parallel. Writes to the DB happen on the same thread after all
+    translations resolve, so SQLite stays happy."""
+    from .db import engine
+
+    targets = [l for l in LANGS if l != src["lang"]]
+    log.info("[translate] post=%s source=%s -> %d targets", post_id, src["lang"], len(targets))
+
+    def one(target_lang: str):
+        return target_lang, translate_post(
+            source_lang=src["lang"],
             target_lang=target_lang,
-            title=src.title,
-            excerpt=src.excerpt,
-            body_html=src.body_html,
+            title=src["title"],
+            excerpt=src["excerpt"],
+            body_html=src["body_html"],
         )
-        if not result:
-            continue
 
-        if existing:
-            existing.title = result["title"]
-            existing.excerpt = result["excerpt"]
-            existing.body_html = result["body_html"]
-            existing.updated_at = _utcnow()
-            existing.is_auto_translated = True
-            existing.category_id = src.category_id
-            existing.cover_image = src.cover_image
-            session.add(existing)
-        else:
-            # Make sure the translated slug doesn't collide in target_lang.
-            base = make_slug(result["title"])
-            slug = base
-            n = 2
-            while session.exec(
-                select(Post).where(Post.lang == target_lang, Post.slug == slug)
-            ).first():
-                slug = f"{base}-{n}"
-                n += 1
+    with ThreadPoolExecutor(max_workers=min(6, len(targets))) as pool:
+        results = list(pool.map(one, targets))
 
-            session.add(
-                Post(
-                    group_id=src.group_id,
-                    lang=target_lang,
-                    slug=slug,
-                    title=result["title"],
-                    excerpt=result["excerpt"],
-                    body_html=result["body_html"],
-                    cover_image=src.cover_image,
-                    category_id=src.category_id,
-                    is_published=False,  # draft until admin reviews & publishes
-                    is_auto_translated=True,
-                    source_lang=src.source_lang,
+    with Session(engine) as session:
+        for target_lang, result in results:
+            if not result:
+                log.warning("[translate] post=%s target=%s: no result", post_id, target_lang)
+                continue
+            existing = session.exec(
+                select(Post).where(Post.group_id == src["group_id"], Post.lang == target_lang)
+            ).first()
+            if existing and not existing.is_auto_translated:
+                log.info("[translate] post=%s target=%s: skipped (hand-edited)", post_id, target_lang)
+                continue
+            if existing:
+                existing.title = result["title"]
+                existing.excerpt = result["excerpt"]
+                existing.body_html = result["body_html"]
+                existing.updated_at = _utcnow()
+                existing.is_auto_translated = True
+                existing.category_id = src["category_id"]
+                existing.cover_image = src["cover_image"]
+                session.add(existing)
+            else:
+                base = make_slug(result["title"])
+                slug = base
+                n = 2
+                while session.exec(
+                    select(Post).where(Post.lang == target_lang, Post.slug == slug)
+                ).first():
+                    slug = f"{base}-{n}"
+                    n += 1
+                session.add(
+                    Post(
+                        group_id=src["group_id"],
+                        lang=target_lang,
+                        slug=slug,
+                        title=result["title"],
+                        excerpt=result["excerpt"],
+                        body_html=result["body_html"],
+                        cover_image=src["cover_image"],
+                        category_id=src["category_id"],
+                        is_published=False,  # draft until admin reviews & publishes
+                        is_auto_translated=True,
+                        source_lang=src["source_lang"],
+                    )
                 )
-            )
-    session.commit()
-    return RedirectResponse(f"/admin/posts/{post_id}/edit", status_code=303)
+        session.commit()
+    log.info("[translate] post=%s done", post_id)
 
 
 # ───────────────────────── Categories ───────────────────────────────────────
