@@ -166,7 +166,31 @@ tinymce.init({
   autoresize_bottom_margin: 50,
   menubar: 'edit view insert format table tools',
   plugins: 'advlist autolink lists link image charmap preview anchor pagebreak searchreplace visualblocks code fullscreen insertdatetime media table help wordcount autoresize codesample',
-  toolbar: 'undo redo | blocks | bold italic underline | alignleft aligncenter alignright | bullist numlist outdent indent | link image media codesample | removeformat | fullscreen code',
+  toolbar: 'undo redo | blocks | bold italic underline | alignleft aligncenter alignright | bullist numlist outdent indent | link image media codesample | removeformat | fullscreen | code',
+  // Tooltip nudge so users know <> is THE way to paste raw HTML.
+  setup: function(editor) {
+    editor.on('init', function(){
+      // Detect plain-text pastes that look like HTML markup and insert them
+      // as HTML (which is the user's intent), instead of letting TinyMCE
+      // escape '<' to '&lt;' because the clipboard didn't ship text/html.
+      editor.on('paste', function(e){
+        var cd = (e.clipboardData) || (e.originalEvent && e.originalEvent.clipboardData);
+        if (!cd) return;
+        // If clipboard already has rich HTML, let TinyMCE handle it normally.
+        var html = '';
+        try { html = cd.getData('text/html'); } catch(_) {}
+        if (html) return;
+        var text = '';
+        try { text = cd.getData('text/plain'); } catch(_) {}
+        // Plain text containing tags like <div>, </p>, <h1 ...> -> treat as HTML.
+        if (text && /<\/?[a-z][\s\S]*?>/i.test(text)) {
+          e.preventDefault();
+          if (e.stopPropagation) e.stopPropagation();
+          editor.insertContent(text);
+        }
+      });
+    });
+  },
   branding: false,
   promotion: false,
   license_key: 'gpl',
