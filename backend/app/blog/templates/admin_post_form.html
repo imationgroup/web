@@ -161,8 +161,6 @@
 // TinyMCE — Word-like editor, MIT build
 tinymce.init({
   selector: 'textarea#body_html',
-  // Tall by default so it doesn't feel cramped, and grows with content
-  // up to a sensible cap (after which the editor scrolls internally).
   min_height: 720,
   max_height: 1600,
   autoresize_bottom_margin: 50,
@@ -172,9 +170,28 @@ tinymce.init({
   branding: false,
   promotion: false,
   license_key: 'gpl',
-  // No hard character cap — the DB column is TEXT, unlimited in SQLite.
-  // nginx is configured for 30 MB request bodies (covers very long posts
-  // with embedded images).
+  // Pass raw HTML through verbatim. The admin is a single trusted user
+  // who explicitly wants <script>, <iframe>, custom attributes, etc. to
+  // round-trip through the editor untouched. Trade-off: we lose XSS
+  // protection inside the editor, but body_html is rendered raw on the
+  // public page anyway -- the trust boundary is "logged-in admin only
+  // writes here".
+  valid_elements: '*[*]',
+  extended_valid_elements: 'script[*],style[*],iframe[*],embed[*],object[*],form[*],input[*],select[*],textarea[*],button[*]',
+  valid_children: '+body[script|style|iframe],+div[script|style|iframe|form],+p[script|iframe]',
+  verify_html: false,
+  cleanup: false,
+  entity_encoding: 'raw',
+  convert_urls: false,
+  // Don't wrap loose text in <p> automatically (interferes with raw HTML
+  // snippets that don't expect to be wrapped).
+  forced_root_block: 'p',
+  // Don't escape characters in attribute values, keep raw.
+  fix_list_elements: false,
+  remove_trailing_brs: false,
+  schema: 'html5',
+  // Allow editing of the raw source as a dialog (toolbar "code" button),
+  // and treat what you type in there as ground truth.
   content_style: 'body { font-family: -apple-system, sans-serif; font-size: 16px; line-height: 1.6; max-width: 760px; }',
   // Inline images: TinyMCE posts the blob to /admin/upload, which runs the
   // same Pillow resize-to-webp pipeline as the cover image. We resolve with
