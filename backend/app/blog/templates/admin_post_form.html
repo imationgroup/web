@@ -52,7 +52,7 @@
 
     <div class="form-group">
       <label for="excerpt">Excerpt</label>
-      <textarea id="excerpt" name="excerpt" maxlength="480" rows="3" placeholder="One-line summary, shown in the blog index and meta description.">{{ post.excerpt if post else '' }}</textarea>
+      <textarea id="excerpt" name="excerpt" rows="4" placeholder="Short summary shown in the blog index and as the meta description. Aim for ~155 characters for best SEO display, but write as much as you need.">{{ post.excerpt if post else '' }}</textarea>
     </div>
 
     <div class="form-group">
@@ -161,14 +161,21 @@
 // TinyMCE — Word-like editor, MIT build
 tinymce.init({
   selector: 'textarea#body_html',
-  height: 540,
-  menubar: 'edit view insert format table',
+  // Tall by default so it doesn't feel cramped, and grows with content
+  // up to a sensible cap (after which the editor scrolls internally).
+  min_height: 720,
+  max_height: 1600,
+  autoresize_bottom_margin: 50,
+  menubar: 'edit view insert format table tools',
   plugins: 'advlist autolink lists link image charmap preview anchor pagebreak searchreplace visualblocks code fullscreen insertdatetime media table help wordcount autoresize codesample',
-  toolbar: 'undo redo | blocks | bold italic underline | alignleft aligncenter alignright | bullist numlist outdent indent | link image media codesample | removeformat code',
+  toolbar: 'undo redo | blocks | bold italic underline | alignleft aligncenter alignright | bullist numlist outdent indent | link image media codesample | removeformat | fullscreen code',
   branding: false,
   promotion: false,
   license_key: 'gpl',
-  content_style: 'body { font-family: -apple-system, sans-serif; font-size: 16px; line-height: 1.6; max-width: 720px; }',
+  // No hard character cap — the DB column is TEXT, unlimited in SQLite.
+  // nginx is configured for 30 MB request bodies (covers very long posts
+  // with embedded images).
+  content_style: 'body { font-family: -apple-system, sans-serif; font-size: 16px; line-height: 1.6; max-width: 760px; }',
   // Inline images: TinyMCE posts the blob to /admin/upload, which runs the
   // same Pillow resize-to-webp pipeline as the cover image. We resolve with
   // the public /uploads/<...> URL so the editor inserts a normal <img src>.
