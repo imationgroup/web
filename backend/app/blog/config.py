@@ -10,7 +10,7 @@ from pathlib import Path
 # Match the i18n languages of the main static site so the blog plays well
 # with the existing hreflang/canonical structure.
 LANGS = ["en", "es", "gl", "ca", "pt", "eu", "et"]
-DEFAULT_LANG = "en"
+DEFAULT_LANG = "es"
 LANG_NAMES = {
     "en": "English",  "es": "Español",  "gl": "Galego", "ca": "Català",
     "pt": "Português", "eu": "Euskera", "et": "Eesti",

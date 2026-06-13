@@ -46,7 +46,7 @@ except ImportError:
 REPO = Path(__file__).resolve().parent.parent
 TEMPLATES = REPO / 'templates'
 SITE = 'https://imationgroup.com'
-DEFAULT = 'en'
+DEFAULT = 'es'
 
 # --- Load translations from i18n.js (extract TRANSLATIONS object literal) ---
 i18n_src = (REPO / 'i18n.js').read_text(encoding='utf-8')

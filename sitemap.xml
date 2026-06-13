@@ -3,7 +3,7 @@
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://imationgroup.com/en/</loc>
-    <lastmod>2026-06-12</lastmod>
+    <lastmod>2026-06-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://imationgroup.com/en/" />
@@ -13,7 +13,7 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://imationgroup.com/pt/" />
     <xhtml:link rel="alternate" hreflang="eu" href="https://imationgroup.com/eu/" />
     <xhtml:link rel="alternate" hreflang="et" href="https://imationgroup.com/et/" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/en/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/es/" />
   </url>
   <url>
     <loc>https://imationgroup.com/en/services</loc>
@@ -27,7 +27,7 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://imationgroup.com/pt/services" />
     <xhtml:link rel="alternate" hreflang="eu" href="https://imationgroup.com/eu/services" />
     <xhtml:link rel="alternate" hreflang="et" href="https://imationgroup.com/et/services" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/en/services" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/es/services" />
   </url>
   <url>
     <loc>https://imationgroup.com/en/projects</loc>
@@ -41,7 +41,7 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://imationgroup.com/pt/projects" />
     <xhtml:link rel="alternate" hreflang="eu" href="https://imationgroup.com/eu/projects" />
     <xhtml:link rel="alternate" hreflang="et" href="https://imationgroup.com/et/projects" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/en/projects" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/es/projects" />
   </url>
   <url>
     <loc>https://imationgroup.com/en/terms</loc>
@@ -55,7 +55,7 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://imationgroup.com/pt/terms" />
     <xhtml:link rel="alternate" hreflang="eu" href="https://imationgroup.com/eu/terms" />
     <xhtml:link rel="alternate" hreflang="et" href="https://imationgroup.com/et/terms" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/en/terms" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/es/terms" />
   </url>
   <url>
     <loc>https://imationgroup.com/en/privacy</loc>
@@ -69,11 +69,11 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://imationgroup.com/pt/privacy" />
     <xhtml:link rel="alternate" hreflang="eu" href="https://imationgroup.com/eu/privacy" />
     <xhtml:link rel="alternate" hreflang="et" href="https://imationgroup.com/et/privacy" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/en/privacy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/es/privacy" />
   </url>
   <url>
     <loc>https://imationgroup.com/es/</loc>
-    <lastmod>2026-06-12</lastmod>
+    <lastmod>2026-06-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://imationgroup.com/en/" />
@@ -83,7 +83,7 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://imationgroup.com/pt/" />
     <xhtml:link rel="alternate" hreflang="eu" href="https://imationgroup.com/eu/" />
     <xhtml:link rel="alternate" hreflang="et" href="https://imationgroup.com/et/" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/en/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/es/" />
   </url>
   <url>
     <loc>https://imationgroup.com/es/services</loc>
@@ -97,7 +97,7 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://imationgroup.com/pt/services" />
     <xhtml:link rel="alternate" hreflang="eu" href="https://imationgroup.com/eu/services" />
     <xhtml:link rel="alternate" hreflang="et" href="https://imationgroup.com/et/services" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/en/services" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/es/services" />
   </url>
   <url>
     <loc>https://imationgroup.com/es/projects</loc>
@@ -111,7 +111,7 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://imationgroup.com/pt/projects" />
     <xhtml:link rel="alternate" hreflang="eu" href="https://imationgroup.com/eu/projects" />
     <xhtml:link rel="alternate" hreflang="et" href="https://imationgroup.com/et/projects" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/en/projects" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/es/projects" />
   </url>
   <url>
     <loc>https://imationgroup.com/es/terms</loc>
@@ -125,7 +125,7 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://imationgroup.com/pt/terms" />
     <xhtml:link rel="alternate" hreflang="eu" href="https://imationgroup.com/eu/terms" />
     <xhtml:link rel="alternate" hreflang="et" href="https://imationgroup.com/et/terms" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/en/terms" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/es/terms" />
   </url>
   <url>
     <loc>https://imationgroup.com/es/privacy</loc>
@@ -139,11 +139,11 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://imationgroup.com/pt/privacy" />
     <xhtml:link rel="alternate" hreflang="eu" href="https://imationgroup.com/eu/privacy" />
     <xhtml:link rel="alternate" hreflang="et" href="https://imationgroup.com/et/privacy" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/en/privacy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/es/privacy" />
   </url>
   <url>
     <loc>https://imationgroup.com/gl/</loc>
-    <lastmod>2026-06-12</lastmod>
+    <lastmod>2026-06-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://imationgroup.com/en/" />
@@ -153,7 +153,7 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://imationgroup.com/pt/" />
     <xhtml:link rel="alternate" hreflang="eu" href="https://imationgroup.com/eu/" />
     <xhtml:link rel="alternate" hreflang="et" href="https://imationgroup.com/et/" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/en/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/es/" />
   </url>
   <url>
     <loc>https://imationgroup.com/gl/services</loc>
@@ -167,7 +167,7 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://imationgroup.com/pt/services" />
     <xhtml:link rel="alternate" hreflang="eu" href="https://imationgroup.com/eu/services" />
     <xhtml:link rel="alternate" hreflang="et" href="https://imationgroup.com/et/services" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/en/services" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/es/services" />
   </url>
   <url>
     <loc>https://imationgroup.com/gl/projects</loc>
@@ -181,7 +181,7 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://imationgroup.com/pt/projects" />
     <xhtml:link rel="alternate" hreflang="eu" href="https://imationgroup.com/eu/projects" />
     <xhtml:link rel="alternate" hreflang="et" href="https://imationgroup.com/et/projects" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/en/projects" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/es/projects" />
   </url>
   <url>
     <loc>https://imationgroup.com/gl/terms</loc>
@@ -195,7 +195,7 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://imationgroup.com/pt/terms" />
     <xhtml:link rel="alternate" hreflang="eu" href="https://imationgroup.com/eu/terms" />
     <xhtml:link rel="alternate" hreflang="et" href="https://imationgroup.com/et/terms" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/en/terms" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/es/terms" />
   </url>
   <url>
     <loc>https://imationgroup.com/gl/privacy</loc>
@@ -209,11 +209,11 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://imationgroup.com/pt/privacy" />
     <xhtml:link rel="alternate" hreflang="eu" href="https://imationgroup.com/eu/privacy" />
     <xhtml:link rel="alternate" hreflang="et" href="https://imationgroup.com/et/privacy" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/en/privacy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/es/privacy" />
   </url>
   <url>
     <loc>https://imationgroup.com/ca/</loc>
-    <lastmod>2026-06-12</lastmod>
+    <lastmod>2026-06-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://imationgroup.com/en/" />
@@ -223,7 +223,7 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://imationgroup.com/pt/" />
     <xhtml:link rel="alternate" hreflang="eu" href="https://imationgroup.com/eu/" />
     <xhtml:link rel="alternate" hreflang="et" href="https://imationgroup.com/et/" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/en/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/es/" />
   </url>
   <url>
     <loc>https://imationgroup.com/ca/services</loc>
@@ -237,7 +237,7 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://imationgroup.com/pt/services" />
     <xhtml:link rel="alternate" hreflang="eu" href="https://imationgroup.com/eu/services" />
     <xhtml:link rel="alternate" hreflang="et" href="https://imationgroup.com/et/services" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/en/services" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/es/services" />
   </url>
   <url>
     <loc>https://imationgroup.com/ca/projects</loc>
@@ -251,7 +251,7 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://imationgroup.com/pt/projects" />
     <xhtml:link rel="alternate" hreflang="eu" href="https://imationgroup.com/eu/projects" />
     <xhtml:link rel="alternate" hreflang="et" href="https://imationgroup.com/et/projects" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/en/projects" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/es/projects" />
   </url>
   <url>
     <loc>https://imationgroup.com/ca/terms</loc>
@@ -265,7 +265,7 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://imationgroup.com/pt/terms" />
     <xhtml:link rel="alternate" hreflang="eu" href="https://imationgroup.com/eu/terms" />
     <xhtml:link rel="alternate" hreflang="et" href="https://imationgroup.com/et/terms" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/en/terms" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/es/terms" />
   </url>
   <url>
     <loc>https://imationgroup.com/ca/privacy</loc>
@@ -279,11 +279,11 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://imationgroup.com/pt/privacy" />
     <xhtml:link rel="alternate" hreflang="eu" href="https://imationgroup.com/eu/privacy" />
     <xhtml:link rel="alternate" hreflang="et" href="https://imationgroup.com/et/privacy" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/en/privacy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/es/privacy" />
   </url>
   <url>
     <loc>https://imationgroup.com/pt/</loc>
-    <lastmod>2026-06-12</lastmod>
+    <lastmod>2026-06-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://imationgroup.com/en/" />
@@ -293,7 +293,7 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://imationgroup.com/pt/" />
     <xhtml:link rel="alternate" hreflang="eu" href="https://imationgroup.com/eu/" />
     <xhtml:link rel="alternate" hreflang="et" href="https://imationgroup.com/et/" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/en/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/es/" />
   </url>
   <url>
     <loc>https://imationgroup.com/pt/services</loc>
@@ -307,7 +307,7 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://imationgroup.com/pt/services" />
     <xhtml:link rel="alternate" hreflang="eu" href="https://imationgroup.com/eu/services" />
     <xhtml:link rel="alternate" hreflang="et" href="https://imationgroup.com/et/services" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/en/services" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/es/services" />
   </url>
   <url>
     <loc>https://imationgroup.com/pt/projects</loc>
@@ -321,7 +321,7 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://imationgroup.com/pt/projects" />
     <xhtml:link rel="alternate" hreflang="eu" href="https://imationgroup.com/eu/projects" />
     <xhtml:link rel="alternate" hreflang="et" href="https://imationgroup.com/et/projects" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/en/projects" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/es/projects" />
   </url>
   <url>
     <loc>https://imationgroup.com/pt/terms</loc>
@@ -335,7 +335,7 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://imationgroup.com/pt/terms" />
     <xhtml:link rel="alternate" hreflang="eu" href="https://imationgroup.com/eu/terms" />
     <xhtml:link rel="alternate" hreflang="et" href="https://imationgroup.com/et/terms" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/en/terms" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/es/terms" />
   </url>
   <url>
     <loc>https://imationgroup.com/pt/privacy</loc>
@@ -349,11 +349,11 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://imationgroup.com/pt/privacy" />
     <xhtml:link rel="alternate" hreflang="eu" href="https://imationgroup.com/eu/privacy" />
     <xhtml:link rel="alternate" hreflang="et" href="https://imationgroup.com/et/privacy" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/en/privacy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/es/privacy" />
   </url>
   <url>
     <loc>https://imationgroup.com/eu/</loc>
-    <lastmod>2026-06-12</lastmod>
+    <lastmod>2026-06-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://imationgroup.com/en/" />
@@ -363,7 +363,7 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://imationgroup.com/pt/" />
     <xhtml:link rel="alternate" hreflang="eu" href="https://imationgroup.com/eu/" />
     <xhtml:link rel="alternate" hreflang="et" href="https://imationgroup.com/et/" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/en/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/es/" />
   </url>
   <url>
     <loc>https://imationgroup.com/eu/services</loc>
@@ -377,7 +377,7 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://imationgroup.com/pt/services" />
     <xhtml:link rel="alternate" hreflang="eu" href="https://imationgroup.com/eu/services" />
     <xhtml:link rel="alternate" hreflang="et" href="https://imationgroup.com/et/services" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/en/services" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/es/services" />
   </url>
   <url>
     <loc>https://imationgroup.com/eu/projects</loc>
@@ -391,7 +391,7 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://imationgroup.com/pt/projects" />
     <xhtml:link rel="alternate" hreflang="eu" href="https://imationgroup.com/eu/projects" />
     <xhtml:link rel="alternate" hreflang="et" href="https://imationgroup.com/et/projects" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/en/projects" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/es/projects" />
   </url>
   <url>
     <loc>https://imationgroup.com/eu/terms</loc>
@@ -405,7 +405,7 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://imationgroup.com/pt/terms" />
     <xhtml:link rel="alternate" hreflang="eu" href="https://imationgroup.com/eu/terms" />
     <xhtml:link rel="alternate" hreflang="et" href="https://imationgroup.com/et/terms" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/en/terms" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/es/terms" />
   </url>
   <url>
     <loc>https://imationgroup.com/eu/privacy</loc>
@@ -419,11 +419,11 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://imationgroup.com/pt/privacy" />
     <xhtml:link rel="alternate" hreflang="eu" href="https://imationgroup.com/eu/privacy" />
     <xhtml:link rel="alternate" hreflang="et" href="https://imationgroup.com/et/privacy" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/en/privacy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/es/privacy" />
   </url>
   <url>
     <loc>https://imationgroup.com/et/</loc>
-    <lastmod>2026-06-12</lastmod>
+    <lastmod>2026-06-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://imationgroup.com/en/" />
@@ -433,7 +433,7 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://imationgroup.com/pt/" />
     <xhtml:link rel="alternate" hreflang="eu" href="https://imationgroup.com/eu/" />
     <xhtml:link rel="alternate" hreflang="et" href="https://imationgroup.com/et/" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/en/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/es/" />
   </url>
   <url>
     <loc>https://imationgroup.com/et/services</loc>
@@ -447,7 +447,7 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://imationgroup.com/pt/services" />
     <xhtml:link rel="alternate" hreflang="eu" href="https://imationgroup.com/eu/services" />
     <xhtml:link rel="alternate" hreflang="et" href="https://imationgroup.com/et/services" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/en/services" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/es/services" />
   </url>
   <url>
     <loc>https://imationgroup.com/et/projects</loc>
@@ -461,7 +461,7 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://imationgroup.com/pt/projects" />
     <xhtml:link rel="alternate" hreflang="eu" href="https://imationgroup.com/eu/projects" />
     <xhtml:link rel="alternate" hreflang="et" href="https://imationgroup.com/et/projects" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/en/projects" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/es/projects" />
   </url>
   <url>
     <loc>https://imationgroup.com/et/terms</loc>
@@ -475,7 +475,7 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://imationgroup.com/pt/terms" />
     <xhtml:link rel="alternate" hreflang="eu" href="https://imationgroup.com/eu/terms" />
     <xhtml:link rel="alternate" hreflang="et" href="https://imationgroup.com/et/terms" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/en/terms" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/es/terms" />
   </url>
   <url>
     <loc>https://imationgroup.com/et/privacy</loc>
@@ -489,6 +489,6 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://imationgroup.com/pt/privacy" />
     <xhtml:link rel="alternate" hreflang="eu" href="https://imationgroup.com/eu/privacy" />
     <xhtml:link rel="alternate" hreflang="et" href="https://imationgroup.com/et/privacy" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/en/privacy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://imationgroup.com/es/privacy" />
   </url>
 </urlset>
