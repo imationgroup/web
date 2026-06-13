@@ -15,71 +15,59 @@
 <style>
   @font-face { font-family: 'Inter'; font-style: normal; font-weight: 100 900; font-display: swap; src: url('/fonts/inter-latin.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
   @font-face { font-family: 'Inter'; font-style: normal; font-weight: 100 900; font-display: swap; src: url('/fonts/inter-latin-ext.woff2') format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
-  :root { --primary-blue: #0066CC; --dark-blue: #003366; --primary-teal: #00A5A8; --text-dark: #1a1a2e; --text-gray: #5a606a; --border: #e5e7eb; --bg: #ffffff; --light-gray: #f8fafc; }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Inter', -apple-system, sans-serif; color: var(--text-dark); background: var(--bg); line-height: 1.65; }
-  a { color: var(--primary-blue); text-decoration: none; }
-  a:hover { color: var(--dark-blue); text-decoration: underline; }
-  .nav { border-bottom: 1px solid var(--border); padding: 16px 0; background: var(--bg); position: sticky; top: 0; z-index: 10; }
-  .container { max-width: 760px; margin: 0 auto; padding: 0 20px; }
-  .nav-inner { display: flex; align-items: center; gap: 24px; }
-  .nav-inner .brand { font-weight: 700; color: var(--primary-blue); }
-  .nav-inner nav a { color: var(--text-gray); margin-right: 18px; font-size: 0.95rem; }
-  .nav-inner .lang-links { margin-left: auto; font-size: 0.85rem; }
-  .lang-links a { margin-left: 8px; color: var(--text-gray); }
-  .lang-links a.active { color: var(--primary-blue); font-weight: 600; }
-  main { padding: 40px 0 80px; }
-  h1 { font-size: 2.1rem; line-height: 1.25; margin-bottom: 14px; }
-  h1.page-title { font-size: 1.6rem; }
-  .post-card { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 22px; transition: transform 0.15s, box-shadow 0.15s; background: var(--bg); display: block; color: inherit; }
-  .post-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.05); text-decoration: none; }
+</style>
+{# Inject the SAME <style> block the static homepage uses so navbar /
+   footer / general look-and-feel match exactly. #}
+{% if chrome and chrome.head_style %}<style>{{ chrome.head_style|safe }}</style>{% endif %}
+{# Blog-specific style overrides: scoped to .blog-article so we don't
+   collide with the homepage's CSS classes. #}
+<style>
+  .blog-wrap { max-width: 760px; margin: 0 auto; padding: 56px 20px 80px; }
+  .blog-wrap h1.page-title { font-size: 2rem; margin-bottom: 28px; color: var(--text-dark); }
+  .post-card { display: block; border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; margin-bottom: 22px; background: var(--white); text-decoration: none; color: inherit; transition: transform 0.15s, box-shadow 0.15s; }
+  .post-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.05); }
   .post-card .cover { aspect-ratio: 16/8; background: var(--light-gray) no-repeat center / cover; }
-  .post-card .body { padding: 18px 22px; }
+  .post-card .body { padding: 20px 24px; }
   .post-card .cat { display: inline-block; font-size: 0.75rem; color: var(--primary-teal); font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px; }
-  .post-card h2 { font-size: 1.15rem; color: var(--text-dark); margin: 0 0 6px; line-height: 1.35; }
+  .post-card h2 { font-size: 1.2rem; margin: 0 0 6px; line-height: 1.35; color: var(--text-dark); }
   .post-card p { color: var(--text-gray); font-size: 0.93rem; margin: 0; }
-  .post-card time { color: var(--text-gray); font-size: 0.8rem; margin-top: 8px; display: block; }
-  article header { margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
-  article .cat { display: inline-block; font-size: 0.78rem; color: var(--primary-teal); font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 12px; }
-  article time { color: var(--text-gray); font-size: 0.88rem; }
-  article .cover { width: 100%; margin-bottom: 28px; border-radius: 10px; overflow: hidden; }
-  article .cover img { width: 100%; height: auto; display: block; }
-  article .content { font-size: 1.06rem; line-height: 1.75; }
-  article .content h2 { font-size: 1.5rem; margin: 2rem 0 0.6rem; color: var(--dark-blue); }
-  article .content h3 { font-size: 1.2rem; margin: 1.6rem 0 0.5rem; color: var(--dark-blue); }
-  article .content p { margin: 0.8em 0; }
-  article .content ul, article .content ol { margin: 1em 0 1em 1.4em; }
-  article .content li { margin: 0.3em 0; }
-  article .content blockquote { border-left: 4px solid var(--primary-teal); padding: 4px 18px; margin: 1.4em 0; color: var(--text-gray); font-style: italic; }
-  article .content code { background: var(--light-gray); padding: 2px 6px; border-radius: 4px; font-size: 0.92em; font-family: ui-monospace, monospace; }
-  article .content pre { background: #0f1729; color: #e6e6e6; padding: 14px 18px; border-radius: 8px; overflow-x: auto; margin: 1.2em 0; font-size: 0.92em; }
-  article .content pre code { background: transparent; padding: 0; color: inherit; }
-  article .content img { max-width: 100%; height: auto; border-radius: 8px; margin: 1em 0; }
-  article .content table { border-collapse: collapse; width: 100%; margin: 1em 0; }
-  article .content th, article .content td { border: 1px solid var(--border); padding: 8px 12px; text-align: left; }
-  article footer { margin-top: 50px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-gray); font-size: 0.9rem; }
+  .post-card time { color: var(--text-gray); font-size: 0.8rem; margin-top: 10px; display: block; }
   .empty { padding: 50px 0; text-align: center; color: var(--text-gray); }
+  article.blog-article header { margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--border-color); }
+  article.blog-article .breadcrumb { color: var(--text-gray); font-size: 0.9rem; margin-bottom: 14px; }
+  article.blog-article .breadcrumb a { color: var(--text-gray); }
+  article.blog-article .cat { display: inline-block; font-size: 0.78rem; color: var(--primary-teal); font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 12px; }
+  article.blog-article h1 { font-size: 2.1rem; line-height: 1.25; margin-bottom: 14px; }
+  article.blog-article time { color: var(--text-gray); font-size: 0.88rem; }
+  article.blog-article .cover { width: 100%; margin-bottom: 28px; border-radius: 12px; overflow: hidden; }
+  article.blog-article .cover img { width: 100%; height: auto; display: block; }
+  article.blog-article .content { font-size: 1.05rem; line-height: 1.75; }
+  article.blog-article .content > * + * { margin-top: 0.85em; }
+  article.blog-article .content h2 { font-size: 1.5rem; margin: 2rem 0 0.6rem; color: var(--dark-blue); }
+  article.blog-article .content h3 { font-size: 1.2rem; margin: 1.6rem 0 0.5rem; color: var(--dark-blue); }
+  article.blog-article .content ul, article.blog-article .content ol { margin: 1em 0 1em 1.4em; }
+  article.blog-article .content blockquote { border-left: 4px solid var(--primary-teal); padding: 4px 18px; margin: 1.4em 0; color: var(--text-gray); font-style: italic; }
+  article.blog-article .content code { background: var(--light-gray); padding: 2px 6px; border-radius: 4px; font-size: 0.92em; font-family: ui-monospace, monospace; }
+  article.blog-article .content pre { background: #0f1729; color: #e6e6e6; padding: 14px 18px; border-radius: 8px; overflow-x: auto; margin: 1.2em 0; font-size: 0.92em; }
+  article.blog-article .content pre code { background: transparent; padding: 0; color: inherit; }
+  article.blog-article .content img { max-width: 100%; height: auto; border-radius: 8px; margin: 1em 0; }
+  article.blog-article .content table { border-collapse: collapse; width: 100%; margin: 1em 0; }
+  article.blog-article .content th, article.blog-article .content td { border: 1px solid var(--border-color); padding: 8px 12px; text-align: left; }
+  article.blog-article footer { margin-top: 50px; padding-top: 24px; border-top: 1px solid var(--border-color); color: var(--text-gray); font-size: 0.9rem; }
 </style>
 {% block head %}{% endblock %}
 </head>
 <body>
-<div class="nav">
-  <div class="container nav-inner">
-    <a class="brand" href="/{{ lang }}/">ImationGroup</a>
-    <nav>
-      <a href="/{{ lang }}/">{{ {'en':'Home','es':'Inicio','gl':'Inicio','ca':'Inici','pt':'Início','eu':'Hasiera','et':'Avaleht'}[lang] }}</a>
-      <a href="/{{ lang }}/services">{{ {'en':'Services','es':'Servicios','gl':'Servizos','ca':'Serveis','pt':'Serviços','eu':'Zerbitzuak','et':'Teenused'}[lang] }}</a>
-      <a href="/{{ lang }}/blog/" style="color: var(--primary-blue); font-weight: 600;">Blog</a>
-    </nav>
-    <div class="lang-links">
-      {% for l in langs %}
-        <a href="/{{ l }}/blog/" class="{% if l == lang %}active{% endif %}" hreflang="{{ l }}">{{ l|upper }}</a>
-      {% endfor %}
-    </div>
-  </div>
-</div>
-<main class="container">
+{% if chrome and chrome.nav_html %}{{ chrome.nav_html|safe }}{% endif %}
+
+<main class="blog-wrap">
 {% block content %}{% endblock %}
 </main>
+
+{% if chrome and chrome.footer_html %}{{ chrome.footer_html|safe }}{% endif %}
+
+{# Inline the same body scripts the homepage uses (language switcher
+   dropdown, mobile menu toggle, etc.) so the chrome behaves identically. #}
+{% if chrome and chrome.scripts_html %}{{ chrome.scripts_html|safe }}{% endif %}
 </body>
 </html>

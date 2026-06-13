@@ -14,6 +14,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from sqlmodel import Session, select
 
+from .chrome import chrome_for
 from .config import DEFAULT_LANG, FLAGS, LANG_NAMES, LANGS, SITE_URL
 from .db import get_session
 from .models import Category, Post
@@ -101,6 +102,7 @@ def _render_index(request: Request, lang: str, session: Session) -> HTMLResponse
             "canonical": _abs_url(f"/{lang}/blog/"),
             "site_url": SITE_URL,
             "title": "Blog — ImationGroup",
+            "chrome": chrome_for(lang) or chrome_for(DEFAULT_LANG),
         },
     )
 
@@ -177,5 +179,6 @@ def _render_post_object(request: Request, post: "Post", session: Session, *, pre
             "site_url": SITE_URL,
             "jsonld": json.dumps(jsonld, ensure_ascii=False, separators=(",", ":")),
             "preview": preview,
+            "chrome": chrome_for(lang) or chrome_for(DEFAULT_LANG),
         },
     )

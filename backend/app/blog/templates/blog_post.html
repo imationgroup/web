@@ -26,9 +26,9 @@
   <a href="/admin/posts/{{ post.id }}/edit" style="margin-left:8px;">Edit</a>
 </div>
 {% endif %}
-<article>
+<article class="blog-article">
   <header>
-    <p style="margin-bottom: 14px;"><a href="/{{ lang }}/blog/" style="color: var(--text-gray); font-size: 0.9rem;">← Blog</a></p>
+    <p class="breadcrumb"><a href="/{{ lang }}/blog/">← Blog</a></p>
     {% if category %}<span class="cat">{{ category.names.get(lang) or category.names.get(default_lang) or category.slug }}</span>{% endif %}
     <h1>{{ post.title }}</h1>
     {% if post.excerpt %}<p style="color: var(--text-gray); font-size: 1.05rem; margin-top: 10px;">{{ post.excerpt }}</p>{% endif %}
