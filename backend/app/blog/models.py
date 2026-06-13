@@ -33,7 +33,7 @@ class Post(SQLModel, table=True):
     # level + an index for fast URL lookup.
     slug: str = Field(index=True, max_length=160)
     title: str = Field(max_length=240)
-    excerpt: str = Field(default="", max_length=2000)
+    excerpt: str = Field(default="", max_length=8000)
     body_html: str = ""  # rich-text from TinyMCE
     cover_image: Optional[str] = None  # path like "/uploads/2026/06/abc.jpg"
     category_id: Optional[int] = Field(default=None, foreign_key="category.id")
