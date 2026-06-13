@@ -65,8 +65,12 @@ def _extract(path: Path, lang: str) -> Chrome:
     html = path.read_text(encoding="utf-8")
     soup = BeautifulSoup(html, "html.parser")
 
-    style_tag = (soup.head or soup).find("style")
-    head_style = style_tag.decode_contents() if style_tag else ""
+    # Concatenate ALL <style> blocks in <head>. The static build emits at
+    # least two: an @font-face block (added by inject_seo) and the main
+    # template's big style block. find() returns only the first, dropping
+    # all the actual UI rules.
+    head = soup.head or soup
+    head_style = "\n".join(s.decode_contents() for s in head.find_all("style"))
 
     nav = soup.find("nav", class_="navbar") or soup.find("nav")
     _rewrite_anchor_links(nav, lang)
