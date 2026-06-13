@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin login — ImationGroup</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>
+  body { font-family: -apple-system, sans-serif; background: #f8fafc; color: #1a1a2e;
+         min-height: 100vh; display: flex; align-items: center; justify-content: center; margin: 0; }
+  .box { background: white; padding: 32px; border: 1px solid #e5e7eb; border-radius: 10px;
+         width: 100%; max-width: 360px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+  h1 { font-size: 1.4rem; margin: 0 0 6px; color: #0066CC; }
+  p.sub { color: #5a606a; margin-bottom: 20px; font-size: 0.92rem; }
+  label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.88rem; color: #5a606a; }
+  input { width: 100%; padding: 10px 12px; border: 1px solid #e5e7eb; border-radius: 6px;
+          font-size: 0.95rem; box-sizing: border-box; }
+  input:focus { outline: none; border-color: #0066CC; box-shadow: 0 0 0 3px rgba(0,102,204,0.12); }
+  .form-group { margin-bottom: 14px; }
+  button { width: 100%; padding: 11px; background: #0066CC; color: white; border: none;
+           border-radius: 6px; cursor: pointer; font-size: 0.95rem; font-weight: 600; }
+  button:hover { background: #003366; }
+  .error { color: #b71c1c; background: #fef2f2; border: 1px solid #fecaca;
+           padding: 10px; border-radius: 6px; margin-bottom: 14px; font-size: 0.88rem; }
+</style>
+</head>
+<body>
+<form class="box" action="/admin/login" method="post" autocomplete="on">
+  <h1>ImationGroup</h1>
+  <p class="sub">Admin panel — sign in</p>
+  {% if error %}<div class="error">{{ error }}</div>{% endif %}
+  <div class="form-group">
+    <label for="username">Username</label>
+    <input id="username" name="username" type="text" autocomplete="username" required autofocus>
+  </div>
+  <div class="form-group">
+    <label for="password">Password</label>
+    <input id="password" name="password" type="password" autocomplete="current-password" required>
+  </div>
+  <button type="submit">Sign in</button>
+</form>
+</body>
+</html>

@@ -1,0 +1,43 @@
+{% extends "admin_base.html" %}
+{% block title %}Categories{% endblock %}
+{% block content %}
+<h1>Categories</h1>
+
+<div class="card" style="margin-bottom: 22px;">
+  <h2>{{ 'Add' }} category</h2>
+  <form method="post" action="/admin/categories" style="margin-top: 12px;">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="name_default">Name ({{ lang_names[default_lang] }})</label>
+        <input id="name_default" name="name_default" type="text" required placeholder="Engineering">
+      </div>
+      <div class="form-group">
+        <label for="slug">Slug</label>
+        <input id="slug" name="slug" type="text" placeholder="auto">
+      </div>
+    </div>
+    <button class="btn btn-primary" type="submit">Add</button>
+  </form>
+</div>
+
+{% if items %}
+<table>
+  <thead><tr><th>Name</th><th>Slug</th><th></th></tr></thead>
+  <tbody>
+    {% for c in items %}
+    <tr>
+      <td>{{ c.names.get(default_lang, c.slug) }}</td>
+      <td><code>{{ c.slug }}</code></td>
+      <td style="text-align:right;">
+        <form action="/admin/categories/{{ c.id }}/delete" method="post" style="display:inline;">
+          <button type="submit" class="btn btn-danger" onclick="return confirm('Delete category? Posts using it will become uncategorised.');">Delete</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p style="color: var(--text-gray);">No categories yet.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "admin_base.html" %}
+{% block title %}Posts{% endblock %}
+{% block content %}
+<div class="toolbar">
+  <h1>Posts</h1>
+  <a class="btn btn-primary" href="/admin/posts/new">New post</a>
+</div>
+
+{% if not groups %}
+  <div class="card">
+    <p style="color: var(--text-gray);">No posts yet. Click <strong>New post</strong> to write your first one.</p>
+  </div>
+{% else %}
+  <table>
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Source lang</th>
+        <th>Translations</th>
+        <th>Updated</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for g in groups %}
+        {# Pick the source-lang version if present, else the first available #}
+        {% set src_lang = g.first.source_lang %}
+        {% set src = g.langs.get(src_lang) or g.first %}
+        <tr>
+          <td>
+            <a href="/admin/posts/{{ src.id }}/edit" style="color: var(--dark-blue); text-decoration: none; font-weight: 600;">{{ src.title }}</a>
+            {% if src.excerpt %}<div style="color: var(--text-gray); font-size: 0.85rem; margin-top: 2px;">{{ src.excerpt[:120] }}{% if src.excerpt|length > 120 %}…{% endif %}</div>{% endif %}
+          </td>
+          <td><span class="badge">{{ src_lang|upper }}</span></td>
+          <td>
+            <div class="lang-pills">
+              {% for l in langs %}
+                {% set p = g.langs.get(l) %}
+                {% if p %}
+                  <a class="lang-pill {{ 'published' if p.is_published else 'draft' }}"
+                     href="/admin/posts/{{ p.id }}/edit" title="{{ lang_names[l] }}{{ ' (draft)' if not p.is_published else '' }}">{{ l }}</a>
+                {% else %}
+                  <span class="lang-pill" title="{{ lang_names[l] }} (missing)" style="opacity:0.35;">{{ l }}</span>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </td>
+          <td style="color: var(--text-gray); font-size: 0.85rem;">{{ src.updated_at.strftime('%Y-%m-%d %H:%M') }}</td>
+          <td style="text-align: right;">
+            <a class="btn" href="/admin/posts/{{ src.id }}/edit">Edit</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endif %}
+{% endblock %}

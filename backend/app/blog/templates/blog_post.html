@@ -1,0 +1,45 @@
+{% extends "blog_base.html" %}
+{% block title %}{{ post.title }} — ImationGroup{% endblock %}
+{% block description %}{{ post.excerpt or post.title }}{% endblock %}
+{% block hreflang %}
+  {% for l, s in sibling_by_lang.items() %}<link rel="alternate" hreflang="{{ l }}" href="{{ site_url }}/{{ l }}/blog/{{ s.slug }}">
+  {% endfor %}<link rel="alternate" hreflang="x-default" href="{{ site_url }}/{{ default_lang }}/blog/{{ sibling_by_lang[default_lang].slug if sibling_by_lang.get(default_lang) else post.slug }}">
+{% endblock %}
+{% block head %}
+<meta property="og:type" content="article">
+<meta property="og:title" content="{{ post.title }}">
+<meta property="og:description" content="{{ post.excerpt or post.title }}">
+<meta property="og:url" content="{{ canonical }}">
+<meta property="og:image" content="{{ image_abs }}">
+<meta property="og:site_name" content="ImationGroup">
+<meta property="og:locale" content="{{ {'en':'en_US','es':'es_ES','gl':'gl_ES','ca':'ca_ES','pt':'pt_PT','eu':'eu_ES','et':'et_EE'}[lang] }}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ post.title }}">
+<meta name="twitter:description" content="{{ post.excerpt or post.title }}">
+<meta name="twitter:image" content="{{ image_abs }}">
+<script type="application/ld+json">{{ jsonld|safe }}</script>
+{% endblock %}
+{% block content %}
+<article>
+  <header>
+    <p style="margin-bottom: 14px;"><a href="/{{ lang }}/blog/" style="color: var(--text-gray); font-size: 0.9rem;">← Blog</a></p>
+    {% if category %}<span class="cat">{{ category.names.get(lang) or category.names.get(default_lang) or category.slug }}</span>{% endif %}
+    <h1>{{ post.title }}</h1>
+    {% if post.excerpt %}<p style="color: var(--text-gray); font-size: 1.05rem; margin-top: 10px;">{{ post.excerpt }}</p>{% endif %}
+    <p style="margin-top: 14px;"><time datetime="{{ (post.published_at or post.created_at).isoformat() }}">{{ (post.published_at or post.created_at).strftime('%Y-%m-%d') }}</time></p>
+  </header>
+
+  {% if post.cover_image %}<div class="cover"><img src="{{ post.cover_image }}" alt="" loading="eager" decoding="async"></div>{% endif %}
+
+  <div class="content">{{ post.body_html|safe }}</div>
+
+  {% if sibling_by_lang|length > 1 %}
+  <footer>
+    <strong>Also available in:</strong>
+    {% for l, s in sibling_by_lang.items() %}
+      {% if l != lang %}<a href="/{{ l }}/blog/{{ s.slug }}" hreflang="{{ l }}" style="margin: 0 8px;">{{ l|upper }}</a>{% endif %}
+    {% endfor %}
+  </footer>
+  {% endif %}
+</article>
+{% endblock %}

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>{% block title %}Admin{% endblock %} — ImationGroup</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>
+  :root {
+    --primary-blue: #0066CC;
+    --dark-blue: #003366;
+    --primary-teal: #00A5A8;
+    --text-dark: #1a1a2e;
+    --text-gray: #5a606a;
+    --border: #e5e7eb;
+    --bg: #f8fafc;
+    --bg-card: #ffffff;
+    --danger: #b71c1c;
+    --success: #1b5e20;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+         background: var(--bg); color: var(--text-dark); line-height: 1.5;
+         min-height: 100vh; display: flex; flex-direction: column; }
+  header { background: var(--bg-card); border-bottom: 1px solid var(--border);
+           padding: 12px 20px; display: flex; align-items: center; gap: 24px; }
+  header .brand { font-weight: 700; color: var(--primary-blue); font-size: 1.05rem; }
+  header nav a { color: var(--text-gray); text-decoration: none; margin-right: 20px; font-size: 0.95rem; }
+  header nav a:hover, header nav a.active { color: var(--primary-blue); }
+  header .right { margin-left: auto; display: flex; align-items: center; gap: 12px; color: var(--text-gray); font-size: 0.9rem; }
+  header .right form { display: inline; }
+  main { flex: 1; max-width: 1200px; width: 100%; margin: 0 auto; padding: 28px 20px; }
+  h1 { font-size: 1.6rem; margin-bottom: 18px; }
+  h2 { font-size: 1.15rem; margin-bottom: 12px; color: var(--dark-blue); }
+  table { width: 100%; background: var(--bg-card); border-collapse: collapse;
+          border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.93rem; }
+  th { background: #f1f5f9; color: var(--text-gray); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; font-size: 0.78rem; }
+  tr:last-child td { border-bottom: none; }
+  .btn { display: inline-block; padding: 8px 16px; border-radius: 6px; border: 1px solid var(--border);
+         background: var(--bg-card); color: var(--text-dark); text-decoration: none; cursor: pointer;
+         font-size: 0.92rem; font-family: inherit; }
+  .btn:hover { background: var(--bg); }
+  .btn-primary { background: var(--primary-blue); color: white; border-color: var(--primary-blue); }
+  .btn-primary:hover { background: var(--dark-blue); }
+  .btn-danger { color: var(--danger); border-color: #f3c0c0; }
+  .btn-danger:hover { background: #fff3f3; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 0.78rem;
+           font-weight: 600; background: #e0e7ff; color: var(--dark-blue); }
+  .badge.draft { background: #fef3c7; color: #92400e; }
+  .badge.auto { background: #f1f5f9; color: var(--text-gray); }
+  .badge.published { background: #dcfce7; color: var(--success); }
+  .form-group { margin-bottom: 16px; }
+  label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.9rem; color: var(--text-gray); }
+  input[type="text"], input[type="email"], input[type="password"],
+  select, textarea {
+    width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 6px;
+    font-family: inherit; font-size: 0.95rem; background: white;
+  }
+  textarea { min-height: 100px; resize: vertical; }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary-blue); box-shadow: 0 0 0 3px rgba(0,102,204,0.12); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .actions { display: flex; gap: 10px; align-items: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 22px; }
+  .error { color: var(--danger); background: #fef2f2; border: 1px solid #fecaca; padding: 10px 14px; border-radius: 6px; margin-bottom: 16px; font-size: 0.92rem; }
+  .lang-pills { display: flex; gap: 4px; flex-wrap: wrap; }
+  .lang-pill { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.72rem;
+               text-transform: uppercase; background: #f1f5f9; color: var(--text-gray); text-decoration: none; }
+  .lang-pill.published { background: var(--primary-blue); color: white; }
+  .lang-pill.draft { background: #fef3c7; color: #92400e; }
+  .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; gap: 12px; flex-wrap: wrap; }
+  .help { color: var(--text-gray); font-size: 0.85rem; margin-top: 4px; }
+</style>
+{% block head %}{% endblock %}
+</head>
+<body>
+<header>
+  <span class="brand">ImationGroup admin</span>
+  <nav>
+    <a href="/admin/" class="{% if request.url.path == '/admin/' %}active{% endif %}">Posts</a>
+    <a href="/admin/categories" class="{% if '/admin/categories' in request.url.path %}active{% endif %}">Categories</a>
+  </nav>
+  <div class="right">
+    {% if admin %}<span>{{ admin }}</span>
+    <form action="/admin/logout" method="post"><button class="btn" type="submit">Logout</button></form>{% endif %}
+  </div>
+</header>
+<main>
+  {% block content %}{% endblock %}
+</main>
+</body>
+</html>

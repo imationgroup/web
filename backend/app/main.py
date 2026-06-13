@@ -54,6 +54,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# ── Blog (public + admin) ──────────────────────────────────────────────────
+# Mounted at /blog and /<lang>/blog by nginx; /admin for the CMS.
+from .blog.db import init_db as _blog_init_db  # noqa: E402
+from .blog.routes_admin import router as blog_admin_router  # noqa: E402
+from .blog.routes_public import lang_router, router as blog_public_router  # noqa: E402
+
+_blog_init_db()
+app.include_router(blog_public_router)
+app.include_router(lang_router())
+app.include_router(blog_admin_router)
+
 
 @app.get("/api/health")
 def health():

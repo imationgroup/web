@@ -1,0 +1,28 @@
+{% extends "blog_base.html" %}
+{% block title %}Blog — ImationGroup{% endblock %}
+{% block hreflang %}
+  {% for l in langs %}<link rel="alternate" hreflang="{{ l }}" href="{{ site_url }}/{{ l }}/blog/">
+  {% endfor %}<link rel="alternate" hreflang="x-default" href="{{ site_url }}/{{ default_lang }}/blog/">
+{% endblock %}
+{% block content %}
+<h1 class="page-title">Blog</h1>
+
+{% if not posts %}
+  <div class="empty">
+    {% if lang == 'es' %}No hay artículos todavía en español.{% elif lang == 'gl' %}Aínda non hai artigos en galego.{% elif lang == 'ca' %}Encara no hi ha articles en català.{% elif lang == 'pt' %}Ainda não há artigos em português.{% elif lang == 'eu' %}Oraindik ez dago artikulurik euskaraz.{% elif lang == 'et' %}Eestikeelseid artikleid pole veel.{% else %}No posts in this language yet.{% endif %}
+  </div>
+{% endif %}
+
+{% for p in posts %}
+  <a class="post-card" href="/{{ lang }}/blog/{{ p.slug }}">
+    {% if p.cover_image %}<div class="cover" style="background-image: url('{{ p.cover_image }}');"></div>{% endif %}
+    <div class="body">
+      {% set cat = categories.get(p.category_id) %}
+      {% if cat %}<span class="cat">{{ cat.names.get(lang) or cat.names.get(default_lang) or cat.slug }}</span>{% endif %}
+      <h2>{{ p.title }}</h2>
+      {% if p.excerpt %}<p>{{ p.excerpt }}</p>{% endif %}
+      <time datetime="{{ (p.published_at or p.created_at).isoformat() }}">{{ (p.published_at or p.created_at).strftime('%Y-%m-%d') }}</time>
+    </div>
+  </a>
+{% endfor %}
+{% endblock %}

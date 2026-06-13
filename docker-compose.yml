@@ -4,7 +4,17 @@ services:
     image: imationgroup-contact:prod
     restart: unless-stopped
     ports:
-      # Solo localhost → Nginx del host hace proxy a https://api.imationgroup.com/api/contact
+      # Solo localhost → Nginx del host hace proxy a:
+      #   - https://api.imationgroup.com/api/contact   (formulario contacto)
+      #   - https://imationgroup.com/blog/*            (blog público)
+      #   - https://imationgroup.com/admin/*           (admin CMS)
       - "127.0.0.1:8001:8000"
     env_file:
       - .env
+    volumes:
+      # Persistencia de SQLite + uploads del blog fuera del container.
+      # El bind a /var/imationgroup-blog del host requiere que ese dir
+      # exista y sea writable por el UID que corre uvicorn dentro del
+      # container (root por defecto en la imagen python:3.12-slim, así
+      # que sin más ceremonia funciona).
+      - /var/imationgroup-blog:/var/imationgroup-blog
