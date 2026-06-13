@@ -105,17 +105,31 @@ def _render_index(request: Request, lang: str, session: Session) -> HTMLResponse
     )
 
 
+def _render_preview(request: Request, post_id: int, session: Session) -> HTMLResponse:
+    """Render a post by id regardless of publish state. For admin preview."""
+    post = session.get(Post, post_id)
+    if not post:
+        raise HTTPException(404)
+    return _render_post_object(request, post, session, preview=True)
+
+
 def _render_post(request: Request, lang: str, slug: str, session: Session) -> HTMLResponse:
     post = session.exec(
         select(Post).where(Post.lang == lang, Post.slug == slug, Post.is_published == True)  # noqa: E712
     ).first()
     if not post:
         raise HTTPException(404)
+    return _render_post_object(request, post, session, preview=False)
 
-    # Find published siblings (same group_id, other langs) for hreflang.
-    siblings = session.exec(
-        select(Post).where(Post.group_id == post.group_id, Post.is_published == True)  # noqa: E712
-    ).all()
+
+def _render_post_object(request: Request, post: "Post", session: Session, *, preview: bool) -> HTMLResponse:
+    lang = post.lang
+    # Find siblings (same group_id, other langs) for hreflang. In preview mode
+    # include drafts too so the admin can navigate between language versions.
+    q = select(Post).where(Post.group_id == post.group_id)
+    if not preview:
+        q = q.where(Post.is_published == True)  # noqa: E712
+    siblings = session.exec(q).all()
     sibling_by_lang = {s.lang: s for s in siblings}
 
     cat = None
@@ -162,5 +176,6 @@ def _render_post(request: Request, lang: str, slug: str, session: Session) -> HT
             "image_abs": image_abs,
             "site_url": SITE_URL,
             "jsonld": json.dumps(jsonld, ensure_ascii=False, separators=(",", ":")),
+            "preview": preview,
         },
     )

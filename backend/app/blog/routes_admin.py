@@ -16,7 +16,7 @@ from fastapi import (
     UploadFile,
     status,
 )
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlmodel import Session, select
 
@@ -369,6 +369,38 @@ def categories_list(
         {"request": request, "admin": admin, "items": items,
          "langs": LANGS, "lang_names": LANG_NAMES, "default_lang": DEFAULT_LANG},
     )
+
+
+# ───────────────────────── Inline image upload ─────────────────────────────
+
+@router.post("/upload", include_in_schema=False)
+def upload_inline_image(
+    file: UploadFile = File(...),
+    admin: str = Depends(require_admin),
+):
+    """TinyMCE's images_upload_handler posts here when editor inserts an image.
+    We reuse the same Pillow-resize-to-webp pipeline as the cover image.
+    Returns JSON {"location": "/uploads/..."} per TinyMCE's expected shape."""
+    try:
+        public_path = save_cover_image(file)
+    except ValueError as e:
+        return JSONResponse({"error": str(e)}, status_code=400)
+    return JSONResponse({"location": public_path})
+
+
+# ───────────────────────── Draft preview ────────────────────────────────────
+
+@router.get("/preview/{post_id}", response_class=HTMLResponse, include_in_schema=False)
+def preview_post(
+    post_id: int,
+    request: Request,
+    admin: str = Depends(require_admin),
+    session: Session = Depends(get_session),
+):
+    """Render any post (draft or published) with the public template, plus a
+    warning banner so the admin knows it's a preview. URL is admin-only."""
+    from .routes_public import _render_preview
+    return _render_preview(request, post_id, session)
 
 
 @router.post("/categories", include_in_schema=False)

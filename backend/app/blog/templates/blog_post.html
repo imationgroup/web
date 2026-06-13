@@ -20,6 +20,12 @@
 <script type="application/ld+json">{{ jsonld|safe }}</script>
 {% endblock %}
 {% block content %}
+{% if preview %}
+<div style="background:#fef3c7;border:1px solid #f59e0b;color:#92400e;padding:10px 14px;border-radius:8px;margin-bottom:24px;font-size:0.92rem;">
+  ⚠ <strong>Preview mode</strong> — this post is {% if post.is_published %}live but you're viewing the latest saved draft{% else %}a draft and not visible to the public{% endif %}.
+  <a href="/admin/posts/{{ post.id }}/edit" style="margin-left:8px;">Edit</a>
+</div>
+{% endif %}
 <article>
   <header>
     <p style="margin-bottom: 14px;"><a href="/{{ lang }}/blog/" style="color: var(--text-gray); font-size: 0.9rem;">← Blog</a></p>
