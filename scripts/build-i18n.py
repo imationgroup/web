@@ -152,11 +152,23 @@ PAGE_NAMES = ['index', 'services', 'projects', 'terms', 'privacy', 'contact-succ
 
 
 def rewrite_links(html, lang):
-    """href="services.html" → clean URL href="/<lang>/services" (preserves anchors via the trailing context)."""
+    """Normalise all in-site links to absolute /<lang>/... paths.
+
+    The template uses relative URLs (services.html, blog/, etc.) so the
+    same file works from any depth, but relative resolution depends on the
+    URL the user is on -- href="blog/" from /es/blog/X resolves to
+    /es/blog/blog/, not /es/blog/. Convert everything to absolute here.
+    """
+    # Page templates with .html suffix in the source markup
     for p in PAGE_NAMES:
         target = f'/{lang}/' if p == 'index' else f'/{lang}/{p}'
         html = re.sub(rf'href="{p}\.html"', f'href="{target}"', html)
         html = re.sub(rf'href="{p}\.html#', f'href="{target}#', html)
+    # Dynamic routes served by the backend, no .html suffix in markup
+    html = re.sub(r'href="blog/"',     f'href="/{lang}/blog/"',     html)
+    html = re.sub(r'href="blog/#',     f'href="/{lang}/blog/#',     html)
+    html = re.sub(r'href="blog/([^"#]+)"', rf'href="/{lang}/blog/\1"', html)
+    # Inline i18n.js loader
     html = html.replace('src="i18n.js"', 'src="/i18n.js"')
     return html
 
