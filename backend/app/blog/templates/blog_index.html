@@ -5,24 +5,64 @@
   {% endfor %}<link rel="alternate" hreflang="x-default" href="{{ site_url }}/{{ default_lang }}/blog/">
 {% endblock %}
 {% block content %}
-<h1 class="page-title">Blog</h1>
+<h1 class="page-title">{% if lang == 'es' %}Blog{% elif lang == 'gl' %}Blog{% elif lang == 'ca' %}Blog{% elif lang == 'pt' %}Blog{% elif lang == 'eu' %}Bloga{% elif lang == 'et' %}Blogi{% else %}Blog{% endif %}</h1>
+<p class="page-subtitle">
+  {% if lang == 'es' %}Ideas, casos de éxito y aprendizajes sobre ingeniería de datos, software y digitalización de negocio.
+  {% elif lang == 'gl' %}Ideas, casos de éxito e aprendizaxes sobre enxeñería de datos, software e dixitalización de negocio.
+  {% elif lang == 'ca' %}Idees, casos d'èxit i aprenentatges sobre enginyeria de dades, programari i digitalització de negoci.
+  {% elif lang == 'pt' %}Ideias, casos de sucesso e aprendizagens sobre engenharia de dados, software e digitalização de negócio.
+  {% elif lang == 'eu' %}Datu-ingeniaritzari, softwareari eta negozioaren digitalizazioari buruzko ideiak, arrakasta kasuak eta ikasketak.
+  {% elif lang == 'et' %}Ideed, edulood ja õppetunnid andmetehnoloogiast, tarkvarast ja äri digitaliseerimisest.
+  {% else %}Ideas, success stories and lessons on data engineering, software, and business digitalisation.
+  {% endif %}
+</p>
 
 {% if not posts %}
   <div class="empty">
-    {% if lang == 'es' %}No hay artículos todavía en español.{% elif lang == 'gl' %}Aínda non hai artigos en galego.{% elif lang == 'ca' %}Encara no hi ha articles en català.{% elif lang == 'pt' %}Ainda não há artigos em português.{% elif lang == 'eu' %}Oraindik ez dago artikulurik euskaraz.{% elif lang == 'et' %}Eestikeelseid artikleid pole veel.{% else %}No posts in this language yet.{% endif %}
+    {% if lang == 'es' %}No hay artículos todavía en español. Vuelve pronto.
+    {% elif lang == 'gl' %}Aínda non hai artigos en galego.
+    {% elif lang == 'ca' %}Encara no hi ha articles en català.
+    {% elif lang == 'pt' %}Ainda não há artigos em português.
+    {% elif lang == 'eu' %}Oraindik ez dago artikulurik euskaraz.
+    {% elif lang == 'et' %}Eestikeelseid artikleid pole veel.
+    {% else %}No posts in this language yet.
+    {% endif %}
   </div>
 {% endif %}
 
+<div class="post-list">
 {% for p in posts %}
   <a class="post-card" href="/{{ lang }}/blog/{{ p.slug }}">
-    {% if p.cover_image %}<div class="cover" style="background-image: url('{{ p.cover_image }}');"></div>{% endif %}
+    {% if p.cover_image %}
+      <div class="cover" style="background-image: url('{{ p.cover_image }}');" aria-hidden="true"></div>
+    {% else %}
+      {# decorative gradient placeholder so cards with no image still look intentional #}
+      <div class="cover cover-placeholder" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>
+      </div>
+    {% endif %}
     <div class="body">
       {% set cat = categories.get(p.category_id) %}
       {% if cat %}<span class="cat">{{ cat.names.get(lang) or cat.names.get(default_lang) or cat.slug }}</span>{% endif %}
       <h2>{{ p.title }}</h2>
-      {% if p.excerpt %}<p>{{ p.excerpt }}</p>{% endif %}
-      <time datetime="{{ (p.published_at or p.created_at).isoformat() }}">{{ (p.published_at or p.created_at).strftime('%Y-%m-%d') }}</time>
+      {% set summary = p|auto_excerpt %}
+      {% if summary %}<p class="excerpt">{{ summary }}</p>{% endif %}
+      <div class="meta">
+        <time datetime="{{ (p.published_at or p.created_at).isoformat() }}">{{ (p.published_at or p.created_at).strftime('%-d %b %Y' if (p.published_at or p.created_at).strftime('%-d') != '%-d' else '%d %b %Y') }}</time>
+        <span class="read-more">
+          {% if lang == 'es' %}Leer más
+          {% elif lang == 'gl' %}Ler máis
+          {% elif lang == 'ca' %}Llegir més
+          {% elif lang == 'pt' %}Ler mais
+          {% elif lang == 'eu' %}Irakurri gehiago
+          {% elif lang == 'et' %}Loe edasi
+          {% else %}Read more
+          {% endif %}
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </span>
+      </div>
     </div>
   </a>
 {% endfor %}
+</div>
 {% endblock %}

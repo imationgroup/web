@@ -37,6 +37,47 @@
 
   {% if post.cover_image %}<div class="cover"><img src="{{ post.cover_image }}" alt="" loading="eager" decoding="async"></div>{% endif %}
 
+  {# Share bar: localised label, LinkedIn / WhatsApp / Facebook / X / Email / Copy.
+     Each share URL is pre-encoded server-side so users can't tamper with the payload. #}
+  {% set share_text = (post.title ~ ' — ImationGroup')|urlenc %}
+  {% set share_url = canonical|urlenc %}
+  <div class="share-bar" role="group" aria-label="Share this post">
+    <span class="share-label">
+      {%- if lang == 'es' -%}Compartir{%- elif lang == 'gl' -%}Compartir{%- elif lang == 'ca' -%}Comparteix
+      {%- elif lang == 'pt' -%}Partilhar{%- elif lang == 'eu' -%}Partekatu{%- elif lang == 'et' -%}Jaga
+      {%- else -%}Share{%- endif -%}
+    </span>
+    <a class="share-btn share-linkedin" target="_blank" rel="noopener nofollow"
+       href="https://www.linkedin.com/sharing/share-offsite/?url={{ share_url }}"
+       aria-label="LinkedIn">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.95v5.66H9.36V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.62 0 4.29 2.38 4.29 5.48v6.26zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zm1.78 13.02H3.56V9h3.56v11.45zM22.23 0H1.77C.79 0 0 .77 0 1.72v20.55C0 23.23.79 24 1.77 24h20.46c.97 0 1.77-.77 1.77-1.73V1.72C24 .77 23.2 0 22.23 0z"/></svg>
+    </a>
+    <a class="share-btn share-whatsapp" target="_blank" rel="noopener nofollow"
+       href="https://api.whatsapp.com/send?text={{ share_text }}%20{{ share_url }}"
+       aria-label="WhatsApp">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.47-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.18.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51l-.57-.01c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.21 5.1 4.5.71.31 1.27.49 1.7.63.71.23 1.36.2 1.87.12.57-.08 1.77-.72 2.02-1.42.25-.7.25-1.3.17-1.42-.07-.12-.27-.2-.57-.35zM12 0C5.4 0 0 5.4 0 12c0 2.1.55 4.15 1.6 5.96L0 24l6.2-1.62A11.94 11.94 0 0 0 12 24c6.6 0 12-5.4 12-12S18.6 0 12 0zm0 22a9.94 9.94 0 0 1-5.07-1.39l-.36-.22-3.78.99 1.01-3.68-.23-.37A9.95 9.95 0 0 1 2 12C2 6.49 6.49 2 12 2s10 4.49 10 10-4.49 10-10 10z"/></svg>
+    </a>
+    <a class="share-btn share-facebook" target="_blank" rel="noopener nofollow"
+       href="https://www.facebook.com/sharer/sharer.php?u={{ share_url }}"
+       aria-label="Facebook">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.69.24 2.69.24v2.97h-1.52c-1.49 0-1.95.93-1.95 1.89v2.26h3.32l-.53 3.49h-2.79V24C19.61 23.1 24 18.1 24 12.07z"/></svg>
+    </a>
+    <a class="share-btn share-x" target="_blank" rel="noopener nofollow"
+       href="https://twitter.com/intent/tweet?url={{ share_url }}&text={{ share_text }}"
+       aria-label="X">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+    </a>
+    <a class="share-btn share-email"
+       href="mailto:?subject={{ post.title|urlenc }}&body={{ share_url }}"
+       aria-label="Email">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+    </a>
+    <button type="button" class="share-btn share-copy" data-url="{{ canonical }}"
+            aria-label="{% if lang == 'es' %}Copiar enlace{% elif lang == 'gl' %}Copiar ligazón{% elif lang == 'ca' %}Copia l'enllaç{% elif lang == 'pt' %}Copiar ligação{% elif lang == 'eu' %}Esteka kopiatu{% elif lang == 'et' %}Kopeeri link{% else %}Copy link{% endif %}">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+    </button>
+  </div>
+
   <div class="content">{{ post.body_html|safe }}</div>
 
   {% if sibling_by_lang|length > 1 %}
@@ -50,6 +91,41 @@
 </article>
 
 <script>
+// Copy-link button: writes the canonical URL to the clipboard and shows a
+// brief visual confirmation. Uses Clipboard API with a textarea fallback for
+// older browsers / non-HTTPS contexts.
+(function(){
+  var btn = document.querySelector('.share-copy');
+  if (!btn) return;
+  var labelMap = {
+    es: 'Copiado',  gl: 'Copiado',  ca: 'Copiat',  pt: 'Copiado',
+    eu: 'Kopiatuta', et: 'Kopeeritud'
+  };
+  var lang = document.documentElement.lang || 'en';
+  var doneLabel = labelMap[lang] || 'Copied';
+  btn.addEventListener('click', function(){
+    var url = btn.getAttribute('data-url') || window.location.href;
+    var done = function(){
+      var prev = btn.getAttribute('aria-label');
+      btn.classList.add('copied');
+      btn.setAttribute('aria-label', doneLabel);
+      setTimeout(function(){
+        btn.classList.remove('copied');
+        if (prev) btn.setAttribute('aria-label', prev);
+      }, 1600);
+    };
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(url).then(done).catch(function(){});
+    } else {
+      var ta = document.createElement('textarea');
+      ta.value = url; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); done(); } catch (_) {}
+      document.body.removeChild(ta);
+    }
+  });
+})();
+
 // On a blog-post URL the lang switcher in the inherited chrome assumes the
 // slug is the same across languages. For posts, slugs are translated -- so a
 // blind /es/blog/<slug> -> /en/blog/<slug> swap 404s. Override.

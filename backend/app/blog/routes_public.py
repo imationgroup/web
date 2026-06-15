@@ -5,9 +5,11 @@ Each post page emits canonical, hreflang to other published translations,
 JSON-LD Article, OpenGraph and the matching <html lang>."""
 from __future__ import annotations
 import json
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
+from urllib.parse import quote_plus
 
 from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import HTMLResponse
@@ -25,6 +27,40 @@ router = APIRouter(prefix="/blog", tags=["blog-public"])
 # COPY app ./app.
 TEMPLATES_DIR = Path(__file__).resolve().parent / "templates"
 templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
+
+# ─── auto-excerpt: derive from body when the field is empty ─────────────────
+try:
+    from bs4 import BeautifulSoup as _BS
+    _HAS_BS = True
+except ImportError:
+    _HAS_BS = False
+_WS_RE = re.compile(r"\s+")
+
+
+def _auto_excerpt(post, max_chars: int = 220) -> str:
+    """Return post.excerpt if set, else first ~max_chars of plain text from
+    body_html, cut at the nearest word boundary."""
+    if post.excerpt:
+        return post.excerpt
+    body = post.body_html or ""
+    if not body:
+        return ""
+    if _HAS_BS:
+        text = _BS(body, "html.parser").get_text(separator=" ", strip=True)
+    else:
+        text = re.sub(r"<[^>]+>", " ", body)
+    text = _WS_RE.sub(" ", text).strip()
+    if len(text) <= max_chars:
+        return text
+    return text[:max_chars].rsplit(" ", 1)[0] + "…"
+
+
+def _urlencode(s: str) -> str:
+    return quote_plus(s or "")
+
+
+templates.env.filters["auto_excerpt"] = _auto_excerpt
+templates.env.filters["urlenc"] = _urlencode
 
 
 def _abs_url(path: str) -> str:
