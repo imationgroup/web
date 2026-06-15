@@ -399,7 +399,7 @@ def generate_root_stub(page):
     page_basename = '' if page['file'] == 'index.html' else page['file'][:-5]
 
     stub = f'''<!DOCTYPE html>
-<html lang="en">
+<html lang="{DEFAULT}">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
