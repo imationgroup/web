@@ -32,7 +32,13 @@
 
 <div class="post-list">
 {% for p in posts %}
-  <a class="post-card" href="/{{ lang }}/blog/{{ p.slug }}">
+  {# Iberian fallback: when lang is gl/ca/eu and this post has no native
+     translation, we link to the Spanish version directly and mark the
+     card so the user knows the article is in Spanish. #}
+  {% set is_fallback = p.group_id in fallback_group_ids %}
+  <a class="post-card{% if is_fallback %} post-card-fallback{% endif %}"
+     href="/{{ p.lang }}/blog/{{ p.slug }}"
+     {% if is_fallback %}hreflang="{{ p.lang }}"{% endif %}>
     {% if p.cover_image %}
       <div class="cover" style="background-image: url('{{ p.cover_image }}');" aria-hidden="true"></div>
     {% else %}
@@ -49,6 +55,9 @@
       {% if summary %}<p class="excerpt">{{ summary }}</p>{% endif %}
       <div class="meta">
         <time datetime="{{ (p.published_at or p.created_at).isoformat() }}">{{ (p.published_at or p.created_at).strftime('%-d %b %Y' if (p.published_at or p.created_at).strftime('%-d') != '%-d' else '%d %b %Y') }}</time>
+        {% if is_fallback %}
+          <span class="lang-fallback-badge" title="{% if lang == 'gl' %}Aínda non traducido a {{ lang_names[lang] }} — mostrámoscho en castelán{% elif lang == 'ca' %}Encara no traduït al {{ lang_names[lang] }} — el mostrem en castellà{% elif lang == 'eu' %}Oraindik ez dago itzulia {{ lang_names[lang] }}-ra — gaztelaniaz erakusten dizugu{% else %}Not yet translated — shown in Spanish{% endif %}">ES</span>
+        {% endif %}
         <span class="read-more">
           {% if lang == 'es' %}Leer más
           {% elif lang == 'gl' %}Ler máis

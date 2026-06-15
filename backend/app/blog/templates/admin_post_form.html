@@ -125,12 +125,32 @@
     {% endfor %}
   </div>
 
-  <form action="/admin/posts/{{ post.id }}/translate" method="post" style="display: inline;">
-    <button class="btn btn-primary" type="submit" onclick="return confirm('Generate / refresh auto-translations to all other languages? Edited versions stay protected.');">Translate to all (Claude)</button>
-  </form>
-  <form action="/admin/posts/{{ post.id }}/delete" method="post" style="display: inline; margin-left: 8px;">
-    <button class="btn btn-danger" type="submit" onclick="return confirm('Delete THIS language version? Other translations stay intact.');">Delete this version</button>
-  </form>
+  <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+    <form action="/admin/posts/{{ post.id }}/translate" method="post" style="display: inline;">
+      <button class="btn btn-primary" type="submit" onclick="return confirm('Generar/refrescar traducciones a TODOS los demás idiomas? Las versiones ya editadas a mano quedan protegidas.');">Traducir a todos (Claude)</button>
+    </form>
+    <span style="color: var(--text-gray); font-size: 0.85rem;">o a uno solo:</span>
+    {% for l in langs %}{% if l != post.lang %}
+      {% set sib = sibling_by_lang.get(l) %}
+      <form action="/admin/posts/{{ post.id }}/translate/{{ l }}" method="post" style="display: inline;">
+        <button class="btn" type="submit"
+                title="{% if sib and not sib.is_auto_translated %}{{ lang_names[l] }} ya está editada manualmente: no se sobreescribirá. Cancela y edítala a mano si quieres cambiarla.{% else %}Traducir a {{ lang_names[l] }}{% endif %}"
+                style="font-size: 0.85rem; padding: 6px 10px; {% if sib and not sib.is_auto_translated %}opacity:0.55;cursor:not-allowed;{% endif %}"
+                {% if sib and not sib.is_auto_translated %}disabled{% endif %}>
+          {{ l|upper }}{% if sib and sib.is_published %} ✓{% elif sib %} ·{% endif %}
+        </button>
+      </form>
+    {% endif %}{% endfor %}
+  </div>
+  <div style="margin-top: 12px;">
+    <form action="/admin/posts/{{ post.id }}/delete" method="post" style="display: inline;">
+      <button class="btn btn-danger" type="submit" onclick="return confirm('¿Borrar SOLO esta versión de idioma? Las traducciones siguen intactas.');">Borrar esta versión</button>
+    </form>
+  </div>
+  <p class="help" style="margin-top: 10px;">
+    Cada botón de idioma traduce solo a ese idioma. <strong>✓</strong> = publicado, <strong>·</strong> = borrador, sin marca = aún no creado.
+    Botones grises = versión hand-edited; protegida frente a sobreescritura por Claude.
+  </p>
 </div>
 {% endif %}
 

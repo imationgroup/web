@@ -117,12 +117,34 @@ def lang_router() -> APIRouter:
     return r
 
 
+# Languages that fall back to Spanish in the blog index when no native
+# translation exists. Pure UX call by the user: gl/ca/eu speakers also
+# read Spanish, so showing them an es post is better than showing nothing.
+# en/pt/et have no fallback -- those audiences are expected to want a
+# proper native translation, so the post just doesn't appear there.
+IBERIAN_FALLBACK_TO_ES = {"gl", "ca", "eu"}
+
+
 def _render_index(request: Request, lang: str, session: Session) -> HTMLResponse:
-    posts = session.exec(
+    native = list(session.exec(
         select(Post)
         .where(Post.lang == lang, Post.is_published == True)  # noqa: E712
-        .order_by(Post.published_at.desc().nulls_last())
-    ).all()
+    ).all())
+
+    fallback_posts: list[Post] = []
+    if lang in IBERIAN_FALLBACK_TO_ES and lang != "es":
+        native_group_ids = {p.group_id for p in native}
+        es_posts = session.exec(
+            select(Post)
+            .where(Post.lang == "es", Post.is_published == True)  # noqa: E712
+        ).all()
+        fallback_posts = [p for p in es_posts if p.group_id not in native_group_ids]
+
+    posts = sorted(
+        native + fallback_posts,
+        key=lambda p: p.published_at or p.created_at,
+        reverse=True,
+    )
     cats = _categories_by_id(session)
     return templates.TemplateResponse(
         "blog_index.html",
@@ -139,6 +161,8 @@ def _render_index(request: Request, lang: str, session: Session) -> HTMLResponse
             "site_url": SITE_URL,
             "title": "Blog — ImationGroup",
             "chrome": chrome_for(lang) or chrome_for(DEFAULT_LANG),
+            # Pass set of group_ids that are fallback (rendered with badge).
+            "fallback_group_ids": {p.group_id for p in fallback_posts},
         },
     )
 

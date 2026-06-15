@@ -282,6 +282,17 @@ def delete_post(
     return RedirectResponse("/admin/", status_code=303)
 
 
+def _snapshot(src: Post) -> dict:
+    """Plain-dict copy of a Post's fields so a background worker doesn't
+    share the request's Session."""
+    return {
+        "group_id": src.group_id, "lang": src.lang,
+        "title": src.title, "excerpt": src.excerpt, "body_html": src.body_html,
+        "cover_image": src.cover_image, "category_id": src.category_id,
+        "source_lang": src.source_lang,
+    }
+
+
 @router.post("/posts/{post_id}/translate", include_in_schema=False)
 def translate_to_all(
     post_id: int,
@@ -289,41 +300,46 @@ def translate_to_all(
     admin: str = Depends(require_admin),
     session: Session = Depends(get_session),
 ):
-    """Kick off translations to every other lang as a background task and
-    redirect immediately. 6 calls to Claude on a long post can easily
-    exceed nginx's proxy_read_timeout (504), so we run them async and
-    in parallel. Existing siblings that were hand-edited
-    (is_auto_translated=False) are NOT overwritten."""
+    """Translate to EVERY other lang in parallel, in background."""
     src = session.get(Post, post_id)
     if not src:
         raise HTTPException(404)
-
-    # Snapshot the source fields so the background worker doesn't share
-    # the request-scoped Session.
-    snapshot = {
-        "group_id": src.group_id,
-        "lang": src.lang,
-        "title": src.title,
-        "excerpt": src.excerpt,
-        "body_html": src.body_html,
-        "cover_image": src.cover_image,
-        "category_id": src.category_id,
-        "source_lang": src.source_lang,
-    }
-    bg.add_task(_run_translations, post_id, snapshot)
+    bg.add_task(_run_translations, post_id, _snapshot(src),
+                [l for l in LANGS if l != src.lang])
     return RedirectResponse(
-        f"/admin/posts/{post_id}/edit?translating=1", status_code=303
+        f"/admin/posts/{post_id}/edit?translating=all", status_code=303
     )
 
 
-def _run_translations(post_id: int, src: dict) -> None:
-    """Fan out one Claude call per missing/auto target language, in
-    parallel. Writes to the DB happen on the same thread after all
-    translations resolve, so SQLite stays happy."""
+@router.post("/posts/{post_id}/translate/{target_lang}", include_in_schema=False)
+def translate_to_one(
+    post_id: int,
+    target_lang: str,
+    bg: BackgroundTasks,
+    admin: str = Depends(require_admin),
+    session: Session = Depends(get_session),
+):
+    """Translate to ONE target lang. Same background pipeline, single-item list."""
+    if target_lang not in LANGS:
+        raise HTTPException(400, f"unsupported lang {target_lang!r}")
+    src = session.get(Post, post_id)
+    if not src:
+        raise HTTPException(404)
+    if target_lang == src.lang:
+        raise HTTPException(400, "target lang same as source")
+    bg.add_task(_run_translations, post_id, _snapshot(src), [target_lang])
+    return RedirectResponse(
+        f"/admin/posts/{post_id}/edit?translating={target_lang}", status_code=303
+    )
+
+
+def _run_translations(post_id: int, src: dict, targets: list[str]) -> None:
+    """Fan out one Claude call per target language, in parallel. Writes to
+    the DB happen on the same thread after all translations resolve, so
+    SQLite stays single-writer."""
     from .db import engine
 
-    targets = [l for l in LANGS if l != src["lang"]]
-    log.info("[translate] post=%s source=%s -> %d targets", post_id, src["lang"], len(targets))
+    log.info("[translate] post=%s source=%s -> targets=%s", post_id, src["lang"], targets)
 
     def one(target_lang: str):
         return target_lang, translate_post(
