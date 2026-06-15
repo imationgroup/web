@@ -175,15 +175,19 @@ def _render_preview(request: Request, post_id: int, session: Session) -> HTMLRes
     return _render_post_object(request, post, session, preview=True)
 
 
-_BOT_UA_RE = re.compile(
-    r"\b(bot|crawler|spider|slurp|crawl|preview|fetch|monitor|http_request|curl|wget|python|go-http|httpx|node-fetch|axios)\b",
-    re.IGNORECASE,
+# Substrings that indicate a bot/crawler/probe. No word boundaries:
+# 'bot' must catch 'Googlebot', 'bingbot', etc.; 'curl' must catch 'curl/8.x'.
+_BOT_SUBSTRINGS = (
+    "bot", "crawl", "spider", "slurp", "preview", "monitor",
+    "curl/", "wget/", "python-requests", "python/", "httpx",
+    "go-http", "node-fetch", "axios", "pingdom", "uptimerobot",
+    "headlesschrome", "lighthouse",
 )
 
 
 def _looks_like_bot(request: Request) -> bool:
     ua = (request.headers.get("user-agent") or "").lower()
-    return bool(_BOT_UA_RE.search(ua))
+    return not ua or any(s in ua for s in _BOT_SUBSTRINGS)
 
 
 def _render_post(request: Request, lang: str, slug: str, session: Session) -> HTMLResponse:
