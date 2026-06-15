@@ -17,6 +17,7 @@
         <th>Title</th>
         <th>Source lang</th>
         <th>Translations</th>
+        <th title="Total visits across all language versions (excl. bots)">Views</th>
         <th>Updated</th>
         <th></th>
       </tr>
@@ -45,6 +46,8 @@
               {% endfor %}
             </div>
           </td>
+          {% set total_views = 0 %}{% for l, post in g.langs.items() %}{% set total_views = total_views + (post.view_count or 0) %}{% endfor %}
+          <td style="text-align:center;font-weight:600;color:var(--primary-blue);" title="{% for l, post in g.langs.items() %}{{ l|upper }}: {{ post.view_count or 0 }}{% if not loop.last %}, {% endif %}{% endfor %}">{{ total_views }}</td>
           <td style="color: var(--text-gray); font-size: 0.85rem;">{{ src.updated_at.strftime('%Y-%m-%d %H:%M') }}</td>
           <td style="text-align: right;">
             <a class="btn" href="/admin/posts/{{ src.id }}/edit">Edit</a>

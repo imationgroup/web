@@ -175,12 +175,30 @@ def _render_preview(request: Request, post_id: int, session: Session) -> HTMLRes
     return _render_post_object(request, post, session, preview=True)
 
 
+_BOT_UA_RE = re.compile(
+    r"\b(bot|crawler|spider|slurp|crawl|preview|fetch|monitor|http_request|curl|wget|python|go-http|httpx|node-fetch|axios)\b",
+    re.IGNORECASE,
+)
+
+
+def _looks_like_bot(request: Request) -> bool:
+    ua = (request.headers.get("user-agent") or "").lower()
+    return bool(_BOT_UA_RE.search(ua))
+
+
 def _render_post(request: Request, lang: str, slug: str, session: Session) -> HTMLResponse:
     post = session.exec(
         select(Post).where(Post.lang == lang, Post.slug == slug, Post.is_published == True)  # noqa: E712
     ).first()
     if not post:
         raise HTTPException(404)
+    # Count this view unless the request looks like a bot/crawler. Per-lang
+    # post; the admin sees a per-translation breakdown plus a group total.
+    if not _looks_like_bot(request):
+        post.view_count = (post.view_count or 0) + 1
+        session.add(post)
+        session.commit()
+        session.refresh(post)
     return _render_post_object(request, post, session, preview=False)
 
 

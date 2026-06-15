@@ -269,6 +269,19 @@ def create_or_update_post(
     session.commit()
     session.refresh(p)
 
+    # Sync the cover image across all language versions: it's the same
+    # article, the hero image must be the same. Avoids the "es shows the
+    # cover, en/gl/ca/... don't" bug when the admin uploads the image AFTER
+    # translating.
+    if p.cover_image is not None:
+        for sib in session.exec(
+            select(Post).where(Post.group_id == p.group_id, Post.id != p.id)
+        ).all():
+            if sib.cover_image != p.cover_image:
+                sib.cover_image = p.cover_image
+                session.add(sib)
+        session.commit()
+
     # Fire newsletter fan-out when a post becomes published (transition only,
     # not on every save of an already-published post).
     if notify_subscribers:
