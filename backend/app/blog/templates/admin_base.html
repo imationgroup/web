@@ -80,6 +80,7 @@
   <nav>
     <a href="/admin/" class="{% if request.url.path == '/admin/' %}active{% endif %}">Posts</a>
     <a href="/admin/categories" class="{% if '/admin/categories' in request.url.path %}active{% endif %}">Categories</a>
+    <a href="/admin/subscribers" class="{% if '/admin/subscribers' in request.url.path %}active{% endif %}">Subscribers</a>
   </nav>
   <div class="right">
     {% if admin %}<span>{{ admin }}</span>

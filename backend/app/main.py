@@ -60,12 +60,14 @@ from .blog.db import init_db as _blog_init_db  # noqa: E402
 from .blog.routes_admin import router as blog_admin_router  # noqa: E402
 from .blog.routes_public import lang_router, router as blog_public_router  # noqa: E402
 from .blog.sitemap import router as blog_sitemap_router  # noqa: E402
+from .blog.newsletter import router as blog_newsletter_router  # noqa: E402
 
 _blog_init_db()
 app.include_router(blog_public_router)
 app.include_router(lang_router())
 app.include_router(blog_admin_router)
 app.include_router(blog_sitemap_router)
+app.include_router(blog_newsletter_router)
 
 
 @app.get("/api/health")

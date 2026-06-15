@@ -1,0 +1,65 @@
+{% extends "admin_base.html" %}
+{% block title %}Subscribers{% endblock %}
+{% block content %}
+<h1>Newsletter subscribers</h1>
+
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:24px;">
+  <div class="card" style="padding:18px;">
+    <div style="color:var(--text-gray);font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;">Confirmados</div>
+    <div style="font-size:1.8rem;font-weight:700;color:var(--success);">{{ by_status.confirmed }}</div>
+  </div>
+  <div class="card" style="padding:18px;">
+    <div style="color:var(--text-gray);font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;">Pendientes</div>
+    <div style="font-size:1.8rem;font-weight:700;color:#92400e;">{{ by_status.pending }}</div>
+  </div>
+  <div class="card" style="padding:18px;">
+    <div style="color:var(--text-gray);font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;">Bajas</div>
+    <div style="font-size:1.8rem;font-weight:700;color:var(--text-gray);">{{ by_status.unsubscribed }}</div>
+  </div>
+</div>
+
+{% if by_lang %}
+<div class="card" style="margin-bottom:22px;">
+  <h2>Confirmados por idioma</h2>
+  <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;">
+    {% for l in langs %}
+      <div style="padding:6px 14px;background:var(--bg);border-radius:6px;font-size:.92rem;">
+        <strong>{{ l|upper }}</strong>
+        <span style="color:var(--text-gray);">({{ lang_names[l] }})</span>:
+        {{ by_lang.get(l, 0) }}
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+{% if rows %}
+<table>
+  <thead>
+    <tr><th>Email</th><th>Lang</th><th>Estado</th><th>Alta</th><th>Confirmada</th><th></th></tr>
+  </thead>
+  <tbody>
+    {% for s in rows %}
+    <tr>
+      <td><code style="font-size:.88rem;">{{ s.email }}</code></td>
+      <td><span class="badge">{{ s.lang|upper }}</span></td>
+      <td>
+        {% if s.status == 'confirmed' %}<span class="badge published">Confirmado</span>
+        {% elif s.status == 'pending' %}<span class="badge draft">Pendiente</span>
+        {% else %}<span class="badge auto">Baja</span>{% endif %}
+      </td>
+      <td style="font-size:.85rem;color:var(--text-gray);">{{ s.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+      <td style="font-size:.85rem;color:var(--text-gray);">{{ s.confirmed_at.strftime('%Y-%m-%d') if s.confirmed_at else '—' }}</td>
+      <td style="text-align:right;">
+        <form action="/admin/subscribers/{{ s.id }}/delete" method="post" style="display:inline;">
+          <button type="submit" class="btn btn-danger" onclick="return confirm('¿Borrar este suscriptor?');">Borrar</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p style="color:var(--text-gray);">Aún no hay suscriptores.</p>
+{% endif %}
+{% endblock %}

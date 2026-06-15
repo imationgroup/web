@@ -1019,6 +1019,53 @@
             padding: 60px 24px 30px;
         }
 
+        /* Newsletter subscribe block — full-width band on top of the footer columns */
+        .footer-newsletter {
+            max-width: 1200px;
+            margin: 0 auto 50px;
+            padding: 28px 32px;
+            background: linear-gradient(135deg, rgba(0,102,204,0.15) 0%, rgba(0,165,168,0.12) 100%);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+        .footer-newsletter .nl-copy { flex: 1; min-width: 240px; }
+        .footer-newsletter h4 { font-size: 1.15rem; color: white; margin-bottom: 4px; }
+        .footer-newsletter p { color: rgba(255,255,255,0.7); font-size: 0.92rem; margin: 0; }
+        .footer-newsletter form { flex: 1; min-width: 280px; display: flex; flex-direction: column; gap: 8px; }
+        .newsletter-input-group {
+            display: flex;
+            gap: 8px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 10px;
+            padding: 4px;
+            transition: border-color 0.2s;
+        }
+        .newsletter-input-group:focus-within { border-color: var(--primary-teal); }
+        .newsletter-input-group input[type=email] {
+            flex: 1; background: transparent; border: 0; outline: 0;
+            color: white; padding: 10px 12px; font-size: 0.95rem; font-family: inherit;
+        }
+        .newsletter-input-group input[type=email]::placeholder { color: rgba(255,255,255,0.4); }
+        .newsletter-input-group button {
+            padding: 10px 20px; border: 0; border-radius: 8px;
+            background: var(--gradient); color: white; font-weight: 600;
+            font-family: inherit; font-size: 0.92rem; cursor: pointer;
+            transition: transform 0.18s, box-shadow 0.18s;
+            white-space: nowrap;
+        }
+        .newsletter-input-group button:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,165,168,0.3); }
+        .newsletter-input-group button:disabled { opacity: 0.55; cursor: wait; transform: none; box-shadow: none; }
+        .newsletter-msg { font-size: 0.85rem; min-height: 1.1em; }
+        .newsletter-msg.ok { color: #6ee7b7; }
+        .newsletter-msg.err { color: #fca5a5; }
+        .newsletter-privacy { color: rgba(255,255,255,0.5); font-size: 0.78rem; margin-top: 4px; }
+        .newsletter-privacy a { color: rgba(255,255,255,0.7); }
+
         .footer-content {
             max-width: 1200px;
             margin: 0 auto;
@@ -1824,6 +1871,26 @@
 
 <!-- Footer -->
 <footer class="footer">
+<div class="footer-newsletter">
+    <div class="nl-copy">
+        <h4 data-i18n="newsletter_title">Subscribe to our newsletter</h4>
+        <p data-i18n="newsletter_subtitle">Get our new posts in your inbox. No spam, unsubscribe any time.</p>
+    </div>
+    <form class="newsletter-form" novalidate>
+        <div class="newsletter-input-group">
+            <input type="email" name="email" required autocomplete="email"
+                   data-i18n-placeholder="newsletter_email_placeholder"
+                   placeholder="you@example.com" aria-label="Email">
+            <button type="submit" data-i18n="newsletter_subscribe">Subscribe</button>
+        </div>
+        <div style="position:absolute;left:-9999px;top:-9999px;" aria-hidden="true">
+            <label for="nl-website">Website</label>
+            <input id="nl-website" name="website" type="text" tabindex="-1" autocomplete="off">
+        </div>
+        <p class="newsletter-msg" role="status" aria-live="polite"></p>
+        <p class="newsletter-privacy" data-i18n="newsletter_privacy">By subscribing you agree to receive emails. Each one carries an unsubscribe link.</p>
+    </form>
+</div>
 <div class="footer-content">
     <div class="footer-brand">
         <h3>ImationGroup</h3>
@@ -2243,6 +2310,76 @@
             }
         }
     });
+
+    // ── Newsletter subscribe (footer) ───────────────────────────────────
+    (function(){
+        var nl = document.querySelector('.newsletter-form');
+        if (!nl) return;
+        var msg = nl.querySelector('.newsletter-msg');
+        // Localised messages — fall back to English if lang not in dict.
+        var T = {
+            ok:   {es:'Casi listo. Te hemos enviado un email para confirmar tu suscripción.',
+                   gl:'Case listo. Enviámosche un correo para confirmar a túa subscrición.',
+                   ca:'Gairebé fet. T’hem enviat un correu per confirmar la subscripció.',
+                   pt:'Quase pronto. Enviámos-te um email para confirmares a tua subscrição.',
+                   eu:'Ia prest. Email bat bidali dizugu harpidetza berresteko.',
+                   et:'Peaaegu valmis. Saatsime kinnituskirja Sinu e-postile.',
+                   en:'Almost done. We sent you an email to confirm your subscription.'},
+            err:  {es:'No hemos podido procesar tu suscripción. Inténtalo de nuevo.',
+                   gl:'Non puidemos procesar a túa subscrición. Téntao de novo.',
+                   ca:'No hem pogut processar la subscripció. Torna-ho a provar.',
+                   pt:'Não conseguimos processar a tua subscrição. Tenta de novo.',
+                   eu:'Ezin izan dugu harpidetza tramitatu. Saiatu berriro.',
+                   et:'Tellimuse töötlemine ebaõnnestus. Proovi uuesti.',
+                   en:'We could not process your subscription. Please try again.'},
+            rate: {es:'Demasiados intentos. Inténtalo más tarde.',
+                   gl:'Demasiados intentos. Téntao máis tarde.',
+                   ca:'Massa intents. Prova-ho més tard.',
+                   pt:'Demasiados pedidos. Tenta mais tarde.',
+                   eu:'Saiakera gehiegi. Saiatu geroago.',
+                   et:'Liiga palju katseid. Proovi hiljem.',
+                   en:'Too many attempts. Please try later.'}
+        };
+        function t(key) {
+            var lang = document.documentElement.lang || 'en';
+            return (T[key] && (T[key][lang] || T[key].en)) || '';
+        }
+        nl.addEventListener('submit', async function(e){
+            e.preventDefault();
+            var btn = nl.querySelector('button[type=submit]');
+            var emailEl = nl.querySelector('input[name=email]');
+            var websiteEl = nl.querySelector('input[name=website]');
+            msg.textContent = ''; msg.className = 'newsletter-msg';
+            if (!emailEl.value || !emailEl.checkValidity()) {
+                emailEl.focus(); return;
+            }
+            var origLabel = btn.textContent;
+            btn.disabled = true; btn.textContent = '…';
+            try {
+                var r = await fetch('https://api.imationgroup.com/api/newsletter/subscribe', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+                    body: JSON.stringify({
+                        email: emailEl.value.trim(),
+                        lang: (document.documentElement.lang || 'en').toLowerCase().split('-')[0],
+                        website: websiteEl ? websiteEl.value : ''
+                    })
+                });
+                if (r.ok) {
+                    msg.textContent = t('ok'); msg.className = 'newsletter-msg ok';
+                    emailEl.value = '';
+                } else if (r.status === 429) {
+                    msg.textContent = t('rate'); msg.className = 'newsletter-msg err';
+                } else {
+                    msg.textContent = t('err'); msg.className = 'newsletter-msg err';
+                }
+            } catch (_) {
+                msg.textContent = t('err'); msg.className = 'newsletter-msg err';
+            } finally {
+                btn.disabled = false; btn.textContent = origLabel;
+            }
+        });
+    })();
 </script>
 
   <!-- analytics: deferred to end of body -->

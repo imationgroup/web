@@ -39,7 +39,7 @@ from .config import (
     LANGS,
 )
 from .db import get_session
-from .models import Category, Post
+from .models import Category, Post, Subscriber
 from .storage import make_slug, remove_uploaded, save_cover_image
 from .translate import translate_post
 
@@ -169,6 +169,7 @@ def edit_post_form(
 @router.post("/posts", include_in_schema=False)
 def create_or_update_post(
     request: Request,
+    bg: BackgroundTasks,
     admin: str = Depends(require_admin),
     session: Session = Depends(get_session),
     # Form fields
@@ -210,6 +211,7 @@ def create_or_update_post(
     cat_id = int(category_id) if category_id.strip().isdigit() else None
     publish = bool(is_published)
 
+    notify_subscribers = False
     if existing_post:
         p = existing_post
         # If admin edited content, it's no longer "auto-translated".
@@ -226,8 +228,10 @@ def create_or_update_post(
         p.lang = lang
         if content_changed:
             p.is_auto_translated = False
+        was_published = p.is_published
         if publish and not p.is_published:
             p.published_at = _utcnow()
+            notify_subscribers = True
         p.is_published = publish
         p.updated_at = _utcnow()
     else:
@@ -245,6 +249,8 @@ def create_or_update_post(
             source_lang=source_lang or lang,
             published_at=_utcnow() if publish else None,
         )
+        if publish:
+            notify_subscribers = True
 
     # Cover image handling
     if remove_cover and p.cover_image:
@@ -262,6 +268,12 @@ def create_or_update_post(
     session.add(p)
     session.commit()
     session.refresh(p)
+
+    # Fire newsletter fan-out when a post becomes published (transition only,
+    # not on every save of an already-published post).
+    if notify_subscribers:
+        from .newsletter import send_post_to_subscribers
+        bg.add_task(send_post_to_subscribers, p.id)
 
     return RedirectResponse(f"/admin/posts/{p.id}/edit", status_code=303)
 
@@ -399,6 +411,42 @@ def _run_translations(post_id: int, src: dict, targets: list[str]) -> None:
                 )
         session.commit()
     log.info("[translate] post=%s done", post_id)
+
+
+# ───────────────────────── Newsletter subscribers ──────────────────────────
+
+@router.get("/subscribers", response_class=HTMLResponse, include_in_schema=False)
+def subscribers_list(
+    request: Request,
+    admin: str = Depends(require_admin),
+    session: Session = Depends(get_session),
+):
+    rows = session.exec(select(Subscriber).order_by(Subscriber.created_at.desc())).all()
+    by_status: dict[str, int] = {"pending": 0, "confirmed": 0, "unsubscribed": 0}
+    by_lang: dict[str, int] = {}
+    for r in rows:
+        by_status[r.status] = by_status.get(r.status, 0) + 1
+        if r.status == "confirmed":
+            by_lang[r.lang] = by_lang.get(r.lang, 0) + 1
+    return templates.TemplateResponse(
+        "admin_subscribers.html",
+        {"request": request, "admin": admin, "rows": rows,
+         "by_status": by_status, "by_lang": by_lang,
+         "langs": LANGS, "lang_names": LANG_NAMES},
+    )
+
+
+@router.post("/subscribers/{sub_id}/delete", include_in_schema=False)
+def delete_subscriber(
+    sub_id: int,
+    admin: str = Depends(require_admin),
+    session: Session = Depends(get_session),
+):
+    s = session.get(Subscriber, sub_id)
+    if s:
+        session.delete(s)
+        session.commit()
+    return RedirectResponse("/admin/subscribers", status_code=303)
 
 
 # ───────────────────────── Categories ───────────────────────────────────────
