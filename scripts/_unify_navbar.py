@@ -77,24 +77,76 @@ print(f"Extracted {len(scripts_needed)} nav-related script blocks.")
 INTERIORS = ["services.html", "projects.html", "terms.html", "privacy.html",
              "contact-success.html"]
 
+# Old per-template CSS rules that fight the unified nav. These had higher
+# specificity than our injected `.logo` etc., so they were winning the
+# cascade and producing subtle metrics differences (e.g. logo font-size
+# 1.4rem on interiors vs 1.35rem on the home).
+STRIP_PATTERNS = [
+    # Old per-template nav CSS that fights the unified rules. Specificity
+    # ties go to source order, and a property set in the OLD .navbar block
+    # but absent from the unified one (e.g. padding: 16px 0) is not
+    # overridden -- so we strip the whole old block.
+    r"\s*\.navbar[^a-zA-Z-]*\{[^}]*\}",            # the bare .navbar rule
+    r"\s*\.navbar\.scrolled[^{]*\{[^}]*\}",
+    r"\s*\.navbar\s+\.container[^{]*\{[^}]*\}",
+    r"\s*\.navbar\s+\.logo[^{]*\{[^}]*\}",
+    r"\s*\.navbar\s+\.back-link[^{]*\{[^}]*\}",
+    r"\s*\.nav-container[^a-zA-Z-]*\{[^}]*\}",
+    r"\s*\.nav-right[^{]*\{[^}]*\}",
+    r"\s*\.back-link[^{a-zA-Z-]*\{[^}]*\}",
+    r"\s*\.back-link:hover[^{]*\{[^}]*\}",
+    r"\s*\.lang-switch[^{a-zA-Z-]*\{[^}]*\}",
+    r"\s*\.lang-switch\s+button[^{]*\{[^}]*\}",
+    r"\s*\.lang-switch\s+button\.active[^{]*\{[^}]*\}",
+    r"\s*\.lang-btn[^{a-zA-Z-]*\{[^}]*\}",
+    r"\s*\.lang-btn:hover[^{]*\{[^}]*\}",
+    r"\s*\.lang-btn\.open[^{]*\{[^}]*\}",
+    r"\s*\.lang-flag-icon[^{]*\{[^}]*\}",
+    r"\s*\.lang-dropdown[^{a-zA-Z-]*\{[^}]*\}",
+    r"\s*\.lang-dropdown\.active[^{]*\{[^}]*\}",
+    r"\s*\.lang-option[^{a-zA-Z-]*\{[^}]*\}",
+    r"\s*\.lang-option:hover[^{]*\{[^}]*\}",
+    r"\s*\.lang-option\.active[^{]*\{[^}]*\}",
+    r"\s*\.lang-chevron[^{]*\{[^}]*\}",
+    r"\s*\.lang-switcher[^{a-zA-Z-]*\{[^}]*\}",
+    r"\s*\.mobile-menu-btn[^{a-zA-Z-]*\{[^}]*\}",
+    r"\s*\.mobile-menu-btn\s+span[^{]*\{[^}]*\}",
+    # Old simplified `.logo` rule from the previous interior patch.
+    r"\s*\.logo\{[^}]*font-size:\s*1\.25rem[^}]*\}",
+    r"\s*\.logo\s+img\{[^}]*width:\s*32px[^}]*\}",
+    # Bare .logo block that doesn't use display:inline-flex (= an old version)
+    r"\s*\.logo\s*\{(?![^}]*inline-flex)[^}]*\}",
+]
+
 for fname in INTERIORS:
     p = TPL / fname
     s = p.read_text(encoding="utf-8")
     orig = s
 
-    # Replace the existing <nav class="navbar"> ... </nav>
+    # 1. Strip the conflicting CSS rules from the interior's own <style>.
+    for pat in STRIP_PATTERNS:
+        s = re.sub(pat, "", s)
+
+    # 2. Replace the existing <nav class="navbar"> ... </nav>.
     s = re.sub(r'<nav class="navbar">.*?</nav>', NAVBAR_HTML, s, count=1, flags=re.S)
 
-    # Make sure the page imports the nav-related CSS. We inject as a NEW
-    # <style> block right before </head>. If the block is already there,
-    # don't double-inject.
+    # 3. Inject the nav-related CSS from index.html as a NEW <style> right
+    #    before </head>. Idempotent via marker comment.
     NAV_CSS_BLOCK = f"<!-- nav unified -->\n<style>{NAV_CSS}</style>\n"
-    if "<!-- nav unified -->" not in s:
+    if "<!-- nav unified -->" in s:
+        # Replace the previous block so re-running the script keeps things up
+        # to date with the home CSS.
+        s = re.sub(r"<!-- nav unified -->\s*<style>[^<]*</style>\s*",
+                   lambda _: NAV_CSS_BLOCK, s, count=1, flags=re.S)
+    else:
         s = s.replace("</head>", NAV_CSS_BLOCK + "</head>", 1)
 
-    # Inject nav scripts before </body>.
-    if "<!-- nav scripts unified -->" not in s:
-        SCRIPTS_BLOCK = f"<!-- nav scripts unified -->\n{NAV_SCRIPTS}\n"
+    # 4. Inject nav scripts before </body>.
+    SCRIPTS_BLOCK = f"<!-- nav scripts unified -->\n{NAV_SCRIPTS}\n"
+    if "<!-- nav scripts unified -->" in s:
+        s = re.sub(r"<!-- nav scripts unified -->.*?(?=</body>)",
+                   lambda _: SCRIPTS_BLOCK, s, count=1, flags=re.S)
+    else:
         s = s.replace("</body>", SCRIPTS_BLOCK + "</body>", 1)
 
     if s != orig:

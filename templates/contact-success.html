@@ -16,16 +16,8 @@
     html{scroll-behavior:smooth}
     body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;color:var(--text-dark);line-height:1.6;background:var(--white);min-height:100vh;display:flex;flex-direction:column}
     /* Navbar */
-    .navbar{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(255,255,255,0.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border-color);box-shadow:0 4px 20px rgba(0,0,0,0.08)}
-    .nav-container{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;height:72px}
-        .logo{display:inline-flex;align-items:center;gap:8px;font-size:1.25rem;font-weight:700;color:var(--text-dark);text-decoration:none;line-height:1}
-    .logo img{width:32px;height:32px;display:block}
     .logo .logo-text{background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-    /* Lang switcher — igual que privacy.html / terms.html */
-    .lang-switch{display:flex;gap:8px;align-items:center}
-    .lang-btn{background:none;border:1px solid var(--border-color);padding:4px 10px;border-radius:4px;cursor:pointer;font-size:0.85rem;font-weight:500;color:var(--text-gray);font-family:inherit;transition:all 0.2s}
-    .lang-flag-icon{width:18px;height:14px;object-fit:cover;border-radius:2px;vertical-align:middle;margin-right:2px} .lang-btn.active{background:var(--primary-teal);color:#fff;border-color:var(--primary-teal)}
-    .lang-btn:hover:not(.active){border-color:var(--primary-teal);color:var(--primary-teal)}
+    /* Lang switcher — igual que privacy.html / terms.html */ .lang-btn.active{background:var(--primary-teal);color:#fff;border-color:var(--primary-teal)}
     /* Main */
     .success-page{flex:1;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#F0F9FF 0%,#E6F7F7 50%,#F0F9FF 100%);padding:120px 24px 80px;position:relative;overflow:hidden}
     .success-page::before{content:'';position:absolute;top:-50%;right:-20%;width:800px;height:800px;background:radial-gradient(circle,rgba(0,165,168,0.1) 0%,transparent 70%);animation:float 20s ease-in-out infinite}
