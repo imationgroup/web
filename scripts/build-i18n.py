@@ -326,8 +326,11 @@ def inject_seo(html, lang, page, t):
     json_ld = json.dumps(build_jsonld(lang, page, t), ensure_ascii=False, separators=(',', ':'))
 
     seo = f'''
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-  <link rel="apple-touch-icon" href="/favicon.svg" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
   <link rel="manifest" href="/site.webmanifest" />
   <meta name="theme-color" content="{THEME_COLOR}" />
   <meta name="color-scheme" content="light" />
@@ -533,7 +536,9 @@ def generate_404():
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>404 — {BRAND}</title>
 <meta name="robots" content="noindex, follow">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <style>
 body{{font-family:system-ui,sans-serif;max-width:560px;margin:8vh auto;padding:0 1.5rem;color:#1a1a2e;text-align:center;line-height:1.6}}
 h1{{font-size:2rem;margin-bottom:.5rem;color:#0066CC}}

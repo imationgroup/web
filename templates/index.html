@@ -67,13 +67,25 @@
         }
 
         .logo {
-            font-size: 1.5rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.35rem;
             font-weight: 700;
+            color: var(--text-dark);
+            text-decoration: none;
+            line-height: 1;
+        }
+        .logo img {
+            width: 36px;
+            height: 36px;
+            display: block;
+        }
+        .logo .logo-text {
             background: var(--gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            text-decoration: none;
         }
 
         .nav-links {
@@ -1314,7 +1326,7 @@
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
-            <a href="#home" class="logo">ImationGroup</a>
+            <a href="#home" class="logo" aria-label="ImationGroup"><img src="/logo-icon.png" alt="" width="36" height="36" decoding="async"><span class="logo-text">ImationGroup</span></a>
             <ul class="nav-links">
                 <li><a href="#home" data-i18n="nav_home">Home</a></li>
                 <li><a href="#about" data-i18n="nav_about">About</a></li>
