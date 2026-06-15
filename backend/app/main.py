@@ -140,6 +140,10 @@ class ContactPayload(BaseModel):
     message: str = Field(min_length=4, max_length=4000)
     # Lengua del visitante para devolverle la confirmación en su idioma.
     lang: str | None = Field(default=None, max_length=8)
+    # GDPR: explicit consent to the privacy policy. The form checkbox is
+    # required at the HTML level; we re-check server-side so a stripped
+    # client can't bypass it.
+    consent: bool | None = None
     # Honeypot — humanos no rellenan, los bots sí.
     website: str | None = None
 
@@ -261,6 +265,13 @@ def contact(payload: ContactPayload, request: Request):
     if payload.website:
         log.info("[contact] honeypot rellenado, ignorando (ip=%s)", ip)
         return ContactResponse(sent=True)
+
+    if not payload.consent:
+        log.info("[contact] consent missing (ip=%s)", ip)
+        raise HTTPException(
+            status.HTTP_400_BAD_REQUEST,
+            "Acepta la política de privacidad para enviar el mensaje.",
+        )
 
     if not _allow(ip):
         log.warning("[contact] rate-limit alcanzado para ip=%s", ip)
