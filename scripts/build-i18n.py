@@ -151,7 +151,10 @@ def apply_i18n(html, t):
 PAGE_NAMES = ['index', 'services', 'projects', 'terms', 'privacy', 'contact-success']
 
 
-def rewrite_links(html, lang):
+HOME_ANCHORS = ("home", "about", "services", "technologies", "projects", "contact")
+
+
+def rewrite_links(html, lang, source_file):
     """Normalise all in-site links to absolute /<lang>/... paths.
 
     The template uses relative URLs (services.html, blog/, etc.) so the
@@ -168,6 +171,12 @@ def rewrite_links(html, lang):
     html = re.sub(r'href="blog/"',     f'href="/{lang}/blog/"',     html)
     html = re.sub(r'href="blog/#',     f'href="/{lang}/blog/#',     html)
     html = re.sub(r'href="blog/([^"#]+)"', rf'href="/{lang}/blog/\1"', html)
+    # Interior pages (everything except index): in-page anchors like #about
+    # don't exist; rewrite them to point at the homepage's section so the
+    # unified nav menu actually works from a non-home page.
+    if source_file != 'index.html':
+        for a in HOME_ANCHORS:
+            html = re.sub(rf'href="#{a}"', f'href="/{lang}/#{a}"', html)
     # Inline i18n.js loader
     html = html.replace('src="i18n.js"', 'src="/i18n.js"')
     return html
@@ -376,7 +385,7 @@ def build_lang_page(lang, page):
     html = strip_meta(html)
     html = apply_i18n(html, t)
     html = patch_lang_switcher(html, lang)
-    html = rewrite_links(html, lang)
+    html = rewrite_links(html, lang, page['file'])
     html = inject_seo(html, lang, page, t)
     html = minify(html)
     out_dir = REPO / lang
