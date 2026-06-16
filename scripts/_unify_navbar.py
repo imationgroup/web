@@ -18,39 +18,76 @@ NAVBAR_HTML = m.group(0)
 # 2. Extract the CSS rules from index.html that style the navbar, lang
 #    switcher and logo. We need to give the interiors the same styling.
 #    Pulling the entire <style> block of index would be too invasive; instead
-#    pull only the nav-related selectors.
-NAV_SELECTORS = [
-    r"\.navbar\s*\{[^}]+\}",
-    r"\.navbar\.scrolled\s*\{[^}]+\}",
-    r"\.nav-container\s*\{[^}]+\}",
-    r"\.logo\s*\{[^}]+\}",
-    r"\.logo\s+img\s*\{[^}]+\}",
-    r"\.logo\s+\.logo-text\s*\{[^}]+\}",
-    r"\.nav-links\s*\{[^}]+\}",
-    r"\.nav-links\s+a[^{]*\{[^}]+\}",
-    r"\.nav-links\s+a:after\s*\{[^}]+\}",
-    r"\.nav-links\s+a:hover[^{]*\{[^}]+\}",
-    r"\.nav-projects[^{]*\{[^}]+\}",
-    r"\.nav-projects-dropdown[^{]*\{[^}]+\}",
-    r"\.nav-projects-dropdown\s+[^{]+\{[^}]+\}",
-    r"\.nav-projects\.open[^{]*\{[^}]+\}",
-    r"\.lang-switcher[^{]*\{[^}]+\}",
-    r"\.lang-btn[^{]*\{[^}]+\}",
-    r"\.lang-btn:hover[^{]*\{[^}]+\}",
-    r"\.lang-btn\.open[^{]*\{[^}]+\}",
-    r"\.lang-dropdown[^{]*\{[^}]+\}",
-    r"\.lang-dropdown\.active[^{]*\{[^}]+\}",
-    r"\.lang-option[^{]*\{[^}]+\}",
-    r"\.lang-option:hover[^{]*\{[^}]+\}",
-    r"\.lang-option\.active[^{]*\{[^}]+\}",
-    r"\.lang-flag-icon[^{]*\{[^}]+\}",
-    r"\.lang-chevron[^{]*\{[^}]+\}",
-    r"\.mobile-menu-btn[^{]*\{[^}]+\}",
-    r"\.mobile-menu-btn\s+span[^{]*\{[^}]+\}",
-    r"\.mobile-menu-btn\.open[^{]*\{[^}]+\}",
-    r"\.mobile-menu-btn\.open\s+span[^{]*\{[^}]+\}",
-    r"\.divider[^{]*\{[^}]+\}",
-]
+#    keep an exact whitelist of selectors. Using a literal set (not a regex)
+#    sidesteps the trap where a regex anchored only at the dropdown name
+#    silently strips a parent prefix -- e.g. `.nav-projects.open
+#    .nav-projects-dropdown` would be captured as a bare
+#    `.nav-projects-dropdown` rule and force the dropdown to stay open on
+#    every page.
+def _norm_sel(s):
+    # Collapse whitespace, strip whitespace around combinators (>, +, ~) so
+    # ".nav-projects > a" and minified ".nav-projects>a" hash the same, and
+    # unify "::before" vs ":before" so equality holds.
+    s = re.sub(r"\s+", " ", s).strip()
+    s = re.sub(r"\s*([>+~])\s*", r"\1", s)
+    s = s.replace("::", ":")
+    return s
+
+
+NAV_SELECTORS = {_norm_sel(s) for s in [
+    ".navbar", ".navbar.scrolled",
+    ".nav-container",
+    ".logo", ".logo img", ".logo .logo-text",
+    ".nav-links", ".nav-links a", ".nav-links a:after",
+    ".nav-links a::after", ".nav-links a:hover", ".nav-links a:hover::after",
+    ".nav-links a:hover:after",
+    ".nav-projects", ".nav-projects > a", ".nav-projects > a:before",
+    ".nav-projects > a::before", ".nav-projects.open > a:before",
+    ".nav-projects.open > a::before",
+    ".nav-projects-dropdown", ".nav-projects.open .nav-projects-dropdown",
+    ".nav-projects-dropdown li a", ".nav-projects-dropdown li a:after",
+    ".nav-projects-dropdown li a::after", ".nav-projects-dropdown li a:hover",
+    ".nav-projects-dropdown li.divider",
+    ".lang-switcher",
+    ".lang-btn", ".lang-btn:hover", ".lang-btn.open",
+    ".lang-dropdown", ".lang-dropdown.active",
+    ".lang-option", ".lang-option:hover", ".lang-option.active",
+    ".lang-flag-icon", ".lang-chevron",
+    ".mobile-menu-btn", ".mobile-menu-btn span",
+    ".mobile-menu-btn.open", ".mobile-menu-btn.open span",
+    ".divider",
+]}
+
+
+def _iter_rules(css):
+    """Yield (selector, raw_rule_text) for each top-level rule in css.
+
+    Skips @media / @keyframes / @supports etc -- callers handle those
+    separately via _split_top_and_media. CSS /* ... */ comments are
+    stripped first so they don't get absorbed into the next selector.
+    """
+    css = re.sub(r"/\*.*?\*/", "", css, flags=re.S)
+    i, n = 0, len(css)
+    while i < n:
+        brace = css.find("{", i)
+        if brace == -1:
+            return
+        sel = css[i:brace]
+        if sel.lstrip().startswith("@"):
+            depth, j = 1, brace + 1
+            while j < n and depth > 0:
+                if css[j] == "{":
+                    depth += 1
+                elif css[j] == "}":
+                    depth -= 1
+                j += 1
+            i = j
+            continue
+        end = css.find("}", brace)
+        if end == -1:
+            return
+        yield sel.strip(), css[i:end + 1]
+        i = end + 1
 def _split_top_and_media(css):
     """Return (top_level_css, [(media_query, inner_css), ...]).
 
@@ -86,15 +123,23 @@ def _split_top_and_media(css):
 
 _top, _media = _split_top_and_media(src)
 nav_css_chunks = []
-for pat in NAV_SELECTORS:
-    for hit in re.finditer(pat, _top):
-        nav_css_chunks.append(hit.group(0))
-# Now handle nav rules that live inside @media -- re-wrap them in their query.
+seen = set()
+for sel, rule in _iter_rules(_top):
+    if _norm_sel(sel) in NAV_SELECTORS:
+        norm = re.sub(r"\s+", " ", rule).strip()
+        if norm not in seen:
+            seen.add(norm)
+            nav_css_chunks.append(rule)
+# Nav rules that live inside @media -- re-wrap them in their original query.
 for mq, inner in _media:
     inner_hits = []
-    for pat in NAV_SELECTORS:
-        for hit in re.finditer(pat, inner):
-            inner_hits.append(hit.group(0))
+    inner_seen = set()
+    for sel, rule in _iter_rules(inner):
+        if _norm_sel(sel) in NAV_SELECTORS:
+            norm = re.sub(r"\s+", " ", rule).strip()
+            if norm not in inner_seen:
+                inner_seen.add(norm)
+                inner_hits.append(rule)
     if inner_hits:
         nav_css_chunks.append(f"{mq}{{{' '.join(inner_hits)}}}")
 NAV_CSS = "\n".join(nav_css_chunks)
