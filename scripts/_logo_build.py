@@ -25,19 +25,30 @@ for corner in [(0, 0), (w - 1, 0), (0, h - 1), (w - 1, h - 1)]:
     if px[0] > 245 and px[1] > 245 and px[2] > 245:
         ImageDraw.floodfill(img, corner, (0, 0, 0, 0), thresh=fill_tolerance)
 
-# Soften residual halo: any pixel that is still near-white AND has a
-# transparent neighbor gets its alpha proportional to (255 - whiteness),
-# which dissolves the aliased ring around the circle.
+# Soften residual halo: a near-white pixel that BORDERS a transparent one is
+# part of the aliased ring around the outside of the circle. Dissolve only
+# those — interior white pixels (the "ig" letters) have no transparent
+# neighbor, so they stay untouched.
 pixels = img.load()
+to_soften = []
 for y in range(h):
     for x in range(w):
         r, g, b, a = pixels[x, y]
         if a == 0:
             continue
         if r > 235 and g > 235 and b > 235:
-            whiteness = (r + g + b) / 3
-            pixels[x, y] = (r, g, b, max(0, int(a * (255 - whiteness) / 20)))
-print("flood-filled white background -> alpha")
+            has_transparent_neighbor = False
+            for dx, dy in ((-1, 0), (1, 0), (0, -1), (0, 1)):
+                nx, ny = x + dx, y + dy
+                if 0 <= nx < w and 0 <= ny < h and pixels[nx, ny][3] == 0:
+                    has_transparent_neighbor = True
+                    break
+            if has_transparent_neighbor:
+                to_soften.append((x, y, r, g, b, a))
+for x, y, r, g, b, a in to_soften:
+    whiteness = (r + g + b) / 3
+    pixels[x, y] = (r, g, b, max(0, int(a * (255 - whiteness) / 20)))
+print(f"flood-filled white background -> alpha (softened {len(to_soften)} edge pixels)")
 
 # Ensure square: pad transparent to make it square if not already.
 w, h = img.size
