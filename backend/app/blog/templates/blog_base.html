@@ -23,10 +23,16 @@
    collide with the homepage's CSS classes. #}
 <style>
   .blog-wrap { max-width: 920px; margin: 0 auto; padding: 100px 24px 80px; }
+  /* Index pages (which contain .post-list) get a much wider wrap so the
+     grid has room for 3+ cards on desktop. Article pages keep the narrow
+     wrap because long-form reading needs a constrained measure. */
+  .blog-wrap:has(.post-list) { max-width: 1400px; }
   .blog-wrap h1.page-title { font-size: 2.4rem; line-height: 1.15; margin-bottom: 10px; color: var(--text-dark); letter-spacing: -0.02em; }
   .blog-wrap .page-subtitle { color: var(--text-gray); font-size: 1.05rem; margin: 0 0 44px; max-width: 640px; }
   .post-list { display: grid; grid-template-columns: 1fr; gap: 28px; }
   @media (min-width: 700px) { .post-list { grid-template-columns: 1fr 1fr; gap: 32px; } }
+  @media (min-width: 1100px) { .post-list { grid-template-columns: repeat(3, 1fr); } }
+  @media (min-width: 1500px) { .post-list { grid-template-columns: repeat(4, 1fr); } }
   .post-card { display: flex; flex-direction: column; border: 1px solid var(--border-color); border-radius: 14px; overflow: hidden; background: var(--white); text-decoration: none; color: inherit; transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
   .post-card:hover { transform: translateY(-4px); box-shadow: 0 16px 36px rgba(0,102,204,0.10); border-color: var(--primary-teal); text-decoration: none; }
   .post-card .cover { aspect-ratio: 16/9; background: var(--light-gray) no-repeat center / cover; position: relative; }
