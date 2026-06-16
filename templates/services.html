@@ -123,9 +123,6 @@
             gap: 32px;
             list-style: none;
         }
-.nav-links {
-                display: none;
-            }
 .nav-links a {
             text-decoration: none;
             color: var(--text-dark);
@@ -410,9 +407,6 @@
             margin: 6px 0;
             transition: all 0.3s ease;
         }
-.mobile-menu-btn {
-                display: block;
-            }
 .mobile-menu-btn');
     const mobileMenu = document.querySelector('.mobile-menu');
     menuBtn.addEventListener('click', () => {
@@ -431,7 +425,12 @@
             height: 1px;
             background: var(--border-color);
             margin: 4px 0;
-        }</style>
+        }
+@media (max-width: 768px){.nav-links {
+                display: none;
+            } .mobile-menu-btn {
+                display: block;
+            }}</style>
 </head>
 <body>
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TXPKFXD9" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>

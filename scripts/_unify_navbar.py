@@ -51,10 +51,52 @@ NAV_SELECTORS = [
     r"\.mobile-menu-btn\.open\s+span[^{]*\{[^}]+\}",
     r"\.divider[^{]*\{[^}]+\}",
 ]
+def _split_top_and_media(css):
+    """Return (top_level_css, [(media_query, inner_css), ...]).
+
+    Walks the string and balances braces so @media blocks are extracted as
+    units, not chopped open. Without this, nav rules inside @media (e.g.
+    `.nav-links{display:none}` in the mobile breakpoint) get re-emitted as
+    top-level rules and hide the nav links on desktop too.
+    """
+    media_blocks = []
+    top_parts = []
+    i = 0
+    while i < len(css):
+        if css[i:i+6] == "@media":
+            brace = css.find("{", i)
+            if brace == -1:
+                break
+            mq = css[i:brace]
+            depth = 1
+            j = brace + 1
+            while j < len(css) and depth > 0:
+                if css[j] == "{":
+                    depth += 1
+                elif css[j] == "}":
+                    depth -= 1
+                j += 1
+            media_blocks.append((mq.strip(), css[brace + 1:j - 1]))
+            i = j
+        else:
+            top_parts.append(css[i])
+            i += 1
+    return "".join(top_parts), media_blocks
+
+
+_top, _media = _split_top_and_media(src)
 nav_css_chunks = []
 for pat in NAV_SELECTORS:
-    for hit in re.finditer(pat, src):
+    for hit in re.finditer(pat, _top):
         nav_css_chunks.append(hit.group(0))
+# Now handle nav rules that live inside @media -- re-wrap them in their query.
+for mq, inner in _media:
+    inner_hits = []
+    for pat in NAV_SELECTORS:
+        for hit in re.finditer(pat, inner):
+            inner_hits.append(hit.group(0))
+    if inner_hits:
+        nav_css_chunks.append(f"{mq}{{{' '.join(inner_hits)}}}")
 NAV_CSS = "\n".join(nav_css_chunks)
 print(f"Extracted {len(nav_css_chunks)} nav-related CSS rules ({len(NAV_CSS)} chars).")
 
