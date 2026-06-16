@@ -4,7 +4,7 @@ Source: D:/IMATIONGROUP/logo/logo3_1.png  (the circular isotipo).
 Outputs into the repo root so nginx serves them at /favicon.ico etc.
 """
 from pathlib import Path
-from PIL import Image
+from PIL import Image, ImageDraw
 
 REPO = Path(__file__).resolve().parent.parent
 SRC = Path(r"D:/IMATIONGROUP/logo/logo3_1.png")
@@ -13,6 +13,31 @@ assert SRC.is_file(), f"missing source logo at {SRC}"
 
 img = Image.open(SRC).convert("RGBA")
 print(f"source: {SRC.name}  {img.size}")
+
+# The source PNG has a solid-white background even though it's RGBA. Flood-fill
+# from the four corners turning near-white pixels into transparent ones. We
+# only fill from the OUTSIDE, so any white pixel that lives inside the logo
+# (e.g. an inner highlight) is preserved.
+w, h = img.size
+fill_tolerance = 18  # 0..255: accept slight color variance at antialiased edge
+for corner in [(0, 0), (w - 1, 0), (0, h - 1), (w - 1, h - 1)]:
+    px = img.getpixel(corner)
+    if px[0] > 245 and px[1] > 245 and px[2] > 245:
+        ImageDraw.floodfill(img, corner, (0, 0, 0, 0), thresh=fill_tolerance)
+
+# Soften residual halo: any pixel that is still near-white AND has a
+# transparent neighbor gets its alpha proportional to (255 - whiteness),
+# which dissolves the aliased ring around the circle.
+pixels = img.load()
+for y in range(h):
+    for x in range(w):
+        r, g, b, a = pixels[x, y]
+        if a == 0:
+            continue
+        if r > 235 and g > 235 and b > 235:
+            whiteness = (r + g + b) / 3
+            pixels[x, y] = (r, g, b, max(0, int(a * (255 - whiteness) / 20)))
+print("flood-filled white background -> alpha")
 
 # Ensure square: pad transparent to make it square if not already.
 w, h = img.size
