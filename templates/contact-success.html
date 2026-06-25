@@ -469,36 +469,13 @@
       }
     };
 
-    function detectLanguage() {
-      const saved = localStorage.getItem('lang');
-      if (saved && translations[saved]) return saved;
-      const browserLang = (navigator.language || 'en').toLowerCase();
-      return browserLang.startsWith('es') ? 'es' : 'en';
-    }
-
-    function setLanguage(lang) {
-      if (!translations[lang]) return;
-      localStorage.setItem('lang', lang);
-      document.documentElement.lang = lang;
-      document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        if (!translations[lang][key]) return;
-        if (el.tagName === 'TITLE') document.title = translations[lang][key];
-        else el.textContent = translations[lang][key];
-      });
-      document.querySelectorAll('.lang-option').forEach(opt => {
-        opt.classList.toggle('active', opt.getAttribute('data-lang') === lang);
-      });
-    }
-
-    // Handler antiguo en `.lang-btn` eliminado: tras la unificación del navbar
-    // `.lang-btn` es el toggle del dropdown (sin `data-lang`), y al pulsarlo
-    // `newLang` salía `null` y redirigía a /null/<página>. La selección de
-    // idioma vive ahora en el script unificado del navbar, que opera sobre
-    // `.lang-option`.
-
-    // Inicializar con el idioma guardado (coherente con el resto del sitio)
-    setLanguage(detectLanguage());
+    // IMPORTANTE: `detectLanguage()` y `setLanguage()` se definen UNA sola
+    // vez en el script unificado del navbar. Si los re-declaramos aquí, el
+    // `let currentLang = 'en'` del unificado revienta con "Identifier
+    // 'currentLang' has already been declared" y la addEventListener del
+    // dropdown nunca llega a registrarse — el botón de idiomas deja de
+    // abrir. Solo dejamos el dict `translations` (que el unificado lee) y
+    // delegamos el resto.
   </script>
 
   <!-- analytics (GTM bootstrap) deferred to end of body -->
