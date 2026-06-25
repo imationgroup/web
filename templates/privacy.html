@@ -666,21 +666,15 @@ function setLanguage(lang) {
         const key = el.getAttribute('data-i18n');
         const _tv = (_t||{})[key]; if (_tv) { if (el.tagName==='TITLE') document.title=_tv; else el.textContent=_tv; }
     });
-    document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.toggle('active', btn.getAttribute('data-lang')===lang));
+    // Legacy: actualizamos también los botones .lang-option del dropdown nuevo.
+    document.querySelectorAll('.lang-option').forEach(opt => opt.classList.toggle('active', opt.getAttribute('data-lang')===lang));
 }
 
-document.querySelectorAll('.lang-btn').forEach(btn => {
-    btn.addEventListener('click', function(){
-      var newLang = btn.getAttribute('data-lang');
-      try { localStorage.setItem('ig_lang', newLang); localStorage.setItem('lang', newLang); } catch (_) {}
-      if (newLang === document.documentElement.lang) return;
-      var path = window.location.pathname;
-      var m = path.match(/^\/([a-z]{2})(\/.*)?$/);
-      var rest = m ? (m[2] || '/') : (path.length > 1 ? path : '/');
-      if (rest.charAt(0) !== '/') rest = '/' + rest;
-      window.location.assign('/' + newLang + rest + window.location.search + window.location.hash);
-    });
-});
+// IMPORTANTE: el handler antiguo que escuchaba clicks en `.lang-btn` se ha
+// eliminado. Tras la unificación del navbar, `.lang-btn` es el botón TOGGLE
+// del dropdown (no tiene `data-lang`) y al pulsarlo `newLang` salía como
+// `null`, redirigiendo a /null/privacy. El switcher de idioma ahora vive
+// dentro del script unificado del navbar y opera sobre `.lang-option`.
 
 setLanguage(detectLanguage());
 </script>
