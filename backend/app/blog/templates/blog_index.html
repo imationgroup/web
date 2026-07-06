@@ -39,8 +39,14 @@
   <a class="post-card{% if is_fallback %} post-card-fallback{% endif %}"
      href="/{{ p.lang }}/blog/{{ p.slug }}"
      {% if is_fallback %}hreflang="{{ p.lang }}"{% endif %}>
+    {% set body_img = p|first_body_image %}
     {% if p.cover_image %}
       <div class="cover" style="background-image: url('{{ p.cover_image }}');" aria-hidden="true"></div>
+    {% elif body_img %}
+      {# Fallback: use the first <img> found inside body_html. Lets posts
+         with an inline hero image show a proper thumbnail on the index
+         without the admin having to upload it separately. #}
+      <div class="cover" style="background-image: url('{{ body_img }}');" aria-hidden="true"></div>
     {% else %}
       {# decorative gradient placeholder so cards with no image still look intentional #}
       <div class="cover cover-placeholder" aria-hidden="true">

@@ -59,8 +59,23 @@ def _urlencode(s: str) -> str:
     return quote_plus(s or "")
 
 
+_IMG_SRC_RE = re.compile(r'<img[^>]+src=["\']([^"\']+)["\']', re.I)
+
+
+def _first_body_image(post) -> str:
+    """First <img src> found inside post.body_html, or ''. Used by the blog
+    index as a fallback cover when the admin didn't set an explicit
+    cover_image but the body already opens with a hero image."""
+    body = post.body_html or ""
+    if not body:
+        return ""
+    m = _IMG_SRC_RE.search(body)
+    return m.group(1) if m else ""
+
+
 templates.env.filters["auto_excerpt"] = _auto_excerpt
 templates.env.filters["urlenc"] = _urlencode
+templates.env.filters["first_body_image"] = _first_body_image
 
 
 def _abs_url(path: str) -> str:
