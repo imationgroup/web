@@ -24,6 +24,7 @@ import json
 import os
 import re
 import sys
+import time
 import urllib.request
 import urllib.error
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -72,6 +73,19 @@ def fetch(url: str, method: str = 'GET', timeout: int = 15) -> tuple[int, str, d
 
 def status_only(url: str) -> int:
     return fetch(url, method='HEAD')[0]
+
+
+def status_reachable(url: str) -> int:
+    """Like status_only(), but falls back to GET when HEAD returns 405.
+
+    The blog backend (FastAPI behind /blog/ and /<lang>/blog/) only registers
+    GET handlers, so it answers 405 to a HEAD even though the page serves 200.
+    Those URLs are in the sitemap, so a plain HEAD sweep reports them broken.
+    """
+    code = status_only(url)
+    if code == 405:
+        code = fetch(url, method='GET')[0]
+    return code
 
 
 # ────────────────────────────── checks ──────────────────────────────────────
@@ -153,7 +167,7 @@ def check_all_urls_200(urls: list[str]):
     print(f'\n[3/6] Reachability of {len(urls)} sitemap URLs (parallel HEADs)')
     bad: list[tuple[str, int]] = []
     with ThreadPoolExecutor(max_workers=8) as ex:
-        for url, code in zip(urls, ex.map(status_only, urls)):
+        for url, code in zip(urls, ex.map(status_reachable, urls)):
             if code != 200:
                 bad.append((url, code))
     if bad:
@@ -361,9 +375,29 @@ def check_security_headers():
             fail(f"{name} missing or wrong (got '{v}', want substring '{must_contain}')")
 
 
+def wait_for_backend() -> None:
+    """Block until the backend container answers again after the deploy.
+
+    scripts/deploy.sh runs `docker compose up -d --build`, so every path Nginx
+    proxies to 127.0.0.1:8001 (/sitemap.xml, /blog/, the contact API) returns
+    502 for a few seconds afterwards. check_backend() already waits, but it
+    runs last: check_sitemap() reached the cold container first and failed the
+    whole run even though the deploy itself was fine.
+    """
+    print('\n[0/9] Backend readiness')
+    url = BASE + '/sitemap.xml'
+    code = 0
+    for attempt in range(15):
+        code = status_only(url)
+        if code not in (0, 502, 503, 504):
+            ok(f"backend up ({url} -> {code})" + (f" after {attempt + 1} attempts" if attempt else ""))
+            return
+        time.sleep(2)
+    print(f"  [warn] backend still returning {code} after 30s; running checks anyway")
+
+
 def check_backend():
     print(f'\n[9/9] Backend API')
-    import time
     url = f"{API}/api/contact"
     # The deploy step restarts the backend container; give it up to 20s to come back.
     for attempt in range(10):
@@ -379,6 +413,7 @@ def check_backend():
 
 def main():
     print(f"Smoke test against {BASE}")
+    wait_for_backend()
     check_basics()
     locs = check_sitemap()
     if locs:
