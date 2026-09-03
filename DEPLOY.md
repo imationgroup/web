@@ -37,16 +37,61 @@ cat ~/.ssh/gha_imationgroup_web        # ← copia el bloque entero (BEGIN..END)
 | `VPS_SSH_KEY` | el contenido de `~/.ssh/gha_imationgroup_web` (privada) |
 | `VPS_PORT` | (opcional) `22` |
 
-### 3. Clonar el repo en el VPS
+### 3. Clonar el repo en el VPS — vía SSH, no HTTPS
+
+> **Ojo.** GitHub **rechaza las operaciones git anónimas por HTTPS desde la IP
+> de este VPS**: el `GET /info/refs` responde 200, pero el `POST
+> /git-upload-pack` devuelve `401` con `www-authenticate: Basic realm="GitHub"`.
+> Por eso `git fetch https://…` falla con *«could not read Username»* aunque el
+> repo sea público. Afecta a todos los repos del servidor, no solo a este.
+>
+> El síntoma engaña: mientras el clon local ya esté al día, `git fetch` **no
+> llega a hacer el POST** y sale con código 0, así que parece que todo va bien.
+> Solo falla cuando hay commits nuevos que traer — es decir, justo durante un
+> despliegue.
+>
+> La solución que ya usaban `autolinked`, `repartirpancamilo` y `loureiro` en
+> esta máquina: una **clave de despliegue SSH por repo**, con un alias en
+> `~/.ssh/config`.
+
+**Ya está hecho** para este repo. Quedó configurado así:
+
+```bash
+# En el VPS, como deploy:
+ssh-keygen -t ed25519 -C "deploy-key-imationgroup-web-vps" -f ~/.ssh/github_imationgroup_web -N ""
+
+cat >> ~/.ssh/config <<'CFG'
+
+Host github-imationgroup-web
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/github_imationgroup_web
+    IdentitiesOnly yes
+CFG
+```
+
+Y la clave **pública** se dio de alta como deploy key de solo lectura en
+`Settings → Deploy keys` del repo (título «VPS deploy (read-only)»).
+
+Con eso, el clonado:
 
 ```bash
 ssh deploy@76.13.56.232
 mkdir -p ~/apps && cd ~/apps
-git clone https://github.com/imationgroup/web.git imationgroup-web
+git clone github-imationgroup-web:imationgroup/web.git imationgroup-web
 cd imationgroup-web
 cp .env.example .env
 nano .env   # rellena los SMTP_* (mismos valores que autolinked)
 ```
+
+Si el clon ya existía con remoto HTTPS, basta con reapuntarlo:
+
+```bash
+git -C ~/apps/imationgroup-web remote set-url origin github-imationgroup-web:imationgroup/web.git
+```
+
+`scripts/deploy.sh` hace `git fetch --prune origin` sobre ese mismo remoto SSH,
+así que no hay que tocar nada más.
 
 ### 4. Nginx
 
